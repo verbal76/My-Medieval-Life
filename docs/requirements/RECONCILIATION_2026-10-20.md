@@ -218,9 +218,9 @@ None.
 | B25-FINISH-01 | Build 25 completion: fixed finish line, finish approved scope, integrated tests, final 365-day flight on the exact candidate, private three-platform draft release | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | B25-HH-BIZFOOD-D1 | A food seller's household eats from its own business stock when household food is short: no sale, no coins | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
 | B25-INTEG-SEQ-02 | Build 25 integration sequence after the 2026-11-10 decisions, with mandatory regression coverage and campaign review | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
-| B25-INV-BANDIT-CHILD | Bandit-clan children starving despite household food (days 305-306) | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
-| B25-INV-P100-FULLPACK | p:100: meal purchases refused, buyer's pack full (45 in a day) | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
-| B25-INV-P52-BLOCKS | p:52: repeated building-block purchase failures (453 in a row) | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
+| B25-INV-BANDIT-CHILD | Bandit-clan children starving despite household food (days 305-306) | approved | INTEGRATED / NOT TESTED / OPEN | unassigned |
+| B25-INV-P100-FULLPACK | p:100: meal purchases refused, buyer's pack full (45 in a day) | approved | INTEGRATED / NOT TESTED / OPEN | unassigned |
+| B25-INV-P52-BLOCKS | p:52: repeated building-block purchase failures (453 in a row) | approved | INTEGRATED / NOT TESTED / OPEN | unassigned |
 | B25-INV02-D2 | INV-02 spoilage: F1(b) F2(b) F3(b) F4(a) F5(b) F6(b) approved, F7 deferred | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-INV02-SPOIL-D1 | INV-02 food spoilage in every store, with storage conditions: investigate and propose before implementation | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
 | B25-LE-ACTIVATE-D1 | Living Economy activation policy for Build 25 | decision | APPROVED | owner decision |
@@ -243,8 +243,8 @@ None.
 | B25-P99-PAYER-01 | p:99: planner reserve check vs payer funds mismatch causes repeated refused buy_from | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
 | B25-REG02-DEBT-D1 | REG-02 migrating household loans: option (b), preserving legitimate continuing obligations | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-SAV04-D1 | SAV-04: reload deterministic; exact equivalence with an uninterrupted wildlife/combat run not required | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
-| B25-SAVE-PHANTOM-D2 | Deterministic reconciliation of phantom household memberships in existing saves | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
-| B25-SAVE-PHANTOM-D3 | Phantom repair: remove dead villagers' and departed bandits' incorrect memberships (with safeguards) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | unassigned |
+| B25-SAVE-PHANTOM-D2 | Deterministic reconciliation of phantom household memberships in existing saves | approved | INTEGRATED / NOT TESTED / OPEN | unassigned |
+| B25-SAVE-PHANTOM-D3 | Phantom repair: remove dead villagers' and departed bandits' incorrect memberships (with safeguards) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
 | B25-SCOPE-AUDIT | Build 25 complete expansion and abandoned-work reconciliation audit (read-only) | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | 20 |
 | B25-SCOPE-D1 | Is Build 25 the consolidation build containing all approved expansion work and all approved recoverable work from abandoned branches? | decision | APPROVED | owner decision |
 | B25-SCOPE-REGION | Build 25 scope correction: the regional economy, world map, physical inter-village travel, envoy surveys and independent inter-village commerce are mandatory Build 25 Living Economy scope; the 4b51c92 freeze is superseded (kept as a tested baseline); Build 25 is not complete until they are implemented, validated and the owner authorizes release | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |

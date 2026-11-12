@@ -102,9 +102,9 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B25-FINAL-REVIEW-01 | Final testing review of fbfd6ad and an owner decision report for baseline acceptance and merge in one decision | approved | OWNER APPROVED | NOT STARTED |
 | B25-HH-BIZFOOD-D1 | A food seller's household eats from its own business stock when household food is short: no sale, no coins | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-INTEG-SEQ-02 | Build 25 integration sequence after the 2026-11-10 decisions, with mandatory regression coverage and campaign review | approved | OWNER APPROVED | NOT STARTED |
-| B25-INV-BANDIT-CHILD | Bandit-clan children starving despite household food (days 305-306) | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
-| B25-INV-P100-FULLPACK | p:100: meal purchases refused, buyer's pack full (45 in a day) | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
-| B25-INV-P52-BLOCKS | p:52: repeated building-block purchase failures (453 in a row) | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
+| B25-INV-BANDIT-CHILD | Bandit-clan children starving despite household food (days 305-306) | approved | OWNER APPROVED | INTEGRATED |
+| B25-INV-P100-FULLPACK | p:100: meal purchases refused, buyer's pack full (45 in a day) | approved | OWNER APPROVED | INTEGRATED |
+| B25-INV-P52-BLOCKS | p:52: repeated building-block purchase failures (453 in a row) | approved | OWNER APPROVED | INTEGRATED |
 | B25-INV02-D2 | INV-02 spoilage: F1(b) F2(b) F3(b) F4(a) F5(b) F6(b) approved, F7 deferred | approved | OWNER APPROVED | NOT STARTED |
 | B25-INV02-SPOIL-D1 | INV-02 food spoilage in every store, with storage conditions: investigate and propose before implementation | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-MP03-OWNERSHIP-D1 | MP-03 property rules: public tables, tavern tables private, owners' household tables, keeper death; host-authoritative parity | approved | OWNER APPROVED | INTEGRATED |
@@ -115,8 +115,8 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B25-P99-PAYER-01 | p:99: planner reserve check vs payer funds mismatch causes repeated refused buy_from | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-REG02-DEBT-D1 | REG-02 migrating household loans: option (b), preserving legitimate continuing obligations | approved | OWNER APPROVED | NOT STARTED |
 | B25-SAV04-D1 | SAV-04: reload deterministic; exact equivalence with an uninterrupted wildlife/combat run not required | approved | OWNER APPROVED | NOT STARTED |
-| B25-SAVE-PHANTOM-D2 | Deterministic reconciliation of phantom household memberships in existing saves | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
-| B25-SAVE-PHANTOM-D3 | Phantom repair: remove dead villagers' and departed bandits' incorrect memberships (with safeguards) | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
+| B25-SAVE-PHANTOM-D2 | Deterministic reconciliation of phantom household memberships in existing saves | approved | OWNER APPROVED | INTEGRATED |
+| B25-SAVE-PHANTOM-D3 | Phantom repair: remove dead villagers' and departed bandits' incorrect memberships (with safeguards) | approved | OWNER APPROVED | INTEGRATED |
 | B25-SELFTRADE-VAL-01 | Self-trade payer defect: complete the investigation beyond preventing the self-trade | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B25-TRACK-69-02 | Original 69 items as a living tracker; new defects in a separate register; work packages for the remaining 29 | approved | OWNER APPROVED | NOT STARTED |
 | B25-WP1-01 | WP-1: the 14-item small-work package authorized on isolated branches | approved | OWNER APPROVED | NOT STARTED |

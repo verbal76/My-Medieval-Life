@@ -8032,7 +8032,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -8046,11 +8046,22 @@
      "date": "2026-11-10",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; assigned_worker: None -> lead; branch: None -> wip/b25-clan-child-pantry",
      "why": "investigation (90a9453) verified by lead: clan children eat only via band_eat (own pack + bandits' packs), never their household pantry (household 25 held 10 wheat); camp_meal returns true regardless. Second defect verified: World.load_dict keeps household members as floats; Array.erase/has/find(int) fail after any load (probe + hh_member_ids_load_test 5 checks: 3 failures before, 0 after; fix cdfa395 on wip/b25-hh-member-ids). Clan pantry fix in progress on wip/b25-clan-child-pantry (clan_child_pantry_test 7 checks: 2 failures before, 0 after)"
+    },
+    {
+     "date": "2026-11-12",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + 39e2a8b; integrated_in + wip/b25r2-rev2 39e2a8b",
+     "why": "merged via the R2 chain (B25R2-CONT-01): dev line 39e2a8b; chain Tests and gates pass, finding changes explained (docs/audits/2026-11-12_R2_MERGE_CHAIN.md)"
     }
    ],
    "lifecycle": "ACTIVE",
    "assigned_worker": "lead",
-   "branch": "wip/b25-clan-child-pantry"
+   "branch": "wip/b25-clan-child-pantry",
+   "commits": [
+    "39e2a8b"
+   ],
+   "integrated_in": [
+    "wip/b25r2-rev2 39e2a8b"
+   ]
   },
   {
    "id": "B25-INV-P100-FULLPACK",
@@ -8068,7 +8079,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -8082,13 +8093,22 @@
      "date": "2026-11-10",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; assigned_worker: None -> lead; branch: None -> wip/b25-meal-claims; commits + d0ddf8f",
      "why": "cause verified from archive seed1 d0220 + code: not a full pack (NPC packs unlimited); seller p:40's ale earmarked for CON-01 contract 592 (LE-03 claims) refused by World.trade; meal planner ignored claims; recorder mislabels claims refusals as buyer_inventory_full. Fix d0ddf8f on wip/b25-meal-claims (meal_claims_test 14 checks: 5 failures before, 0 after); Tests + gate dispatched"
+    },
+    {
+     "date": "2026-11-12",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + 39e2a8b; integrated_in + wip/b25r2-rev2 39e2a8b",
+     "why": "merged via the R2 chain (B25R2-CONT-01): dev line 39e2a8b; chain Tests and gates pass, finding changes explained (docs/audits/2026-11-12_R2_MERGE_CHAIN.md)"
     }
    ],
    "lifecycle": "ACTIVE",
    "assigned_worker": "lead",
    "branch": "wip/b25-meal-claims",
    "commits": [
-    "d0ddf8f"
+    "d0ddf8f",
+    "39e2a8b"
+   ],
+   "integrated_in": [
+    "wip/b25r2-rev2 39e2a8b"
    ]
   },
   {
@@ -8107,7 +8127,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -8121,13 +8141,22 @@
      "date": "2026-11-10",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; assigned_worker: None -> lead; branch: None -> wip/b25-meal-claims; commits + d0ddf8f",
      "why": "investigation docs/audits/2026-11-10_INVESTIGATIONS_P52_BANDIT_CHILDREN.md (90a9453): contract buy step (Contracts.plan) checked raw purse above reserve; act pays only coins the LE-03 claims leave free (p:52's own bids held them); not a code regression (path unchanged b57261f..fbfd6ad; run divergence). Fix in d0ddf8f (contract buy step uses buy_qty; buy_qty counts claims) - test case in meal_claims_test (60 planned/60 refused before, 0 after). Contract acceptance capacity check (contracts.gd:364-372) not changed: proposal for owner"
+    },
+    {
+     "date": "2026-11-12",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + 39e2a8b; integrated_in + wip/b25r2-rev2 39e2a8b",
+     "why": "merged via the R2 chain (B25R2-CONT-01): dev line 39e2a8b; chain Tests and gates pass, finding changes explained (docs/audits/2026-11-12_R2_MERGE_CHAIN.md)"
     }
    ],
    "lifecycle": "ACTIVE",
    "assigned_worker": "lead",
    "branch": "wip/b25-meal-claims",
    "commits": [
-    "d0ddf8f"
+    "d0ddf8f",
+    "39e2a8b"
+   ],
+   "integrated_in": [
+    "wip/b25r2-rev2 39e2a8b"
    ]
   },
   {
@@ -9032,7 +9061,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -9051,13 +9080,22 @@
      "date": "2026-11-10",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; assigned_worker: worker (lead's agent) -> lead; commits + 7e844e3",
      "why": "7e844e3 on wip/b25-hh-phantom-repair (from cdfa395): World.repair_household_members on load; NPC.household + register 'where' authoritative; phantom/duplicate/missing repaired, unknown/dead_elsewhere/no_household/conflict/ended/unlisted kept and flagged in saved membership_report; no save_version bump. hh_phantom_repair_test 30 checks (15 failures before, 0 after); 16 save/household suites 0 failures. Lead check on the real campaign save 42788018729 seed 1 day 300: 13 living villagers listed in a second household (incl. p:142 in household 25) repaired, 4 dead flagged, second load identical, coins 7543 unchanged. Tests + gate dispatched"
+    },
+    {
+     "date": "2026-11-12",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + 39e2a8b; integrated_in + wip/b25r2-rev2 39e2a8b",
+     "why": "merged via the R2 chain (B25R2-CONT-01): dev line 39e2a8b; chain Tests and gates pass, finding changes explained (docs/audits/2026-11-12_R2_MERGE_CHAIN.md)"
     }
    ],
    "lifecycle": "ACTIVE",
    "assigned_worker": "lead",
    "branch": "wip/b25-hh-phantom-repair",
    "commits": [
-    "7e844e3"
+    "7e844e3",
+    "39e2a8b"
+   ],
+   "integrated_in": [
+    "wip/b25r2-rev2 39e2a8b"
    ]
   },
   {
@@ -9077,7 +9115,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -9091,6 +9129,11 @@
      "date": "2026-11-10",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25-hh-phantom-repair; tests: None -> hh_phantom_repair_test 37/0; 16 related suites 0 failures; real saves 42788018729 day 100/200/300 seeds 1-2; test_commit: None -> 837e3e1; commits + 837e3e1",
      "why": "worker done: dead/away phantoms and former-bandit band entries removed on load under the owner's safeguards; band conflicts and household-less former bandits flagged only; test 37/0 (7 failures on 7e844e3); 6 real saves verified"
+    },
+    {
+     "date": "2026-11-12",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + 39e2a8b; integrated_in + wip/b25r2-rev2 39e2a8b",
+     "why": "merged via the R2 chain (B25R2-CONT-01): dev line 39e2a8b; chain Tests and gates pass, finding changes explained (docs/audits/2026-11-12_R2_MERGE_CHAIN.md)"
     }
    ],
    "lifecycle": "ACTIVE",
@@ -9098,7 +9141,11 @@
    "tests": "hh_phantom_repair_test 37/0; 16 related suites 0 failures; real saves 42788018729 day 100/200/300 seeds 1-2",
    "test_commit": "837e3e1",
    "commits": [
-    "837e3e1"
+    "837e3e1",
+    "39e2a8b"
+   ],
+   "integrated_in": [
+    "wip/b25r2-rev2 39e2a8b"
    ]
   },
   {
@@ -11118,12 +11165,18 @@
      "date": "2026-11-12",
      "change": "implementation_status: NOT STARTED -> PARTIALLY IMPLEMENTED; branch: None -> wip/b25r2-rev2; commits + ab72074",
      "why": "chain step 1 (cdfa395 household member ids) merged: dev line ab72074; Tests 43124190693 pass, gate 43124194923 blocking unchanged, determinism identical"
+    },
+    {
+     "date": "2026-11-12",
+     "change": "commits + 39e2a8b",
+     "why": "chain steps 2-4 merged: dev line 39e2a8b (Tests 43124198918, 43124207067, 43124215890 pass; gates 43124202901, 43124211471, 43124220147 explained)"
     }
    ],
    "lifecycle": "ACTIVE",
    "branch": "wip/b25r2-rev2",
    "commits": [
-    "ab72074"
+    "ab72074",
+    "39e2a8b"
    ]
   },
   {

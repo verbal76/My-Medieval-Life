@@ -18,7 +18,7 @@ It points to the records; it does not repeat them. Times are EST.
 
 ## 2. Development line
 
-- Development branch: `wip/b25r2-rev2` @ `ab72074` (2026-11-12: R2 chain step 1, household member ids; chain status `docs/audits/2026-11-12_R2_MERGE_CHAIN.md`); before that @ `1f7043b` (2026-11-11 03:40 UTC: ND-12 merged, Tests 42947422593, gate 42947426216); before that @ `b2cd024` (2026-11-11 02:40 UTC: Batch 3+4 merged, Tests 42940243926, gate 42940247768; ND-12 merge `1f7043b` on `wip/b25-nd12-merge` under CI); before that @ `7d99550` (then also the CI report fix for re-run attempts, verified by 42929466693); earlier @ `98bda59` (2026-11-11 00:15 UTC: fast-forward from `9fd18a5` with the CI-only change `wip/b25-ci-groups`, owner-authorized by the GitHub Actions testing directive; full Tests 42921579595 and targeted 42913303043 passed). No gameplay change merged. `main` and staging untouched.
+- Development branch: `wip/b25r2-rev2` @ `39e2a8b` (2026-11-12: R2 chain steps 1-4 merged: member ids, phantom repair, clan pantry, meal claims; chain status `docs/audits/2026-11-12_R2_MERGE_CHAIN.md`); before that @ `1f7043b` (2026-11-11 03:40 UTC: ND-12 merged, Tests 42947422593, gate 42947426216); before that @ `b2cd024` (2026-11-11 02:40 UTC: Batch 3+4 merged, Tests 42940243926, gate 42940247768; ND-12 merge `1f7043b` on `wip/b25-nd12-merge` under CI); before that @ `7d99550` (then also the CI report fix for re-run attempts, verified by 42929466693); earlier @ `98bda59` (2026-11-11 00:15 UTC: fast-forward from `9fd18a5` with the CI-only change `wip/b25-ci-groups`, owner-authorized by the GitHub Actions testing directive; full Tests 42921579595 and targeted 42913303043 passed). No gameplay change merged. `main` and staging untouched.
 - Batch 3+4 merge candidate: `wip/b25-sim34-on-dev` @ `fbfd6ad` (NOT merged; awaits the owner, section 7).
 - Records branch: `wip/requirements-control` (this file's commit is the head).
 
@@ -106,3 +106,8 @@ never cancel or duplicate a running simulation; no new background agents in the 
 Scratchpad files (container-local, lost when the container ends): campaign comparisons `scratchpad/cmp_b4`, `cmp_fp`; phantom
 probe `_probe_d3.gd`; real campaign saves `frstates`; attribution measurements `baseline_attr`. Everything needed for decisions
 is summarised in the repository documents named above; the CI artifacts remain on GitHub (state archives expire 2026-12-10).
+
+
+## Disk cleanup 2026-11-12 (owner authorization "MML SAFE DISK CLEANUP AUTHORIZATION")
+
+Start 4 MB free. Removed with `git worktree remove --force` after checks (no symlinks, no open files, no process; backup of wt_old in `scratchpad/preserved_wt_old`): scratch `wt_old` (229 MB) and `f015pop/wtA` (277 MB). Now 511 MB free; repository connectivity check clean; 75 worktrees listed. Recursive `rm -rf` of the other verified targets (`/home/user/inventory-src` 1,606 MB; scratch `flyover_v3`, `inv02`, `ico`, `b9`, `smoke`, `ci`, `gate`, `x20f`, `inv_bc`, `icons`, rest of `f015pop`) was denied by the session permission check (Auto mode) and skipped.
