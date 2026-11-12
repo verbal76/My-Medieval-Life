@@ -734,6 +734,29 @@ func _act_step(n: NPC, s: Dictionary) -> bool:
 	return ok
 
 
+## MML-NPC-01: a failed walk (no route to the level, no path) used to leave the villager to decide again the next tick, so one
+## whose every errand was out of reach searched for a path and decided once a game minute without end. The first failure
+## still decides again at once (as before); from the second in a row (since the last path found, within WALK_BACKOFF_FORGET
+## minutes) the villager stands lost for WALK_BACKOFF_FIRST minutes, doubling with each further failure up to
+## WALK_BACKOFF_MAX, before deciding again. No random draw; the count and its time are saved (NPC.path_fails, path_fail_at).
+const WALK_BACKOFF_FIRST := 15.0     # game minutes
+const WALK_BACKOFF_MAX := 60.0       # game minutes: the longest wait, so a way that opens is tried within the hour
+const WALK_BACKOFF_FORGET := 120.0   # game minutes: a failure this long after the last starts the count again
+
+
+func _walk_failed(n: NPC) -> void:
+	if n.path_fails > 0 and minutes - n.path_fail_at > WALK_BACKOFF_FORGET:
+		n.path_fails = 0
+	n.path_fails += 1
+	n.path_fail_at = minutes
+	if n.path_fails < 2:
+		return
+	var wait := minf(WALK_BACKOFF_FIRST * pow(2.0, float(n.path_fails - 2)), WALK_BACKOFF_MAX)
+	n.plan = [brain.wait(n, wait)]
+	n.anim = "idle"
+	stat("walk_backoff")
+
+
 ## Move along a path to s.to; returns true on arrival.
 func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 	var to: Vector2i = s.to
@@ -747,6 +770,7 @@ func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 				recorder.interruption(n, "walk_lost", "interrupted", "no_level_route")     # REC-19
 			n.plan.clear()
 			n.doing = "lost"
+			_walk_failed(n)
 			return false
 		to = leg.from.stand
 	if not s.has("pathed"):
@@ -763,7 +787,9 @@ func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 				recorder.interruption(n, "walk_lost", "interrupted", "no_path")     # REC-19
 			n.plan.clear()
 			n.doing = "lost"
+			_walk_failed(n)
 			return false
+		n.path_fails = 0                 # NPC-01: a path found ends a run of failed walks
 	if n.path_i >= n.path.size() and not leg.is_empty():
 		_npc_through(n, leg, s)
 		return false
