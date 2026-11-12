@@ -1114,7 +1114,7 @@ func drives(n: NPC) -> bool:
 ## Before each update of a homesteader: eat from the pack when hungry on the way (as a traveller does, Journeys).
 func tick(n: NPC) -> void:
 	if n.hunger < 40.0 and not n.plan.is_empty():
-		for f in NPCBrain.EDIBLE:
+		for f in Decay.eat_order(NPCBrain.EDIBLE):        # MML-INV-02 F6(b): the most perishable first while INV-02 is on
 			if n.inv.has(f) and f != "wheat":
 				n.inv.remove(f)
 				n.hunger = minf(100.0, n.hunger + float(GameData.item(f).food))

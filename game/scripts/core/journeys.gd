@@ -203,7 +203,7 @@ static func night_and_food(w: World, n: NPC) -> bool:
 	if n.hunger < EAT_BELOW and str(n.journey.leg) == "there" and food_in(n.inv) <= 0.0:
 		buy_food(w, n, 1440.0)
 	if n.hunger < EAT_BELOW:
-		for f in NPCBrain.EDIBLE:
+		for f in Decay.eat_order(NPCBrain.EDIBLE):     # MML-INV-02 F6(b): the most perishable first while INV-02 is on
 			if n.inv.has(f):
 				n.inv.remove(f)
 				n.hunger = minf(100.0, n.hunger + float(GameData.item(f).food))

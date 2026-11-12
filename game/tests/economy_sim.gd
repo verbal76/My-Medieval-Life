@@ -18,6 +18,8 @@ extends SceneTree
 ##       [--judgment]   (attach a fresh judgment store; Build 19 ships judgment on already; prints its counts at the end)
 ##       [--economy]   (Expansion 20 LE-01: the economy model on, observing only; prints its record counts at the end)
 ##       [--civic]     (Expansion 21 P21-01: the civic records on; they only observe, so the fingerprint is identical to a run without)
+##       [--spoil-storage]   (MML-INV-02, docs/design/INV02_SPOILAGE_PROPOSAL.md: spoilage by storage condition on (balance.json
+##       decay.storage, off as shipped); a measurement run only)
 ##       [--market]    (Expansion 20 LE-03: the shipped economy.json switched on, the market driving; audits the claims at the end)
 ##       [--scenario strip_mine|contracts_fail|social_chain --at DAY]   (X20-FINAL phase 4, tools/sim_suite.py: economic stress
 ##       and the judgment chain through the game's own verbs; see _intervene and _scripted_step)
@@ -128,6 +130,9 @@ func _init() -> void:
 		print("economy: LE-01 model enabled (observing)")
 	if "--civic" in args:                 # P21-01: the civic records on (they only observe; the fingerprint must not change)
 		CivicRecords.override = 1
+	if "--spoil-storage" in args:         # MML-INV-02 (off by default until validated): spoilage by storage condition
+		Decay.storage_on = true
+		print("spoilage: INV-02 storage classes ON %s" % JSON.stringify(Decay.scfg()))
 	w = World.new()
 	var fr_resumed := _fr_read(str(arg.call("--resume", "")), seed)   # FLIGHT-REC-01: {} unless --resume STATE (a chained segment)
 	if fr_resumed.has("error"):
@@ -1943,6 +1948,8 @@ func _regions(start: Dictionary) -> Dictionary:
 			made[k] = int(made.get(k, 0)) + int(st.flows.produced[k])
 		for k in st.flows.used:
 			used[k] = int(used.get(k, 0)) + int(st.flows.used[k])
+		for k in st.flows.get("spoiled", {}):     # MML-INV-02 F2(b): food spoiled in a settlement (the flow exists only while INV-02 is on)
+			used[k] = int(used.get(k, 0)) + int(st.flows.spoiled[k])
 		for k in st.flows.from_village:
 			in_v[k] = int(in_v.get(k, 0)) + int(st.flows.from_village[k])
 		for k in st.flows.to_village:

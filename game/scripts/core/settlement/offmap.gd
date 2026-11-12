@@ -781,13 +781,53 @@ func audit() -> String:
 	for k in ids:
 		var w := int(start.goods.get(k, 0)) + int(f.produced.get(k, 0)) - int(f.used.get(k, 0)) + int(f.from_village.get(k, 0)) \
 			- int(f.to_village.get(k, 0)) + int(f.road_in.get(k, 0)) - int(f.road_out.get(k, 0)) \
-			+ int(f.regional_in.get(k, 0)) - int(f.regional_out.get(k, 0)) + int(f.outside_in.get(k, 0)) - int(f.outside_out.get(k, 0))
+			+ int(f.regional_in.get(k, 0)) - int(f.regional_out.get(k, 0)) + int(f.outside_in.get(k, 0)) - int(f.outside_out.get(k, 0)) \
+			- int((f.get("spoiled", {}) as Dictionary).get(k, 0))            # MML-INV-02 F2(b): food spoiled here (absent while INV-02 is off)
 		if w != int(have.get(k, 0)):
 			return "%s %s %d, books say %d" % [id, k, int(have.get(k, 0)), w]
 	var hs := int(f.horses_start) + int(f.horses_foaled) - int(f.horses_died) - int(f.horses_sold)
 	if hs != horses():
 		return "%s horses %d, books say %d" % [id, horses(), hs]
 	return ""
+
+
+# ------------------------------------------------------------------ spoilage (MML-INV-02 F2(b)) ----------------
+## A day's spoilage (only while Decay.on()): the village's rule (Decay.spoiled, decay.spoil rates, the hashed draw, no random
+## number) at the same storage classes: households' pantries, businesses' and own trades' stock at home, the treasury's granary
+## a cellar, the packs of walkers on the road (not a live walker's: the NPC holds it) carried. Every unit lost is booked in the
+## `spoiled` flow line (created on the first loss, so a settlement where nothing spoiled saves as before) and `audit` subtracts
+## it. The consigned goods (rules.consign: ores) and the imported marks are untouched: ores keep, and a mark never exceeds the
+## stock (_imported_left after).
+func _spoil() -> void:
+	var home := Decay.smul("home")
+	for h in hh:
+		if bool(h.get("alive", true)):
+			_spoil_d(h.pantry, "hh:%d" % int(h.id), home)
+	var ts: Array = biz.keys()
+	ts.sort()
+	for t in ts:
+		_spoil_d(biz[t].stock, "biz:" + str(t), home)
+	var os: Array = own.keys()
+	os.sort()
+	for o in os:
+		_spoil_d(own[o].stock, "own:" + str(o), home)
+	_spoil_d(gov.granary, "granary", Decay.smul("cellar"))
+	for t in trips:
+		if not live.has(int(t.who)):
+			_spoil_d(t.pack, "trip:" + str(t.tx), Decay.smul("carried"))
+	_imported_left()
+
+
+func _spoil_d(d: Dictionary, key: String, m: float) -> void:
+	var ids: Array = d.keys()
+	ids.sort()
+	for k in ids:
+		var n := Decay.spoiled(int(d[k]), Decay.rate(str(k)) * m, Decay.draw(0, day, "offmap:%s:%s" % [id, key], str(k)))
+		if n > 0:
+			n = _take(d, str(k), n)
+			if not flows.has("spoiled"):
+				flows["spoiled"] = {}
+			_add(flows.spoiled, str(k), n)
 
 
 # ------------------------------------------------------------------ prices ----------------
@@ -842,6 +882,8 @@ func step_day(d: int) -> void:
 	_sup = {}
 	_pcache = {}
 	var t0 := Time.get_ticks_usec() if profile else 0
+	if Decay.on():
+		_spoil()                           # MML-INV-02 F2(b): a day's spoilage of the settlement's food, before anything is traded or eaten
 	_consign_return()                      # B25-ECON-P4: what the trader carried on consignment and did not sell goes home first
 	if not transit.is_empty():
 		_deliver()
@@ -2770,6 +2812,8 @@ static func from_dict(d: Dictionary) -> OffMapSettlement:
 		s.flows[k] = _ints(d.flows.get(k, {}))
 	for k in FLOW_COUNTS:
 		s.flows[k] = int(d.flows.get(k, 0))
+	if d.flows.has("spoiled"):                       # MML-INV-02 F2(b): optional (written only once INV-02 has spoiled food here)
+		s.flows.spoiled = _ints(d.flows.spoiled)
 	s._toll_acc = float(d.get("toll_acc", 0.0))
 	s.tax = (d.get("tax", {}) as Dictionary).duplicate(true)             # DVW-B5 (optional key: an older save starts in the band the treasury shows)
 	if s.tax.has("band"):

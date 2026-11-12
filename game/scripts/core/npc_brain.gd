@@ -1140,7 +1140,7 @@ func _plan_eat(n: NPC) -> bool:
 			n.plan = _home_meal(n)
 			return true
 	# raw food in hand (eggs, milk, fruit, roots) is eaten as it is, as the player eats it (FSE-00 section 1)
-	for f in EDIBLE:
+	for f in Decay.eat_order(EDIBLE):                 # MML-INV-02 F6(b): the most perishable first while INV-02 is on
 		if f != "wheat" and not COOKED.has(f) and n.inv.has(f):
 			n.doing = "eating"
 			n.plan = [first(n, work(10, "eat", {"item": f}, "idle"))]
@@ -2213,7 +2213,7 @@ func band_eat(n: NPC) -> bool:
 	while n.hunger < 90.0:
 		var got := ""
 		for o: NPC in band:
-			for f in EDIBLE:
+			for f in Decay.eat_order(EDIBLE):        # MML-INV-02 F6(b)
 				if o.inv.has(f):
 					got = f
 					o.inv.remove(f)
@@ -2229,7 +2229,7 @@ func band_eat(n: NPC) -> bool:
 			if got != "":
 				break
 		if got == "" and pantry != null:
-			for f in EDIBLE:
+			for f in Decay.eat_order(EDIBLE):        # MML-INV-02 F6(b)
 				if pantry.has(f):
 					pantry.remove(f)
 					got = f
@@ -2986,7 +2986,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 		"homestead":                                    # B25R1-010: the end of a homesteader's walk (Homesteads.act)
 			return w.homesteads.act(n, a) if w.homesteads != null else false
 		"eat":
-			for f in ([str(a.item)] if a.has("item") else (COOKED if a.get("cooked_only", false) else EDIBLE)):
+			for f in ([str(a.item)] if a.has("item") else Decay.eat_order(COOKED if a.get("cooked_only", false) else EDIBLE)):     # INV-02 F6(b)
 				if n.inv.has(f):
 					n.inv.remove(f)
 					n.hunger = minf(100.0, n.hunger + float(GameData.item(f).food))
@@ -2998,7 +2998,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			var pantry: Inventory = w.households[n.household].pantry
 			stock_family_chest(n)                    # FSE-18
 			_cook_at_home(n, pantry)
-			for f in EDIBLE:
+			for f in Decay.eat_order(EDIBLE):        # MML-INV-02 F6(b): the most perishable first while INV-02 is on
 				if pantry.has(f):
 					pantry.remove(f)
 					n.hunger = minf(100.0, n.hunger + float(GameData.item(f).food))
