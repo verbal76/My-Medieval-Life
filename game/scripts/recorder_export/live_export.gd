@@ -5,7 +5,7 @@ extends RefCounted
 ## in Settings, Saves ("Record gameplay", GameSettings.record_gameplay; off by default): bounded buffer, incremental chunk
 ## files under user://recorder, storage cap (recorder.json), no effect on the game.
 ##
-## export_world(world, dest_dir) writes, into dest_dir (default: the Documents folder, "My Medieval Life/recordings"):
+## export_world(world, dest_dir) writes, into dest_dir (default: the Documents folder, "Forge My Life/recordings"):
 ##   <session>_day<N>.xlsx           the analysis workbook (charts and event records), the same builder the CI gate uses
 ##   <session>_day<N>_analysis.json  the analysis as structured data
 ##   <session>_day<N>_archive.zip    the recorder's own archive of the session (gzip JSON-lines chunks and session.json)
@@ -19,7 +19,7 @@ static func default_dir() -> String:
 	var docs := OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS)
 	if docs == "":
 		return ProjectSettings.globalize_path("user://recordings")
-	return docs.path_join("My Medieval Life").path_join("recordings")
+	return docs.path_join("Forge My Life").path_join("recordings")
 
 
 static func newest_session(root: String) -> String:

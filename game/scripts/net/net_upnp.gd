@@ -10,7 +10,7 @@ extends RefCounted
 ## The mapping lasts until it is removed (lease 0, which every IGD version accepts) and is removed when hosting stops.
 
 const SEARCH_MS := 2000
-const DESCRIPTION := "My Medieval Life"
+const DESCRIPTION := "Forge My Life"
 
 var state := ""
 var external := ""            # the router's outside address ("" until known)

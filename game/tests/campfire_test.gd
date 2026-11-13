@@ -93,6 +93,9 @@ func _run() -> void:
 		and str(sm[0].packs).contains("1/10"), "SMStudios credited: the campfire, its page, CC BY 4.0 and the change made")
 	main.ui.show_credits()
 	var links: Array = main.ui.panel_body.find_children("*", "LinkButton", true, false)
+	var heads: Array = main.ui.panel_body.get_children().filter(func(n): return n is Label).map(func(n): return (n as Label).text)
+	check(not heads.is_empty() and str(heads[0]) == "Forge My Life, by Hot Attic Games LLC.", "NAME-01: the credits page names the game and the studio (%s)" % (str(heads[0]) if not heads.is_empty() else ""))
+	check(not heads.any(func(t): return str(t).contains("My Medieval Life")), "NAME-01: no credit line uses the old title")
 	check(links.any(func(l): return (l as LinkButton).uri == "https://simon-develop.itch.io/"), "the credits page links the creator's page")
 	_end()
 

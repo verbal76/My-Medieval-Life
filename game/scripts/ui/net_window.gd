@@ -72,7 +72,7 @@ static func show_host(ui: GameUI) -> void:
 		var open_btn := ui._button("Open to friends", go, where != "", row)
 		open_btn.name = "HostOpen"
 		ui._button("Back", ui.show_pause, true, row)
-		ui._label("On Windows, allow My Medieval Life through the firewall on private networks (UDP ports %d and %d) when it asks." % [NetProtocol.GAME_PORT, NetProtocol.DISCOVERY_PORT], 13)
+		ui._label("On Windows, allow Forge My Life through the firewall on private networks (UDP ports %d and %d) when it asks." % [NetProtocol.GAME_PORT, NetProtocol.DISCOVERY_PORT], 13)
 	ui.compact(560.0)
 
 
