@@ -371,7 +371,7 @@ func provoke(a: Animal, who: String) -> void:
 	var foe := _foe_pos(who)
 	var fresh := a.alarm == "" or a.alarm_left <= 0.0     # not already running from a blow (one keeps running, facing its way)
 	var ch := charge_cfg(a)
-	if foe != Vector2.INF and foe.distance_to(a.pos) > 0.001 and (fresh or bool(a.spec().get("people", false)) or not ch.is_empty()):
+	if foe != Vector2.INF and foe.distance_to(a.pos) > 0.001 and (fresh or bool(a.spec().get("people", false)) or (not ch.is_empty() and a.anger != "")):
 		a.facing = foe - a.pos
 	if bool(a.spec().get("people", false)):
 		a.anger = who

@@ -15,6 +15,7 @@ extends Sprite2D
 ##    left (three frames, flipped for right), drawn while it stands facing sideways.
 ## Babies use the Cozy Farm baby sheet at full scale (B8-029); a species with no baby art (boar) is drawn at half scale. The node's position is the animal's feet.
 
+var _base_y := 0.0           # the offset's height set by setup (a lunge moves the sprite off it for a moment)
 const ROWS := {
 	"mini_bear": {"idle": [0, 4], "walk": [1, 6], "attack": [3, 6], "hit": [6, 2], "death": [7, 4]},
 	"mini_wolf": {"idle": [0, 4], "walk": [1, 6], "attack": [3, 5], "hit": [6, 2], "death": [7, 4]},
@@ -59,6 +60,7 @@ func setup(a: Animal, now := -1.0) -> void:
 		vframes = 5
 	var frame_px := float(s.get("baby_frame", s.frame)) if baby else float(art.frame)
 	offset = Vector2(0, -frame_px / 2.0 + 3.0)
+	_base_y = offset.y
 
 
 func show_state(a: Animal, now: float, dt: float) -> void:
@@ -67,6 +69,11 @@ func show_state(a: Animal, now: float, dt: float) -> void:
 		setup(a, now)                       # grew up (or loaded as a baby): the sheet changes
 	scale = Vector2.ONE if (a.adult(now) or baby) else Vector2(0.5, 0.5)
 	t += dt
+	# B25-ANIMAL-BOAR-LIVESTOCK: a sheet with no attack row (the Cozy Farm boars) lunges a few pixels toward the way it
+	# faces for the start of an attack (a gore), so the blow reads; the MiniFolks sheets play their attack row instead.
+	var lunge := a.act == "attack" and a.act_left > 0.3 and layout != "minifolks"
+	offset.x = (3.0 * signf(a.facing.x) if absf(a.facing.x) >= absf(a.facing.y) else 0.0) if lunge else 0.0
+	offset.y = _base_y + ((3.0 * signf(a.facing.y)) if lunge and absf(a.facing.y) > absf(a.facing.x) else 0.0)
 	if layout == "minifolks":
 		var rows: Dictionary = ROWS.get(skin_now, ROWS.mini_doe)
 		var r: Array = rows.get(a.act, rows.walk if a.moving else rows.idle) if a.act != "" else (rows.walk if a.moving else rows.idle)
