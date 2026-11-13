@@ -53,6 +53,21 @@ const HOST_FIGURES := ["player_xp", "player_hit_npc", "player_hit_animal"]
 ## and the two requests cross the network apart, so the host allows a margin).
 const BEGUN_WORK := {"player_craft": "player_craft_begin", "player_repair": "player_repair_begin"}
 const WORK_GRACE := 0.75
+## ND-28 (MP-GUEST-TRUST follow-up): verbs that land at the end of a timed action on the guest's own machine, with no begin verb:
+## a swing at a seam (player_mine), a blow of the axe (player_chop), a sword blow (player_melee_npc, player_melee_animal). The host
+## paces them by the same time the single-player interface takes for each (World.player_mine_plan, player_fell_plan a blow,
+## Combat.swing_secs), on its own clock, per pace (one for gathering, one for the sword): the next is accepted no sooner than that
+## time after the last one accepted, less PACE_SLACK of it plus PACE_SLACK_S seconds (requests cross the network apart, so a
+## late one followed by a prompt one is not refused); the slack is spent, not refunded, so over time a guest works no faster than
+## a player at the same work. The first after a pause is accepted at once (its time ran on the guest's machine).
+const PACED := {"player_mine": "gather", "player_chop": "gather", "player_melee_npc": "sword", "player_melee_animal": "sword"}
+const PACE_SLACK := 0.25
+const PACE_SLACK_S := 0.25
+## ND-28: a sword blow's reach on the host: the single-player blow's (Combat reach, a clear line) and MELEE_SLACK tiles more, as
+## the guest and its target each move on their own machine between the blow and the host's frame (no facing is sent).
+const MELEE_SLACK := 1.5
+## ND-28: the host's clock for pacing (seconds); tests set it.
+static var clock := Callable()
 
 ## Every player verb a guest's interface can call, by the path World.mirror sends: "" the World itself, "<field>." a module the World
 ## holds, "<Class>:" a static verb taking the World first. The sub-batch is the BATCH_C.md checklist row it belongs to.
@@ -206,6 +221,9 @@ static func apply_verb(w: World, p: PlayerState, path: String, raw: Array) -> Di
 	var no_place := place_refusal(w, p, path, args)
 	if no_place != "":
 		return _answer(w, p, false, no_place)
+	var early := pace_refusal(w, p, path, args)
+	if early != "":
+		return _answer(w, p, false, early)
 	var plan := _work_plan(w, p, path, args)
 	var r = w.as_actor(p, func():
 		match path:
@@ -288,6 +306,23 @@ static func place_refusal(w: World, p: PlayerState, path: String, args: Array) -
 			return ""
 		"player_craft", "player_repair":
 			return begun_work_refusal(w, p, path, args)
+		"player_mine", "player_chop":          # ND-28: the single-player rules of the swing (cell reach, a wall, the tool, the tree)
+			if args.size() < (2 if path == "player_mine" else 3) or not (args[0] is Dictionary):
+				return "Nothing to do."
+			var tool := str(args[args.size() - 1])
+			var kind := "pickaxe" if path == "player_mine" else "axe"
+			if not p.inv.has(tool) or str(GameData.item(tool).get("tool", "")) != kind:
+				return "Requires a pickaxe. The smith sells them." if kind == "pickaxe" else "Requires an axe. The smith sells them."
+			var plan: Dictionary = w.player_mine_plan(args[0], p) if path == "player_mine" else w.player_fell_plan(args[0], p)
+			return "" if bool(plan.get("ok", false)) else str(plan.get("why", far))
+		"player_melee_npc", "player_melee_animal":   # ND-28: a sword's reach, not the screen's
+			if args.is_empty() or not (args[0] is NPC or args[0] is Animal):
+				return "Nothing to do."
+			var at: Vector2 = args[0].pos
+			if p.map_level != (args[0].depth if args[0] is NPC else 0) or at.distance_to(p.pos) > float(Combat.cfg().reach) + MELEE_SLACK \
+					or not Combat.clear_line(w, p.pos, at):
+				return far
+			return ""
 		"counters.summon":
 			var id := str(args[0]) if args.size() >= 1 else ""
 			if not w.stations.has(id):
@@ -399,6 +434,37 @@ static func begun_work_refusal(w: World, p: PlayerState, path: String, args: Arr
 	if w.minutes - float(b.at) < float(b.mins) * WORK_GRACE:
 		return "That is not finished yet."
 	return ""
+
+
+## ND-28: why guest `p`'s paced verb `path` (PACED) comes too soon, "" when it may be applied (and then its time is spent): the
+## time the single-player interface takes for it, from the last one of its pace the host accepted (pace_secs).
+static func pace_refusal(w: World, p: PlayerState, path: String, args: Array) -> String:
+	if not PACED.has(path):
+		return ""
+	var secs := pace_secs(w, p, path, args)
+	var now := float(clock.call()) if clock.is_valid() else float(Time.get_ticks_msec()) / 1000.0
+	var key := "mp_pace_" + str(PACED[path])
+	if p.has_meta(key):
+		var done := float(p.get_meta(key))
+		if now < done + secs * (1.0 - PACE_SLACK) - PACE_SLACK_S:
+			return "You are not done with the last one yet."
+		p.set_meta(key, maxf(now, done + secs))
+	else:
+		p.set_meta(key, now)
+	return ""
+
+
+## ND-28: the seconds the single-player interface takes for paced verb `path` by guest `p`: a swing at a seam (the mining
+## plan's), one blow of a felling (the felling's time over Trees.cfg().chops), a sword swing (Combat.swing_secs).
+static func pace_secs(w: World, p: PlayerState, path: String, args: Array) -> float:
+	match path:
+		"player_mine":
+			return float(w.player_mine_plan(args[0], p).get("secs", 0.0))
+		"player_chop":
+			return float(w.player_fell_plan(args[0], p).get("secs", 0.0)) / maxf(1.0, float(Trees.cfg().chops))
+		"player_melee_npc", "player_melee_animal":
+			return Combat.swing_secs(p)
+	return 0.0
 
 
 ## MP-GUEST-TRUST: whether station `st` offers `recipe`: a village station of the recipe's own kind (the craft window lists

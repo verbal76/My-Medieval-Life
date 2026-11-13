@@ -16,6 +16,7 @@ var checks := 0
 var failures := 0
 const NOT_YOURS := "That is not yours to decide."
 const FAR := "That is too far away."
+var now := 1000.0          # ND-28: the host paces a guest's sword blows (NetActions.clock); each blow here comes a swing apart
 
 
 func check(ok: bool, msg: String) -> void:
@@ -45,6 +46,7 @@ func coins(w: World) -> int:
 
 func _init() -> void:
 	GameData.ensure()
+	NetActions.clock = func(): return now
 	var w := World.new()
 	w.setup(VillageMap.load_default(), 8807)
 	var g := PlayerState.new()
@@ -115,6 +117,7 @@ func _init() -> void:
 		check(r.ok and (is_equal_approx(float(res.get("dmg", -1.0)), dmg) or is_equal_approx(float(res.get("dmg", -1.0)), dmg * 2.0)) and dealt > 0.0 and dealt <= dmg * 2.0 + 0.001,
 			"the guest's sword blow on the animal (player_melee_animal) deals the host's figure from its own weapon and skills (%.1f, weapon %.1f)" % [float(res.get("dmg", -1.0)), dmg])
 	g.pos = villager.pos + Vector2(0.5, 0)
+	now += Combat.swing_secs(g)              # ND-28: a swing after the blow on the animal
 	var vhp := villager.hp
 	var vdmg := g.damage()
 	r = verb(w, g, "player_melee_npc", [villager])
@@ -313,5 +316,6 @@ func _init() -> void:
 	r = verb(w, g, "couriers.book_route", [order])
 	check(not r.ok and r.text == "That is not yours.", "a booking naming the host as sender is still refused")
 
+	NetActions.clock = Callable()
 	print("mp06_guest_trust_test: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)

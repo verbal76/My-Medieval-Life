@@ -28,6 +28,14 @@ static func cfg() -> Dictionary:
 	return GameData.b("player_combat")
 
 
+## The seconds one swing of player `p` takes: swing_time by the Combat tier's attack_time and the weapon in hand's attack_speed
+## (WEAPON-CATALOG-01; 1 = as before). The interface times its swings by it, and the host paces a guest's blows by it (ND-28).
+static func swing_secs(p: PlayerState) -> float:
+	var wpn := p.weapon
+	var spd := float(GameData.item(wpn).get("attack_speed", 1.0)) if wpn != "" and p.inv.has(wpn) else 1.0
+	return float(cfg().swing_time) * Skills.value(p, "combat", "attack_time", 1.0) / maxf(0.25, spd)
+
+
 ## A press of Attack. "start" (a swing begins), "queued" (it will follow the current swing) or "ignored".
 func press(swing_time: float, who: Object = null) -> String:
 	presses += 1

@@ -4928,9 +4928,7 @@ func _ground_under(pos: Vector2) -> String:
 
 ## Seconds one swing takes: windup, blow and recovery (the Combat tier makes it shorter).
 func swing_time() -> float:
-	var w := world.player.weapon            # WEAPON-CATALOG-01: a catalogue weapon's attack_speed (1 = as before) shortens or lengthens it
-	var spd := float(GameData.item(w).get("attack_speed", 1.0)) if w != "" and world.player.inv.has(w) else 1.0
-	return float(Combat.cfg().swing_time) * Skills.value(world.player, "combat", "attack_time", 1.0) / maxf(0.25, spd)
+	return Combat.swing_secs(world.player)     # WEAPON-CATALOG-01: a catalogue weapon's attack_speed shortens or lengthens it
 
 
 func _swing_begins() -> void:
