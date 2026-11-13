@@ -1006,7 +1006,7 @@ func craft_pick(n: NPC, c: Dictionary) -> String:
 		var ok := true
 		var cost := 0.0
 		for id in r["in"]:
-			if n.inv.count(id) + pantry.count(id) < int(r["in"][id]):
+			if n.inv.count(id) + craft_spare(pantry, str(id), r) < int(r["in"][id]):
 				ok = false
 			cost += GameData.value(str(id)) * float(r["in"][id])
 		if not ok:
@@ -1033,7 +1033,7 @@ func _plan_craft(n: NPC, c: Dictionary) -> bool:
 	var r: Dictionary = GameData.recipes[rid]
 	var pantry: Inventory = w.households[n.household].pantry
 	for id in r["in"]:
-		var short := int(r["in"][id]) - n.inv.count(id)
+		var short := mini(int(r["in"][id]) - n.inv.count(id), craft_spare(pantry, str(id), r))
 		if short > 0:
 			w.transfer(pantry, n.inv, str(id), short)
 	var at := Homesteads.step_of(c)
@@ -1193,13 +1193,22 @@ func errand(n: NPC, c: Dictionary, trip: Dictionary) -> bool:
 
 
 # ---------------------------------------------------------------- the band ----------------------
-## The household of the band (the outlaws' wilderness settlement), -1 none.
 ## What of `id` a claim's pantry can give to its works: all of it, but for logs the keep_logs on the hearth (ND-29: the logs the
 ## household burns at night, bought or gathered as deadwood, are not carried off to a well or a pen).
 func spare_of(pantry: Inventory, id: String) -> int:
 	return maxi(0, pantry.count(id) - (int(Homesteads.cfg().keep_logs) if id == "log" else 0))
 
 
+## What of `id` a claim's workshop may take from `pantry` for recipe `r`: spare_of (the hearth's keep_logs stay for the fire),
+## but all of it for a recipe that makes food (an oven's roast: cooking is no less a need than the night's fire). ND-29.
+func craft_spare(pantry: Inventory, id: String, r: Dictionary) -> int:
+	for o in r.get("out", {}):
+		if str(o) in NPCBrain.EDIBLE:
+			return pantry.count(id)
+	return spare_of(pantry, id)
+
+
+## The household of the band (the outlaws' wilderness settlement), -1 none.
 func band_household() -> int:
 	for h in w.households.size():
 		var hh: Dictionary = w.households[h]

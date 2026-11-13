@@ -61,7 +61,7 @@ const VERBS := {
 	"player_eat": "C1", "player_sharpen": "C3", "player_use_medicine": "C1", "player_equip": "C1", "player_unequip": "C1", "player_drop": "C1",
 	"player_yield": "C1", "player_wake": "C1", "player_rest": "C1",
 	# C2: gathering, inventory, crafting, stations
-	"player_pick_plant": "C2", "player_pick_fruit": "C2", "player_harvest": "C2", "player_mine": "C2", "player_chop": "C2",
+	"player_pick_plant": "C2", "player_pick_fruit": "C2", "player_gather_deadwood": "C2", "player_harvest": "C2", "player_mine": "C2", "player_chop": "C2",
 	"player_craft_begin": "C2", "player_craft": "C2", "player_repair_begin": "C2", "player_repair": "C2", "player_take": "C2", "container_store": "C2", "container_pick": "C2",
 	"player_home_move": "C2", "player_loot": "C2", "player_plant_sapling": "C2", "plant_bush": "C2",
 	"release_player_station": "C2", "chests.store": "C2", "chests.take": "C2", "chests.set_own_lock": "C2",
@@ -288,6 +288,11 @@ static func place_refusal(w: World, p: PlayerState, path: String, args: Array) -
 			return ""
 		"player_craft", "player_repair":
 			return begun_work_refusal(w, p, path, args)
+		"player_gather_deadwood":            # ND-29: the single-player rule (a mature tree in cell reach, its wood there, room)
+			if args.is_empty() or not (args[0] is Dictionary):
+				return "Nothing to do."
+			var dp: Dictionary = w.player_deadwood_plan(args[0], p)
+			return "" if bool(dp.get("ok", false)) else str(dp.get("why", far))
 		"counters.summon":
 			var id := str(args[0]) if args.size() >= 1 else ""
 			if not w.stations.has(id):
@@ -444,6 +449,11 @@ static func _work_plan(w: World, p: PlayerState, path: String, args: Array) -> D
 				var fp := w.player_fell_plan(args[0], p)
 				if bool(fp.get("ok", false)):
 					return {"industry": "forestry", "mins": float(fp.secs) * gm / maxf(1.0, float(Trees.cfg().chops))}
+		"player_gather_deadwood":
+			if args.size() >= 1 and args[0] is Dictionary:
+				var dp := w.player_deadwood_plan(args[0], p)
+				if bool(dp.get("ok", false)):
+					return {"industry": "forestry", "mins": float(dp.secs) * gm}
 		"player_craft":
 			var b: Dictionary = p.get_meta("mp_work", {}) if p.has_meta("mp_work") else {}
 			if not b.is_empty() and args.size() >= 1:
@@ -466,7 +476,7 @@ static func _after_work(w: World, p: PlayerState, path: String, args: Array, r, 
 	if plan.is_empty() or not (r is Dictionary):
 		return
 	var done := str(r.get("result", ""))
-	if done == "ok" or (path == "player_chop" and done in ["blow", "felled"]):
+	if done == "ok" or (path == "player_chop" and done in ["blow", "felled"]) or (path == "player_gather_deadwood" and int(r.get("log", 0)) > 0):
 		credit_work(w, p, str(plan.industry), float(plan.mins))
 
 

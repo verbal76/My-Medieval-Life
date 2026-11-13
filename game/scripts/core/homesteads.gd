@@ -1172,7 +1172,7 @@ func plan(n: NPC) -> void:
 	if hr >= NPCBrain.WORK_START and hr < NPCBrain.WORK_END and w.wilds != null and w.wilds.plan_hunt(n, c):
 		return                                          # game in the open country round the claim, when food runs low (or a hunter's trade)
 	if hr >= NPCBrain.WORK_START and hr < NPCBrain.WORK_END and plan_deadwood(n, c):
-		return                                          # ND-29: the band's camp fire, from fallen wood (no axe)
+		return                                          # ND-29: the claim's hearth fire, from fallen wood (no axe)
 	if hr >= NPCBrain.WORK_START and hr < NPCBrain.WORK_END and _plan_livelihood(n, c):
 		return
 	_idle(n, home, "about the homestead")
@@ -1395,13 +1395,16 @@ func _near_tree(c: Dictionary, n: NPC) -> Vector2i:
 
 
 ## ND-29 (owner 2026-11-12: "limited gathering of fallen branches and deadwood without an axe, using existing gathering systems
-## wherever possible ... Do not create unlimited free firewood"): one of the outlaw band's people with no axe, the camp's hearth
-## below keep_logs, walks to the nearest mature tree within deadwood_radius of the camp whose fallen wood is there, gathers it by
-## hand (deadwood_minutes of work, act "deadwood": one log) and carries it to the hearth (act "store_logs"), where the nightly
-## burn (World.burn_firewood) takes it. One of the band at a time. A tree gives again deadwood_seasons later (`deadwood`, saved);
-## a sapling, a young tree or a stump gives nothing. No new random number, no cold effect (the owner: fuel only).
+## wherever possible ... Do not create unlimited free firewood"; owner 2026-11-12 23:10: "Approve deadwood gathering without an
+## axe for ordinary homesteaders"): one of a claim's people with no axe (the outlaw band's camp or an ordinary homestead), the
+## claim's hearth below keep_logs, walks to the nearest mature tree within deadwood_radius of the claim whose fallen wood is
+## there, gathers it by hand (deadwood_minutes of work, act "deadwood": one log) and carries it to the hearth (act "store_logs"),
+## where the nightly burn (World.burn_firewood) takes it. One of a household at a time. A tree gives again deadwood_seasons later
+## (`deadwood`, saved, the same timer whoever gathered it: a villager or a player, take_deadwood); a sapling, a young tree or a
+## stump gives nothing. No new random number, no cold effect (the owner: fuel only). Village households do not gather: they
+## buy their firewood in the village (NPCBrain's evening provisioning), and Homesteads drives only a claim's people.
 func plan_deadwood(n: NPC, c: Dictionary) -> bool:
-	if n.household < 0 or n.household >= w.households.size() or not w.households[n.household].get("band", false) or n.inv.has("axe"):
+	if c.is_empty() or n.household < 0 or n.household >= w.households.size() or not w.households[n.household].has("homestead") or n.inv.has("axe"):
 		return false
 	var cf := cfg()
 	if (w.households[n.household].pantry as Inventory).count("log") + n.inv.count("log") >= int(cf.keep_logs):
@@ -1449,21 +1452,40 @@ func deadwood_tree(c: Dictionary, n: NPC) -> Vector2i:
 	return best
 
 
-## The work's end (act "deadwood"): beside a mature tree whose fallen wood is there, one log into the pack, counted made_log
-## (the item ledger's produced, as picked fruit is) and gathered_deadwood; the tree gives again deadwood_seasons later.
+## The work's end (act "deadwood"): beside a mature tree whose fallen wood is there, one log into the pack (take_deadwood).
 func _deadwood_act(n: NPC, c: Dictionary, cell: Vector2i) -> bool:
-	if n.cell().distance_to(cell) > 2.5 or n.inv.has("axe") or not w.households[n.household].get("band", false):
+	if n.cell().distance_to(cell) > 2.5 or n.inv.has("axe") or not w.households[n.household].has("homestead"):
 		return false
-	var t := w.tree_at(cell)
-	var key := "%d,%d" % [cell.x, cell.y]
-	if t.is_empty() or str(t.state) != "grown" or int(deadwood.get(key, 0)) > w.day():
+	if not take_deadwood(cell):
 		return false
-	deadwood[key] = w.day() + roundi(Life.seasons_to_days(float(cfg().deadwood_seasons)))
 	n.inv.add("log", 1)
-	w.stat("made_log")
-	w.stat("gathered_deadwood")
 	_count("deadwood")
 	_rec("wild_production", {"claim": str(c.id), "by": n.id, "action": "deadwood", "goods": {"log": 1}})
+	return true
+
+
+## ND-29: why the fallen wood of tree `t` (a World tree record) cannot be gathered today, "" when it can: only a mature tree
+## gives it, and only once in deadwood_seasons (the tree's day in `deadwood`, whoever gathered it last).
+func deadwood_refusal(t: Dictionary) -> String:
+	if t.is_empty() or str(t.get("state", "")) != "grown":
+		return "Only a mature tree drops wood to gather."
+	var back := int(deadwood.get("%d,%d" % [int(t.x), int(t.y)], 0))
+	if back > w.day():
+		var d := back - w.day()
+		return "Its fallen wood has been gathered. More falls in %d day%s." % [d, "" if d == 1 else "s"]
+	return ""
+
+
+## ND-29: take the fallen wood of the mature tree at `cell` (one log, which the caller puts in a pack): counted made_log (the
+## item ledger's produced, as picked fruit is) and gathered_deadwood, and the tree gives again deadwood_seasons later. The one
+## rule for a claim's gatherer (_deadwood_act) and the player (World.player_gather_deadwood). False when it gives nothing.
+func take_deadwood(cell: Vector2i) -> bool:
+	var t := w.tree_at(cell)
+	if t.is_empty() or Vector2i(int(t.x), int(t.y)) != cell or deadwood_refusal(t) != "":
+		return false
+	deadwood["%d,%d" % [cell.x, cell.y]] = w.day() + roundi(Life.seasons_to_days(float(cfg().deadwood_seasons)))
+	w.stat("made_log")
+	w.stat("gathered_deadwood")
 	return true
 
 

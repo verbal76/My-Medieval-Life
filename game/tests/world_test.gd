@@ -1552,6 +1552,7 @@ func _dvw_a12_felling() -> void:
 	p.inv = Inventory.new()
 	var tr3: Dictionary = grown[2]
 	p.pos = _beside(Vector2i(int(tr3.x), int(tr3.y)))
+	w.homesteads.deadwood["%d,%d" % [int(tr3.x), int(tr3.y)]] = w.day() + 4      # ND-29: its fallen wood gathered (without an axe, Use gathers it)
 	main.target = {"kind": "tree", "tree": tr3, "label": "Fell"}
 	main._use()
 	check(main.action.is_empty() and main.ui.toast.text.contains("Requires an axe"), "DVW-A12 R2: the interface shows core's refusal and starts nothing (%s)" % main.ui.toast.text)

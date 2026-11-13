@@ -3157,7 +3157,9 @@ func _find_target() -> void:
 		if not tr.is_empty() and tr.state != "cleared":
 			var lab: String
 			if tr.state == "grown":
-				lab = "Fell this tree" if p.tool_of("axe") != "" else "A tree: requires an axe (the smith sells them)"
+				# ND-29: without an axe, a mature tree's fallen wood is gathered by hand (felling still needs the axe)
+				var dw: String = world.homesteads.deadwood_refusal(tr) if p.tool_of("axe") == "" else ""
+				lab = "Fell this tree" if p.tool_of("axe") != "" else ("Gather deadwood" if dw == "" else "%s Felling it requires an axe (the smith sells them)." % dw)
 			else:
 				lab = "%s: %s" % [Trees.describe(str(tr.state)), Trees.hint(str(tr.state))]
 			front = {"kind": "tree", "tree": tr, "label": lab}
@@ -3990,9 +3992,16 @@ func _use() -> void:
 				_level_up("mining", int(r.up)), "swing", pick)
 		"tree":
 			var tr: Dictionary = target.tree
+			var dw_why := ""
+			if p.tool_of("axe") == "" and str(tr.get("state", "")) == "grown":
+				var dp := world.player_deadwood_plan(tr)                # ND-29: no axe: the fallen wood, by hand
+				if dp.ok:
+					_gather_deadwood(tr, float(dp.secs))
+					return
+				dw_why = str(dp.why) + " "
 			var fp := world.player_fell_plan(tr)                      # the rules are in core (DVW-A12 R2)
 			if not fp.ok:
-				ui.message(str(fp.why))
+				ui.message(dw_why + str(fp.why))
 				return
 			_chop(tr, str(fp.tool), float(fp.secs))
 		"station":
@@ -4579,6 +4588,22 @@ func _chop(tr: Dictionary, axe: String, secs: float) -> void:
 		if r.broke:
 			ui.message("Your %s broke." % GameData.item_name(axe).to_lower())
 		_level_up("woodcutting", int(r.up)), "swing", axe)
+
+
+## ND-29: gather a mature tree's fallen wood by hand (no axe): World.player_deadwood_plan's time, then one log through
+## World.player_gather_deadwood (a claim gatherer's rule and timer; a guest's is the host's to answer, as a picking is).
+func _gather_deadwood(tr: Dictionary, secs: float) -> void:
+	player_sprite.face(Vector2(int(tr.x), int(tr.y)) + Vector2(0.5, 0.5) - world.player.pos)
+	next_industry = "forestry"
+	next_sound = "bush_rustling"
+	start_action("Gathering deadwood", secs, func():
+		var got := world.player_gather_deadwood(tr)
+		if _pick_answered_later():
+			return
+		for id in got:
+			_gain("+%d %s" % [int(got[id]), GameData.item_name(id)], id)
+		if got.is_empty():
+			ui.message("Its fallen wood has already been gathered."))
 
 
 ## Plant a sapling from the pack (the pack window's Plant button) on the free grass in front of the player.

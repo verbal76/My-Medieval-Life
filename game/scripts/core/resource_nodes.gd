@@ -246,6 +246,8 @@ static func can_harvest(world: World, d: Dictionary, ref) -> String:
 			var why := Trees.refusal(str(ref.state))        # only a mature tree can be felled
 			if why != "":
 				return why
+			if p.tool_of("axe") == "":
+				return world.homesteads.deadwood_refusal(ref)   # ND-29: no axe: its fallen wood is gathered by hand
 		"plant":
 			if ref.state == "picked" and not world.plant_in_season(str(ref.get("kind", ""))):      # SEED-03
 				return "Bare, or picked: it bears only in %s." % " and ".join(PackedStringArray(GameData.b("plant_seasons")[str(ref.kind)])).to_lower()

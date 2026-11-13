@@ -24,8 +24,10 @@ static func add_pages(w: Wiki) -> void:
 			"Nothing is free: every plank, block and log is one you gathered or bought, and the house goes up only when all of it is in.",
 			"You can have one unfinished homestead at a time.",
 			"The country is not safe: animals live in the woods out there and there is nobody to call for help. A homestead far from the village means a long walk to market.",
-			"A homestead you have claimed, or one you come near, is one you know of."]),
-		Wiki.links(["guide:homestead", "sys:property"])], "", "homestead claim wilderness land country")
+			"A homestead you have claimed, or one you come near, is one you know of.",
+			"A homestead's fire burns a log each night, as a village house's does. Homesteaders buy firewood at market or fell trees with an axe; with no axe, one of the household at a time gathers fallen deadwood from the grown trees near the claim, an hour's work for one log. A tree that has given its deadwood has none again for some days, so the wood near a claim can run short.",
+			"The logs on a homestead's hearth (up to %d) are kept for the fire: the claim's well, pens and workshop use only the logs beyond them (cooking food at its oven may still take one)." % int(cf.keep_logs)]),
+		Wiki.links(["guide:homestead", "sys:property", "node:tree"])], "", "homestead claim wilderness land country firewood deadwood")
 	w.add_page("sys:leaving_home", "Leaving home: homesteaders, runaways and outlaws", "systems", [
 		Wiki.p("Villagers make the big choices of their lives themselves, weighing what they want and what they fear."),
 		Wiki.bullets([

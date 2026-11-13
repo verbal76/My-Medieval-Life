@@ -2441,6 +2441,43 @@ func player_pick_fruit(t: Dictionary, actor: PlayerState = null) -> Dictionary:
 	return got
 
 
+## ND-29 (owner 2026-11-12 23:10: "Approve equivalent player gathering using existing interaction systems"): whether the player
+## may gather the fallen wood of tree `t` by hand, and how long it takes. No tool: within reach of a mature tree whose fallen wood
+## is there (Homesteads.deadwood_refusal: the one per-tree timer, whoever gathered it last), with room in the pack for the log. The
+## time: homestead.deadwood_minutes, the claim gatherer's game minutes, converted as the player's other timed work is (balance.json
+## game_minutes_per_second, x 0.6). Returns {ok: true, secs} or {ok: false, why}.
+func player_deadwood_plan(t: Dictionary, actor: PlayerState = null) -> Dictionary:
+	if actor != null and actor != player:
+		return as_actor(actor, player_deadwood_plan.bind(t))
+	if t.is_empty() or not t.has("x") or not t.has("y"):
+		return {"ok": false, "why": "There is no fallen wood here."}
+	var far := player_reach_cell(Vector2i(int(t.x), int(t.y)), true)
+	if far != "":
+		return {"ok": false, "why": far}
+	var why := homesteads.deadwood_refusal(tree_at(Vector2i(int(t.x), int(t.y))))
+	if why != "":
+		return {"ok": false, "why": why}
+	if not player.inv.can_add("log"):
+		return {"ok": false, "why": player.inv.full_text("log")}
+	return {"ok": true, "secs": float(Homesteads.cfg().deadwood_minutes) / float(GameData.b("game_minutes_per_second")) * 0.6}
+
+
+## ND-29: the player gathers the fallen wood of tree `t` into the pack (the timed action the interface completed): one log by
+## Homesteads.take_deadwood, the claim gatherer's own rule (made_log, the tree's day), when player_deadwood_plan allows it.
+## Returns what came ({"log": 1}) or {} (gathered meanwhile by someone else, out of reach, the pack full). MP C2: a guest's goes
+## to the host.
+func player_gather_deadwood(t: Dictionary, actor: PlayerState = null) -> Dictionary:
+	if mirrors():
+		return mirror("player_gather_deadwood", player_gather_deadwood.bind(t), [t])
+	if actor != null and actor != player:
+		return as_actor(actor, player_gather_deadwood.bind(t))
+	if not bool(player_deadwood_plan(t).get("ok", false)) or not homesteads.take_deadwood(Vector2i(int(t.x), int(t.y))):
+		return {}
+	player.inv.add("log", 1)
+	stat("player_deadwood")
+	return {"log": 1}
+
+
 ## MP C2: the player sets a handcart from the pack down at `at` (the action Main completed). The cart, or {} without one.
 func player_set_down_cart(at: Vector2, actor: PlayerState = null) -> Dictionary:
 	if mirrors():
