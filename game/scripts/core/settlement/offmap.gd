@@ -252,6 +252,8 @@ static func create(spec: Dictionary, world_seed: int, index: int) -> OffMapSettl
 					b.reserves[k] = int(reserves[k])
 			for k in starts.get(bt, {}):
 				b.stock[k] = int(starts[bt][k])
+			if bt == "merchant":
+				b.reserve = int(float(b.till) * 0.85)         # DIAGNOSTIC ONLY (baseline investigation): Q33 reverted to isolate its effect
 			if bt == "farm":
 				b.horses = int(spec.get("horses", 0))          # the settlement's working horses (the traders lead them to the road)
 			s.biz[bt] = b
