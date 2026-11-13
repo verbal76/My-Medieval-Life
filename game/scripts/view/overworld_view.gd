@@ -69,7 +69,19 @@ func setup(src: MapView, o: Overworld, load_radius: int) -> void:
 
 ## Keep the chunks round `center` (tiles) drawn, building at most `budget` this call (a negative
 ## budget builds them all: a first view, a teleport), and fade canopies over `feet`.
+## B25-MOVE-STUTTER-INV (diagnostics only, off by default): microseconds per part of follow, summed until a probe clears it.
+var profiling := false
+var prof := {}
+
+
+func _pf(key: String, t0: int) -> int:
+	var now := Time.get_ticks_usec()
+	prof[key] = int(prof.get(key, 0)) + now - t0
+	return now
+
+
 func follow(center: Vector2, feet: Vector2, delta: float, budget := BUILD_PER_FRAME) -> void:
+	var tq := Time.get_ticks_usec() if profiling else 0
 	var cc := Overworld.chunk_of(Vector2i(floori(center.x), floori(center.y)))
 	if cc != _center:
 		_center = cc
@@ -86,18 +98,28 @@ func follow(center: Vector2, feet: Vector2, delta: float, budget := BUILD_PER_FR
 		for c: Vector2i in chunks.keys():
 			if maxi(absi(c.x - cc.x), absi(c.y - cc.y)) > radius + 1:
 				_free(c)
+		if profiling:
+			tq = _pf("ow:recentre+free", tq)
 	var n := 0
 	while not _pending.is_empty() and (budget < 0 or n < budget):
 		var c: Vector2i = _pending.pop_front()
 		if not chunks.has(c):
 			_build(c)
 			n += 1
+	if profiling:
+		tq = _pf("ow:build", tq)
 	if n == 0 and budget >= 0:
 		_prefetch(cc, center)
+		if profiling:
+			tq = _pf("ow:prefetch", tq)
 	if budget < 0 and tree_sink != null:
 		tree_sink.flush()
 	_road_step()
+	if profiling:
+		tq = _pf("ow:road_step", tq)
 	_live_step()
+	if profiling:
+		tq = _pf("ow:live_step", tq)
 	if overworld.works_version != _works_seen:
 		_works_seen = overworld.works_version
 		for c: Vector2i in chunks:
@@ -105,12 +127,18 @@ func follow(center: Vector2, feet: Vector2, delta: float, budget := BUILD_PER_FR
 	if overworld.homes_version != _homes_seen:
 		_homes_seen = overworld.homes_version
 		_draw_homes()
+	if profiling:
+		tq = _pf("ow:works+homes", tq)
 	site_roof_step(feet, delta)
 	for id in _home_roofs:
 		var inside := Rect2((_home_roofs[id][1] as Rect2i)).has_point(feet)
 		for l: TileMapLayer in _home_roofs[id][0]:
 			l.modulate.a = 0.3 if inside else 1.0
+	if profiling:
+		tq = _pf("ow:roofs", tq)
 	canopy.update(feet, delta)
+	if profiling:
+		_pf("ow:canopy", tq)
 
 
 var _last_center := Vector2.INF                # B25R2: where the view's centre was, for the direction of travel (_prefetch)

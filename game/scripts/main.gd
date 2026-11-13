@@ -1986,9 +1986,25 @@ func _refresh_player_worn() -> void:
 		player_sprite.texture = sheet
 
 
+## B25-MOVE-STUTTER-INV (diagnostics only, off by default): when true, frame_prof holds this frame's microseconds per part of
+## _process (reset each frame); probes read it. Reads the clock only, so it changes no result.
+var frame_profiling := false
+var frame_prof := {}
+
+
+func _fp(key: String, t0: int) -> int:
+	var now := Time.get_ticks_usec()
+	frame_prof[key] = int(frame_prof.get(key, 0)) + now - t0
+	return now
+
+
 func _process(delta: float) -> void:
 	if world == null:
 		return
+	var tp := 0
+	if frame_profiling:
+		frame_prof = {}
+		tp = Time.get_ticks_usec()
 	if delta > HOST_STALL_SECONDS and net.is_host():
 		delta = 1.0 / 30.0                      # Batch D (MP-D6): a hosting app frozen (Android background, a stall): time stopped meanwhile
 	_refresh_player_worn()
@@ -2010,28 +2026,46 @@ func _process(delta: float) -> void:
 	if Demo.is_demo() and not guest_world and not _demo_step(delta):
 		return                              # DEMO-01: this world's demo time is used up (or the window is in the background): it waits
 	_report_view()                          # B25R1-019: the live range follows what this screen shows (zoom, window, camera)
+	if frame_profiling:
+		tp = _fp("pre (audio, view report)", tp)
 	if not guest_world and not paused and world.player.alive:
 		net.apply_requests()                # MP A2: the guests' requests, at this one fixed point of the host's frame
 		world.update(delta)
+		if frame_profiling:
+			tp = _fp("world.update", tp)
 		save_meta["play_seconds"] = float(save_meta.get("play_seconds", 0.0)) + delta
 		_player_step(delta)
+		if frame_profiling:
+			tp = _fp("player_step", tp)
 		_projectiles_step(delta)
 		_look_step(delta)
 		_aerial_step()
+		if frame_profiling:
+			tp = _fp("projectiles, look, aerial", tp)
 		var h := int(world.minutes / 60.0)
 		if h != autosave_hour:
 			autosave_hour = h
 			save_game(false)
+			if frame_profiling:
+				tp = _fp("autosave", tp)
 	if running and not world.player.alive and not ui.is_open("death"):
 		ui.show_death()
 	if running and not world.offers.is_empty():
 		_tell_offers()                       # MP-D8, MP-INTERACT-01: what another player asked or said, told once
 	_fx_step()
+	if frame_profiling:
+		tp = _fp("fx", tp)
 	_sync_sprites()
+	if frame_profiling:
+		tp = _fp("sync_sprites (incl. ow_view.follow)", tp)
 	_sync_levels(delta)
 	_sync_gather_mark()
 	_sync_outlines()
+	if frame_profiling:
+		tp = _fp("levels, marks, outlines", tp)
 	ui.update_hud()
+	if frame_profiling:
+		_fp("hud", tp)
 
 
 # ---------------------------------------------------------------- aerial maps (B25R1-025) -------
@@ -2247,12 +2281,19 @@ func _sync_sprites() -> void:
 		if n.alive and world.presence.keeps_live(n.pos, n.live):
 			var ns: ActorSprite = sprites.get(n.id)
 			people.append([n.pos, ns if ns != null and ns.visible else null])
+	var ts := Time.get_ticks_usec() if frame_profiling else 0
 	door_view.update(people, get_process_delta_time())
 	_sync_player_pose()
 	_sync_signs(p.pos)
 	canopy.update(p.pos, get_process_delta_time())
+	if frame_profiling:
+		ts = _fp("ss:doors, pose, signs, canopy", ts)
 	tree_view.update(p.pos, get_process_delta_time())
+	if frame_profiling:
+		ts = _fp("ss:tree_view", ts)
 	ow_view.follow(camera.get_screen_center_position() / T, p.pos, get_process_delta_time())
+	if frame_profiling:
+		ts = _fp("ss:ow_view.follow", ts)
 	var rf := RoofFade.probe(world, p.pos, inside_hold)         # which roof lifts (B8-018: roofs never return indoors)
 	inside_hold = rf.inside
 	roofs.follow(rf.inside, rf.inside_roof, rf.under, rf.under_roof, get_process_delta_time())
