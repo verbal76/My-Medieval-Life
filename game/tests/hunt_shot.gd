@@ -62,24 +62,39 @@ func _open_cell(area: String, r: int) -> Vector2i:
 	return Vector2i(-1, -1)
 
 
+## The cell of a wood with the most open ground of that wood within 6 cells (ties: the first in the wood's order).
+func _most_open(area: String) -> Vector2i:
+	var w: World = main.world
+	var best := Vector2i(-1, -1)
+	var bn := -1
+	for c: Vector2i in w.fauna.cells(area):
+		var n := 0
+		for dy in range(-6, 7):
+			for dx in range(-6, 7):
+				var q := c + Vector2i(dx, dy)
+				if w.fauna.in_area(area, q) and not w.map.is_solid(q):
+					n += 1
+		if n > bn:
+			bn = n
+			best = c
+	return best
+
+
 func _stage(species: String) -> void:
 	var w: World = main.world
 	for b: Animal in w.fauna.animals:
 		b.hunger = 100.0
 		b.anger = ""
-	a = w.fauna.animals.filter(func(x): return x.alive and x.species == species and x.area == "woods_w" and x.adult(w.minutes))[0]
-	var c := _open_cell("woods_w", 5)
-	if c.x < 0:
-		c = _open_cell("woods_w", 4)
-	if c.x < 0:
-		c = _open_cell("woods_w", 3)
+	var area := "woods_e" if species == "deer" else "woods_w"    # the deer where the east wood is most open, to see it look back
+	a = w.fauna.animals.filter(func(x): return x.alive and x.species == species and x.area == area and x.adult(w.minutes))[0]
+	var c := _most_open(area)
 	a.pos = Vector2(c) + Vector2(0.5, 0.5)
 	a.goal = Vector2.INF
 	a.wait = 30.0
 	a.moving = false
 	a.facing = Vector2.RIGHT                 # its back to the player, who comes from the west
 	for b: Animal in w.fauna.animals:        # nobody else in the picture
-		if b != a and b.area == "woods_w" and b.pos.distance_to(a.pos) < 8.0:
+		if b != a and b.area == area and b.pos.distance_to(a.pos) < 8.0:
 			b.pos = Vector2(-50, -50)
 	w.player.pos = a.pos + Vector2(-1.1, 0.0)
 	w.player.hp = float(GameData.b("player_max_hp"))
