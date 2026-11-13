@@ -84,14 +84,15 @@ jobs:
           ref: ${{ github.sha }}   # every shard tests the one commit the run was started on
           fetch-depth: 2           # the requirements check compares the register with the previous commit
 
-      - name: Fetch the integration branches named by records (the register tests check paths there too)
+      - name: Fetch, check and record the integration branches named by records (the register tests check paths there too)
         run: |
-          for b in staging/my-medieval-life wip/build18 wip/build17 wip/expansion18-preparation wip/expansion19-preparation wip/expansion20-preparation wip/expansion21-preparation; do
-            git fetch --depth=1 origin "$b:refs/remotes/origin/$b" || echo "note: $b not fetched"
-          done
-          # audit 2026-11-13 (docs/audits/2026-11-13_INHERITED_FAILURES_AUDIT.md): a branch not fetched makes the register's
-          # path check undecidable and silently weaker, so fail here, loudly, instead of passing with less checked
-          python3 tools/check_test_env.py --strict
+          # Audit 2026-11-13 (docs/audits/2026-11-13_INHERITED_FAILURES_AUDIT.md; owner Build 42 directive section 2): the
+          # branches come from the register check's own PATH_REFS (no second list to drift), are fetched from GitHub, compared
+          # with GitHub (git ls-remote), and recorded with the commit under test; a branch that cannot be fetched, a stale
+          # ref or a missing HEAD~1 (for --against HEAD~1) fails here as an ENVIRONMENT failure instead of silently
+          # weakening or falsifying the register tests.
+          python3 tools/check_test_env.py --fetch --strict --require-authority --candidate "${{ github.sha }}" \
+            --require-commit HEAD~1 --record "$CI_OUT/test-env.json"
 
       - name: Cache Godot
         id: godot
@@ -123,7 +124,7 @@ jobs:
         if: ${{ matrix.shard == 0 && needs.plan.outputs.targeted != 'true' }}
         run: |
           cat > "$RUNNER_TEMP/python.txt" <<'EOF'
-          python3 -m unittest discover -s tests
+          python3 tools/check_unittest_skips.py   # unittest discover -s tests, failing on an unexpected skip or fewer tests than the floor
           python3 tools/check_interactions.py
           python3 tools/check_requirements.py --against HEAD~1   # no approved requirement lost or closed without a record
           python3 tools/check_resources.py
