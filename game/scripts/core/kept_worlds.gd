@@ -62,12 +62,18 @@ static func info(path: String, save_path: String) -> Dictionary:
 	e["settlement"] = settlement(d)
 	e["day"] = int(float(d.get("minutes", 0.0)) / 1440.0) + 1
 	e["saved_at"] = int(meta.get("saved_at", 0))
-	e["last_played"] = Time.get_datetime_string_from_unix_time(int(meta.saved_at), true) if meta.has("saved_at") else ""
+	e["last_played"] = local_time(int(meta.saved_at)) if meta.has("saved_at") else ""
 	e["demo"] = meta.get("demo") is Dictionary
 	e["expired"] = Demo.expired(meta) if e.demo else false
 	e["remaining"] = Demo.remaining(meta) if e.demo else 0.0
 	e["used"] = float(Demo.state(meta).active) if e.demo else 0.0
 	return e
+
+
+## "2026-11-13 04:46": a save's time (Unix seconds, UTC) on this device's clock.
+static func local_time(unix: int) -> String:
+	var bias := int(Time.get_time_zone_from_system().get("bias", 0))          # minutes from UTC
+	return Time.get_datetime_string_from_unix_time(unix + bias * 60, true).left(16)
 
 
 ## Every kept world of `save_path`, in the order of `files`.
