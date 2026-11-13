@@ -78,7 +78,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B21-LAN-PLAYTEST | Build 21: host/join interface, Android networking, animal sync, recorder audit and a private playtest build | multiplayer | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | B25-AMBITION-IMPL | Activate and correct the skill-aware career ambition (job_choice) system | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-ANDROID-RELEASE-EXPORT | Android packages exported with --export-release, signing identity unchanged | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| B25-ANIMAL-BOAR-LIVESTOCK | Boars sometimes charge when struck; struck livestock flee within their pens | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25-ANIMAL-BOAR-LIVESTOCK | Boars sometimes charge when struck; struck livestock flee within their pens | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B25-ANIMAL-HUNT-AI | Animal reactions to melee attacks (hunting AI) | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B25-AUD-BIZ-03 | Payroll before owner withdrawals; hiring budgets the whole payroll (audit BIZ-03, Option B) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | B25-AUD-BIZ-04 | A migrating household keeps its business money (audit BIZ-04) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |

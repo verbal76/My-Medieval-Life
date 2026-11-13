@@ -5626,7 +5626,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -5635,9 +5635,19 @@
      "date": "2026-11-13",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-12_b25_complete_owner_direction_evening.md"
+    },
+    {
+     "date": "2026-11-13",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> boar/livestock worker (lead session); branch: None -> wip/b25-animal-boar-livestock; commits + 5132879",
+     "why": "worker: 5132879 on wip/b25-animal-boar-livestock (base 3ba8d22): boar charges with 0.3/0.6/0.75 odds from the seeded stream, gives up at 8 s / 8 tiles; pen animals flee on inner pen cells only; animal_boar_livestock_test 61/0 (16 red before); animal_hunt_ai 68/0, wildlife 61/0, herd 19/0, horse 56/0, combat 41/0, world 339/0, refuge 59/0, ecology 14/0, save_continuity 5/0, net_fauna 14/0, wiki 144/0; 10-day seed 1 fingerprint identical to 3ba8d22; lead looked at the contact sheet (charge reads naturally; flee partly under canopy; pen pig stays inside)"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "boar/livestock worker (lead session)",
+   "branch": "wip/b25-animal-boar-livestock",
+   "commits": [
+    "5132879"
+   ]
   },
   {
    "id": "B25-ANIMAL-HUNT-AI",

@@ -2,10 +2,11 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (31)
+## Workers and task branches (32)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
+| B25-ANIMAL-BOAR-LIVESTOCK | unassigned | IN DEVELOPMENT | boar/livestock worker (lead session) | wip/b25-animal-boar-livestock |
 | B25-ANIMAL-HUNT-AI | unassigned | IN DEVELOPMENT | animal-AI worker (lead session) | wip/b25-animal-hunt-ai |
 | B25-AUD-EMP-03 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-emp03 |
 | B25-AUDIT-69-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
