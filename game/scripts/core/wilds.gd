@@ -867,7 +867,7 @@ func plan_work(n: NPC, c: Dictionary) -> bool:
 		var at := Vector2i(int(wk.cell[0]), int(wk.cell[1])) + Vector2i(0, int(wk.rect[3]))
 		if not (wk.need as Dictionary).is_empty():
 			for id in wk.need:
-				if n.inv.has(str(id)) or (w.households[n.household].pantry as Inventory).has(str(id)) or (str(id) == "stone" and n.inv.has("rubble")):
+				if n.inv.has(str(id)) or spare_of(w.households[n.household].pantry, str(id)) > 0 or (str(id) == "stone" and n.inv.has("rubble")):
 					n.doing = "carrying materials to the %s" % str(wk.kind).trim_prefix("workshop_")
 					n.plan = [b.go(at), b.doit("homestead", {"step": "deliver_work"})]
 					return true
@@ -1128,7 +1128,7 @@ func act(n: NPC, c: Dictionary, step: String, a: Dictionary) -> bool:
 			var wk := open_work(c)
 			if not wk.is_empty():
 				for id in (wk.need as Dictionary).keys():
-					var k := mini(int(wk.need[id]) - n.inv.count(str(id)), pantry.count(str(id)))
+					var k := mini(int(wk.need[id]) - n.inv.count(str(id)), spare_of(pantry, str(id)))
 					if k > 0:
 						w.transfer(pantry, n.inv, str(id), k)
 			return deliver_work(c, n.inv, World.npc_ref(n.id))
@@ -1194,6 +1194,12 @@ func errand(n: NPC, c: Dictionary, trip: Dictionary) -> bool:
 
 # ---------------------------------------------------------------- the band ----------------------
 ## The household of the band (the outlaws' wilderness settlement), -1 none.
+## What of `id` a claim's pantry can give to its works: all of it, but for logs the keep_logs on the hearth (ND-29: the logs the
+## household burns at night, bought or gathered as deadwood, are not carried off to a well or a pen).
+func spare_of(pantry: Inventory, id: String) -> int:
+	return maxi(0, pantry.count(id) - (int(Homesteads.cfg().keep_logs) if id == "log" else 0))
+
+
 func band_household() -> int:
 	for h in w.households.size():
 		var hh: Dictionary = w.households[h]

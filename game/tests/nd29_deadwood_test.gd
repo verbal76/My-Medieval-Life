@@ -138,6 +138,12 @@ func _init() -> void:
 	p3.add("log", int(cf.keep_logs))
 	check(not w3.homesteads.plan_deadwood(n3, c3), "with keep_logs (%s) on the hearth nobody gathers" % cf.keep_logs)
 	p3.remove("log", p3.count("log"))
+	# the hearth's logs are kept for the fire: a claim's works (a well, a pen) take only the logs above keep_logs from its pantry
+	p3.add("log", int(cf.keep_logs))
+	var at_keep: int = w3.wilds.spare_of(p3, "log")
+	p3.add("log", 2)
+	check(at_keep == 0 and w3.wilds.spare_of(p3, "log") == 2, "the claim's works leave keep_logs on the hearth (spare %d, then %d)" % [at_keep, w3.wilds.spare_of(p3, "log")])
+	p3.remove("log", p3.count("log"))
 	# a villager household is not the band: its people do not gather deadwood
 	var v: NPC = null
 	for o: NPC in w3.npcs:
