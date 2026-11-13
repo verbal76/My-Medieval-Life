@@ -303,7 +303,8 @@ class Analyser:
                 elif sub == "birth":
                     self.births += 1
             elif cat == "identity" and sub in ("registered_newcomer", "registered_arrival", "returned_to_village", "registered_outlaw"):
-                self.arrivals += 1
+                if "cause=rejoined" not in detail:     # a former villager coming back is the same person, not an arrival
+                    self.arrivals += 1
             elif cat == "employment":
                 self.employment[sub] += 1
                 self.daily[day]["employment:" + sub] += 1

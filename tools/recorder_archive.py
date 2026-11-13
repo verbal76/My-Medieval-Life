@@ -629,7 +629,8 @@ def verify(session_dir, require_flags=None, require_rows=None):
                 elif r[ci] == "life" and r[si] == "birth":
                     rep["births"] += 1
                 elif r[ci] == "identity" and r[si] in ("registered_newcomer", "registered_outlaw", "registered_arrival", "returned_to_village"):
-                    rep["newcomers"] += 1
+                    if "cause=rejoined" not in str(r[di]):     # a former villager coming back is the same person, not an arrival
+                        rep["newcomers"] += 1
                 elif r[ci] == "transaction" and r[si] == "trade" and r[oi] == "ok":
                     rep["trades"] += 1
                 elif r[ci] == "network":

@@ -492,6 +492,7 @@ static func _undo_villager(w: World, n: NPC) -> void:
 ## After the people are housed: each is in exactly one household's list, the register says they are in the village (and under what
 ## name), and the undo record is done with.
 static func _arrived(w: World, n: NPC) -> void:
+	var rejoined := _returning.has(n.id)               # a former villager's own record, reactivated (no new person: the population count does not grow)
 	_returning.erase(n.id)
 	for hh in w.households:
 		var list: Array = hh.members
@@ -500,7 +501,7 @@ static func _arrived(w: World, n: NPC) -> void:
 			list.erase(n.id)
 		if keep:
 			list.append(n.id)
-	Identity.move(w, n.id, Identity.VILLAGE)
+	Identity.move(w, n.id, Identity.VILLAGE, "rejoined" if rejoined else "")     # REC-19: the recorder tells a return from a first arrival
 	if w.people.has(n.id):
 		w.people[n.id].name = n.name
 		w.people[n.id].family = n.family

@@ -549,7 +549,7 @@ func runs_sheet(runs: Array) -> void:
 			for k in a.events:
 				if str(k).begins_with("identity|registered_newcomer|") or str(k).begins_with("identity|registered_outlaw|") or str(k).begins_with("identity|registered_arrival|") or str(k).begins_with("identity|returned_to_village|"):
 					nc += int(a.events[k])
-			vals.newcomers = nc
+			vals.newcomers = nc - int(a.life.get("rejoined", 0))     # a former villager coming back is the same person, not an arrival
 			var tr := 0
 			for k in a.events:
 				if str(k) == "transaction|trade|ok":

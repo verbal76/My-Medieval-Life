@@ -125,6 +125,9 @@ static func analyse(session_dir: String, defs: Dictionary) -> Dictionary:
 				return
 			"interruption":
 				_inc(interruptions, "%s|%s" % [sub, str(row[idx.reason])])
+			"identity":
+				if sub == "returned_to_village" and "cause=rejoined" in str(row[idx.detail]):
+					_inc(life, "rejoined")         # a former villager's own record back in the village: the same person, not an arrival
 			"life":
 				_inc(life, sub)
 				if sub == "death":
