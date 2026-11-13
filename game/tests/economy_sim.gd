@@ -8,6 +8,7 @@ extends SceneTree
 ## Diagnostics only: the only thing it changes in the world is the player's hunger, kept full so
 ## the inert player (left where it starts, as in households_sim) never starves.
 ##   godot --headless --path game --script res://tests/economy_sim.gd -- --days 30 [--seed 1] [--every 1] [--out path.json]
+##       [--homesteads N]  (ND-29 scenario: up to N young founders set out for homesteads before day 1; FIREWOOD lines read them)
 ##       [--watch-from DAY]   (B7-015: hourly lines for households near starving, and each death, from DAY)
 ##       [--set key=value]...   (override a top-level balance.json number for a comparison run, e.g. --set manor_job_reserve_days=10)
 ##       [--record DIR]   (REC-19: the flight recorder writes its archive under DIR; changes nothing in the run)
@@ -70,6 +71,8 @@ var herd_last := {}            # kind -> the last row's key, to keep only the da
 var herd_care := {}            # kind -> hours a pen had a hungry animal and too little in the trough, and why it was not fed
 var trader_diag := false       # X20-TRADER-PAY-INV: --trader-diag prints the settlements' traders and their households each day (reads only)
 var trader_ever := {}          # "<settlement>|<household id>" of every household that has worked a settlement's trade
+var hs_want := 0                  # ND-29 scenario (--homesteads N): homesteads to start, and how many have set out
+var hs_began := 0
 var view_sweep := false        # B25R1-019: --view-sweep moves the view round the village every step (the observation twin)
 var flee_path := PackedVector2Array()   # SIM-GATE-01 crime_spree: the player's flight after a crime, cell by cell
 const FLEE_TILES_PER_SECOND := 4.5      # the player's walking speed (docs: guards chase at 1.3 x walk_tiles_per_second)
@@ -170,6 +173,7 @@ func _init() -> void:
 	if cap_on:
 		CapMetrics.post_setup(cap_info, w)
 	var cap0 := CapMetrics.snapshot(w) if cap_on else {}
+	hs_want = int(arg.call("--homesteads", "0"))
 	var cap_at: PackedStringArray = str(arg.call("--cap-at", "")).split(",")
 	var start := {"stats": w.stats.duplicate(), "goods": _all_goods(), "coins": _coins(), "coin_sources": w.coin_sources, "regions_coins": w.regions.coins(), "regions_goods": w.regions.goods(),
 		"deposits": w.deposits.map(func(d): return int(d.amount)), "hosts": _hosts(), "boulders": _boulder_stone(), "pits": w.pits.ground_left(), "cut": w.mine_works.ground_cut(), "fill_out": w.mine_works.fill_out, "fill_in": w.mine_works.fill_in(), "animals": _animal_counts(), "alive": _villagers().size(),
@@ -208,6 +212,8 @@ func _init() -> void:
 	for d in range(d0, days):
 		if scenario != "" and d == scenario_day:
 			_intervene(scenario)
+		if hs_began < hs_want:
+			_start_homesteads(hs_want - hs_began)       # ND-29 scenario (--homesteads): a world change, before the day runs
 		for i in per_day:
 			if scenario == "crime_spree" and i % 60 == 0 and w.day() >= scenario_day:
 				_crime_step(w.day() - scenario_day, int(fmod(w.minutes, World.DAY) / 60.0))
@@ -1644,6 +1650,34 @@ func _ore_line(day: int) -> Dictionary:
 
 
 ## B25-ECON-P5: the ground cleared into manor fields (read only): blocks left, cells tilled, fields made, the want and the board.
+## ND-29 scenario (--homesteads N, default 0: nothing): at the start of each day until N have set out, the village's young
+## founders (age 30 or under, as homestead_test's fixture picks them) who pass the settlement's gates set out for a homestead
+## (Homesteads.begin, path "test"), so that ordinary homesteads, rare in a short run, are lived in for most of it and their
+## firewood can be read (FIREWOOD). The gates are kept (the coins are the leaver's and the family's own, Homesteads._go: nothing
+## is granted or made) but for max_starting, raised to N for the run.
+func _start_homesteads(k: int) -> void:
+	if k <= 0:
+		return
+	var hs: Homesteads = w.homesteads
+	GameData.balance.homestead.max_starting = maxi(int(Homesteads.cfg().max_starting), hs_want)     # (the scenario's one override)
+	var cands := []
+	for h in w.households.size():
+		var o: NPC = w.construction.founder_of(h)
+		if o != null and Life.npc_age(w, o) <= 30.0 and hs.gate(h, [o]) == "":
+			cands.append([-w.property.purse(World.hh_ref(h)), h, o.id])
+	cands.sort()
+	var began := 0
+	for e in cands:
+		if began >= k:
+			break
+		var n: NPC = w.npc(int(e[2]))
+		if hs.begin(int(e[1]), n, [n]):
+			began += 1
+	hs_began += began
+	if began > 0:
+		print("SCENARIO homesteads day %d: %d set out, %d of %d in all (%d candidates; counts %s)" % [w.day(), began, hs_began, hs_want, cands.size(), JSON.stringify(hs.counts)])
+
+
 ## ND-29 (owner 2026-11-12 23:10: "Verify ... long-term sustainability"): read only. Each claim: its kind (band or an ordinary
 ## homestead), status, living members, axes held, hearth logs, cold nights so far (cold_hh_<h>), and the mature overworld trees
 ## within deadwood_radius of its house with how many of them are waiting for their deadwood (Homesteads.deadwood). Totals: logs
