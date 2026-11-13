@@ -8492,11 +8492,19 @@
      "date": "2026-11-13",
      "change": "title, owner_wording, source, acceptance corrected",
      "why": "owner clarification 2026-11-13: the symptom is whole-game micro-freezes (step, freeze, catch up), not rubber-banding; previous investigation requirements kept"
+    },
+    {
+     "date": "2026-11-13",
+     "change": "commits + 12cf1a4",
+     "why": "worker findings (docs/audits/2026-11-13_MOVEMENT_FREEZE_INVESTIGATION.md on wip/b25-move-stutter-inv 12cf1a4): main-thread stalls, not render-only, not rubber-banding. (1) fixed 0.5 s world tick since e66ca18 (2026-11-03): one frame in 30 does all villagers/animals, p99 36-40 ms; (2) village field tiles made in play rebuild the TileSet, 113-222 ms (ed221df covered only overworld tiles; probe premake removed all >100 ms frames); (3) hourly autosave on main thread 50-85 ms, 94-149 ms frames; (4) chunk prefetch 26-35 ms x3-5 frames per crossing (82cb449 spread, not removed); (5) rare tick spikes: long path search 345-409 ms, first tick 0.8-0.9 s (D3), dawn 0.6-1.2 s, reeve_day 30-130 ms. The two ~230 ms spikes = first tick and 17:00 reeve_day, never explained before. Catch-up confirmed (unclamped delta). Six ranked fixes proposed, none implemented; awaiting owner. Not measured: real PC/phone/GPU"
     }
    ],
    "lifecycle": "ACTIVE",
    "assigned_worker": "movement-stutter investigation worker (lead session)",
-   "branch": "wip/b25-move-stutter-inv"
+   "branch": "wip/b25-move-stutter-inv",
+   "commits": [
+    "12cf1a4"
+   ]
   },
   {
    "id": "B25-MP03-OWNERSHIP-D1",
