@@ -5646,6 +5646,11 @@
      "date": "2026-11-13",
      "change": "owner_wording; acceptance + self-defence tests",
      "why": "owner decisions 2026-11-13 (docs/directives/2026-11-13_b25_boar_livestock_owner_decisions.md): charge odds 0.3/0.6/0.75, gore 5 every 1.3 s and the 8 s / 8 tile give-up approved for hardware playtesting, no rebalance; boars take the existing wolf/bear self-defence rules (a boar that is an active threat under them may be killed in self-defence; provoking one grants no immunity); add deterministic self-defence tests (qualifying, non-qualifying, save/load); stays on wip/b25-animal-boar-livestock, out of Build 40; no CI, packaging or release"
+    },
+    {
+     "date": "2026-11-13",
+     "change": "note",
+     "why": "owner clarification 2026-11-13 (docs/directives/2026-11-13_b25_boar_self_defense_clarification.md): if wolf/bear kills carry no legal consequence, invent none; apply existing threat recognition to charging boars, keep attack vs provocation distinct, record defensive kills only through an existing system or document the gap; approved behaviour unchanged; mid-charge save/load test; investigate fingerprint differences; isolated from Build 40; no merge, Actions, packaging or release"
     }
    ],
    "lifecycle": "ACTIVE",
