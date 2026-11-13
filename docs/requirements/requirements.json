@@ -7356,6 +7356,37 @@
    ]
   },
   {
+   "id": "B25-DEMO-KEPT-WORLDS",
+   "kind": "approved",
+   "title": "Kept Worlds list on the title screen (demo)",
+   "description": "Kept Worlds list on the title screen (demo)",
+   "source": "docs/directives/2026-11-12_b25_owner_decisions_nd29_kept_worlds_nd22.md",
+   "owner_wording": "Add a Kept Worlds list on the title screen supporting multiple retained worlds, with character, settlement, and last-played information where available. Expired worlds must not be playable beyond demo restrictions, but their save data must be preserved for eventual full-game import. Do not delete or overwrite existing saves. Verify save compatibility and migration behavior before claiming import works.",
+   "approval": "owner, 2026-11-12 (option A)",
+   "acceptance": [
+    "title screen lists every kept world with character, settlement, last played",
+    "expired worlds cannot be played beyond demo limits; their save files are never deleted or overwritten",
+    "full-game import of a kept demo save verified with save compatibility and migration tests"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-13",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-12_b25_owner_decisions_nd29_kept_worlds_nd22.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25-DISK-CLEAN-D1",
    "kind": "approved",
    "title": "Verified safe disk cleanup of the lead machine",
@@ -8568,6 +8599,64 @@
    "commits": [
     "df48840"
    ]
+  },
+  {
+   "id": "B25-ND22-B34-NOTES",
+   "kind": "approved",
+   "title": "Correct Build 34's release notes (no full Linux package); point Linux users to a newer verified build",
+   "description": "Correct Build 34's release notes (no full Linux package); point Linux users to a newer verified build",
+   "source": "docs/directives/2026-11-12_b25_owner_decisions_nd29_kept_worlds_nd22.md",
+   "owner_wording": "Correct the Build 34 release notes and point Linux users to a newer verified build. Do not reconstruct the old Linux package unless a technical dependency requires it.",
+   "approval": "owner, 2026-11-12",
+   "acceptance": [
+    "build-34 notes no longer list a full-game Linux package and name a newer verified Linux build"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-13",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-12_b25_owner_decisions_nd29_kept_worlds_nd22.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B25-ND29-BAND-CAMPFIRE",
+   "kind": "approved",
+   "title": "The outlaw band keeps a functional campfire; cold exposure when it goes out",
+   "description": "The outlaw band keeps a functional campfire; cold exposure when it goes out",
+   "source": "docs/directives/2026-11-12_b25_owner_decisions_nd29_kept_worlds_nd22.md",
+   "owner_wording": "Give the outlaw band a functional campfire using the existing heating and fuel systems. They should experience cold exposure if their fire goes out. Add regression tests. Do not exempt them from survival mechanics.",
+   "approval": "owner, 2026-11-12",
+   "acceptance": [
+    "the band's camp burns fuel from the existing fuel system; when it has none the band's household is cold and suffers the existing cold effects; regression tests"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-13",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-12_b25_owner_decisions_nd29_kept_worlds_nd22.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
   },
   {
    "id": "B25-NINE",

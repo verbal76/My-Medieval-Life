@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 893 (497 of them still open) |
-| **Open entries now** (rules excluded) | | **655** |
+| Entries added since | | 896 (500 of them still open) |
+| **Open entries now** (rules excluded) | | **658** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (893)
+## Added since the baseline (896)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -203,6 +203,7 @@ None.
 | B25-CLOSE-02 | Close Build 25 under strict scope: finish the targeted tests, freeze one SHA, ONE final year-long campaign (seeds 1 and 2 normal, seed 1 economy-on) on it, present B25-ECON-P1..P5, JOB-02/CON-02-KINDS/PIT-02/FSE-10 as future-scope candidates, LE-07 gate 11 open for an owner device test, no packaging until the gates pass | approved | PARTIALLY IMPLEMENTED / NOT TESTED / CLOSED | 20 |
 | B25-CONT-INV-01 | Continued investigation, validation and merge preparation (Build 25) | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-CONTRACT-FUNDS-D1 | Contract acceptance accounts for committed coins (bids, contracts, obligations) | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
+| B25-DEMO-KEPT-WORLDS | Kept Worlds list on the title screen (demo) | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-DISK-CLEAN-D1 | Verified safe disk cleanup of the lead machine | approved | INTEGRATED / NOT TESTED / OPEN | unassigned |
 | B25-ECON-P1 | Business founding requires the trade's benches to be full and busy (Ventures.refusal, skilled_place busy_share 0.35); in seed 1 the founding trades' benches were 2-20% busy all 120 days, so every one of 172 weekly looks stopped there. Options: A keep the rule (businesses form when demand exists); B let a founder weigh independence even with idle benches (the judgment weighing decides); C a lower busy threshold for founding only. Recommendation: A, and act on demand (P2-P4) rather than the gate. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | decision | APPROVED | 20 |
 | B25-ECON-P2 | Coinless adults cannot take open miner or woodcutter places because those jobs need a tool and the manor's tool help covers only workers already in the trade (all 10 jobless at day 120 came of age in the run and hold median 0 coins). Options: A keep; B the household buys a member's first work tool from its own purse (existing purchase rules); C the manor advances the tool against wages; D tool rental outside the Living Economy. Recommendation: B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | decision | APPROVED | 20 |
@@ -230,6 +231,8 @@ None.
 | B25-ND12-01 | ND-12: recorder diagnostic line overwritten (refused-trade detail) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | unassigned |
 | B25-ND15-TOL-01 | ND-15: documented numerical tolerances for save/load float differences, proven harmless | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | unassigned |
 | B25-ND16-PREC-01 | ND-16: campaigns save at gameplay precision; regime labelled; history preserved | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | unassigned |
+| B25-ND22-B34-NOTES | Correct Build 34's release notes (no full Linux package); point Linux users to a newer verified build | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
+| B25-ND29-BAND-CAMPFIRE | The outlaw band keeps a functional campfire; cold exposure when it goes out | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-NINE | Build 25: implement the nine consolidated owner decisions of 2026-11-01 | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | B25-NINE-D1 | Organic skills, apprenticeship and career development | decision | APPROVED | owner decision |
 | B25-NINE-D2 | Informal services and expanded service contracts | decision | APPROVED | owner decision |
