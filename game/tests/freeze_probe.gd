@@ -104,7 +104,7 @@ func _begin() -> void:
 	t_last = Time.get_ticks_usec()
 	ticks0 = _ticks(w)
 	pos0 = w.player.pos
-	b0 = int(main.ow_view.build_usec)
+	b0 = int(main.ow_view.get("build_usec") if main.ow_view.get("build_usec") != null else 0)
 	tiles0 = _tiles()
 	process_frame.connect(_frame)
 	RenderingServer.frame_pre_draw.connect(func(): t_pre = Time.get_ticks_usec())
@@ -134,7 +134,7 @@ func _frame() -> void:
 	row.append_array([frames, "%.3f" % t_game, "%.3f" % wall, "%.3f" % (delta_prev * 1000.0), _ticks(w) - ticks0,
 			int(w.minutes / 60.0) % 24, "%.1f" % w.minutes, "%.3f" % w.player.pos.x, "%.3f" % w.player.pos.y,
 			"%.4f" % w.player.pos.distance_to(pos0), "%.2f" % last_v.x, "%.2f" % last_v.y, w.player.map_level, place,
-			"%.3f" % ((int(main.ow_view.build_usec) - b0) / 1000.0), tiles - tiles0, snaps,
+			"%.3f" % ((int(main.ow_view.get("build_usec") if main.ow_view.get("build_usec") != null else 0) - b0) / 1000.0), tiles - tiles0, snaps,
 			int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)), "%.3f" % (maxi(0, t_post - t_pre) / 1000.0)])
 	for k in keys_world:
 		row.append("%.3f" % ((int(w.prof.get(k, {}).get("us", 0)) - int(prof0.get(k, {}).get("us", 0))) / 1000.0))
@@ -157,7 +157,7 @@ func _frame() -> void:
 	emits.clear()
 	prof0 = w.prof.duplicate(true)
 	ticks0 = _ticks(w)
-	b0 = int(main.ow_view.build_usec)
+	b0 = int(main.ow_view.get("build_usec") if main.ow_view.get("build_usec") != null else 0)
 	tiles0 = tiles
 	delta_prev = main.get_process_delta_time()      # the delta of the frame starting now (written with its row next time)
 	t_game += delta_prev
