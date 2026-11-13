@@ -54,13 +54,14 @@ const HOST_FIGURES := ["player_xp", "player_hit_npc", "player_hit_animal"]
 const BEGUN_WORK := {"player_craft": "player_craft_begin", "player_repair": "player_repair_begin"}
 const WORK_GRACE := 0.75
 ## ND-28 (MP-GUEST-TRUST follow-up): verbs that land at the end of a timed action on the guest's own machine, with no begin verb:
-## a swing at a seam (player_mine), a blow of the axe (player_chop), a sword blow (player_melee_npc, player_melee_animal). The host
-## paces them by the same time the single-player interface takes for each (World.player_mine_plan, player_fell_plan a blow,
-## Combat.swing_secs), on its own clock, per pace (one for gathering, one for the sword): the next is accepted no sooner than that
+## a swing at a seam (player_mine), a blow of the axe (player_chop), a cell tilled or sown (farm.till, farm.sow), a sword blow
+## (player_melee_npc, player_melee_animal). The host paces them by the same time the single-player interface takes for each
+## (World.player_mine_plan, player_fell_plan a blow, Farming's till and sow seconds, Combat.swing_secs), on its own clock, per pace (one for gathering, one for the sword): the next is accepted no sooner than that
 ## time after the last one accepted, less PACE_SLACK of it plus PACE_SLACK_S seconds (requests cross the network apart, so a
 ## late one followed by a prompt one is not refused); the slack is spent, not refunded, so over time a guest works no faster than
 ## a player at the same work. The first after a pause is accepted at once (its time ran on the guest's machine).
-const PACED := {"player_mine": "gather", "player_chop": "gather", "player_melee_npc": "sword", "player_melee_animal": "sword"}
+const PACED := {"player_mine": "gather", "player_chop": "gather", "farm.till": "gather", "farm.sow": "gather",
+	"player_melee_npc": "sword", "player_melee_animal": "sword"}
 const PACE_SLACK := 0.25
 const PACE_SLACK_S := 0.25
 ## ND-28: a sword blow's reach on the host: the single-player blow's (Combat reach, a clear line) and MELEE_SLACK tiles more, as
@@ -462,6 +463,10 @@ static func pace_secs(w: World, p: PlayerState, path: String, args: Array) -> fl
 			return float(w.player_mine_plan(args[0], p).get("secs", 0.0))
 		"player_chop":
 			return float(w.player_fell_plan(args[0], p).get("secs", 0.0)) / maxf(1.0, float(Trees.cfg().chops))
+		"farm.till":                            # a cell dug or ploughed (Farming.plan: till_cost's seconds)
+			return CapabilityHook.time(float(w.farm.till_cost(p).seconds), "farming", p)
+		"farm.sow":
+			return CapabilityHook.time(float(Farming.cfg().sow_seconds), "farming", p)
 		"player_melee_npc", "player_melee_animal":
 			return Combat.swing_secs(p)
 	return 0.0
@@ -510,6 +515,8 @@ static func _work_plan(w: World, p: PlayerState, path: String, args: Array) -> D
 				var fp := w.player_fell_plan(args[0], p)
 				if bool(fp.get("ok", false)):
 					return {"industry": "forestry", "mins": float(fp.secs) * gm / maxf(1.0, float(Trees.cfg().chops))}
+		"farm.till", "farm.sow":                # ND-28: a guest's farm work credited to its work record, as the host's own interface does
+			return {"industry": "farming", "mins": pace_secs(w, p, path, args) * gm}
 		"player_craft":
 			var b: Dictionary = p.get_meta("mp_work", {}) if p.has_meta("mp_work") else {}
 			if not b.is_empty() and args.size() >= 1:
@@ -529,6 +536,10 @@ static func _after_work(w: World, p: PlayerState, path: String, args: Array, r, 
 		return
 	if path in BEGUN_WORK and p.has_meta("mp_work"):
 		p.remove_meta("mp_work")
+	if path in ["farm.till", "farm.sow"] and not plan.is_empty():
+		if r is String and r == "":                # the cell dug or sown ("" from Farming.till and sow)
+			credit_work(w, p, str(plan.industry), float(plan.mins))
+		return
 	if plan.is_empty() or not (r is Dictionary):
 		return
 	var done := str(r.get("result", ""))
