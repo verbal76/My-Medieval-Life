@@ -112,6 +112,7 @@ var shot_pick := 0.0
 var view_scale := 1.0          # phones draw the interface larger; the camera zoom makes up for it
 var walking := false           # the player moved this frame (resource prompts wait until they stop)
 var net: NetSession            # MP Batch A2: hosting and joining (scripts/net, docs/multiplayer/BATCH_A.md)
+const MAX_STEP_TILES := 0.4      # stream fix: the longest single movement step of the player (_player_step); a long frame is walked in parts
 const HOST_STALL_SECONDS := 1.0   # Batch D: a hosted world's frame longer than this was a freeze, not play: not caught up
 var guest_world := false       # this machine shows a host's world from its own character: it never simulates or saves it
 var host_after_start := false  # B25R2-HOSTMENU (owner 2026-11-07): Host a game on the title: once the world starts, its host window opens
@@ -2719,15 +2720,25 @@ func _player_step(delta: float) -> void:
 	if v.length() > 0.1:
 		var speed := float(GameData.b("player_tiles_per_second")) * _sprint_step(delta) \
 				* (world.carts.pull_speed_for(world.carts.pulled_by(world.acting_ref())) if not world.carts.pulled_by(world.acting_ref()).is_empty() else 1.0)     # B14: a cart is slower going (MIN-F: a minecart on its rails less so)
-		var step := v.normalized() * minf(v.length(), 1.0) * speed * delta
+		var full := v.normalized() * minf(v.length(), 1.0) * speed * delta
+		# Stream fix (B25-MOVE-STUTTER-INV, catch-up): try_step checks only where a step ends, so a long frame (a stall) walked
+		# straight through a wall. The frame's movement is walked in steps of at most MAX_STEP_TILES, each through try_step: the
+		# same distance, never through a wall. A normal frame (0.075 tiles at 60 fps) is one step, as before.
+		var parts := maxi(1, ceili(full.length() / MAX_STEP_TILES))
+		var step := full / parts
 		var before := p.pos
-		var moved_x := _try_move(Vector2(step.x, 0))
-		var moved_y := _try_move(Vector2(0, step.y))
+		var moved_x := false
+		var moved_y := false
+		for i in parts:
+			moved_x = _try_move(Vector2(step.x, 0))
+			moved_y = _try_move(Vector2(0, step.y))
+			if not moved_x and not moved_y:
+				break
 		if not moved_y and absf(v.y) > absf(v.x):
 			_slide_to_gap(Vector2(0, step.y))
 		elif not moved_x and absf(v.x) > absf(v.y):
 			_slide_to_gap(Vector2(step.x, 0))
-		walk_stuck = walk_stuck + delta if p.pos.distance_to(before) < step.length() * 0.3 else 0.0
+		walk_stuck = walk_stuck + delta if p.pos.distance_to(before) < full.length() * 0.3 else 0.0
 		_through_portal(v)
 		player_sprite.face(v)
 		if not player_sprite.striking:     # GP-SWORD-VIS: a blow begun plays through while walking (the walk used to cut it off)
