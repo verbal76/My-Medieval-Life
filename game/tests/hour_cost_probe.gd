@@ -44,6 +44,8 @@ func _init() -> void:
 			top.reverse()
 			print("TICK %.1f ms day %d %02d:%02d%s: %s" % [ms, w.day(), hh, int(m0) % 60, (" (hour " + hk + ")") if hk != "" else "",
 					", ".join(top.slice(0, 7).map(func(e): return "%s %.1f" % [e[1], e[0]]))])
+	for e in w.slow_npcs:
+		print("SLOW villager %02d:%02d id %d %s %.0f ms (step before %s; now %s; travelling %s)" % [int(e[0] / 60.0) % 24, int(e[0]) % 60, e[1], e[2], e[3], e[4], e[5], str(e[6])])
 	var s := costs.duplicate()
 	s.sort()
 	print("ticks %d: p50 %.2f p90 %.2f p99 %.2f max %.2f ms; first tick %.1f ms" % [s.size(), s[s.size() / 2], s[s.size() * 9 / 10],
