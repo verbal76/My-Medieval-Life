@@ -130,6 +130,7 @@ var regions: Regions                # SET-C-FIVE (Expansion 18): the five off-ma
 var quests: Quests                 # side quests on offer (scripts/core/quests.gd)
 var manor_work: ManorWork          # the reeve's jobs: the manor's goods carried and used (scripts/core/manor_work.gd)
 var log_lines: Array = []
+var slow_npcs: Array = []          # B25-MOVE-STUTTER-INV: [minutes, id, role, ms, step before, step after, travelling] (profiling only)
 var profiling := false             # PERF-02: when true, prof collects microseconds per subsystem (diagnostics; changes nothing)
 var prof := {}                     # subsystem -> {us, n}
 var stats := {}                    # running ledger (food made, eaten, exported, meals missed ...) for diagnostics; not saved
@@ -441,7 +442,11 @@ func _tick(dt: float) -> void:
 			continue
 		n.trail.resize(0)
 		n.trail.append(n.pos)
+		var tn := Time.get_ticks_usec() if profiling else 0
+		var step0: String = str(n.plan[0].get("kind", n.plan[0].get("do", "?"))) if profiling and not n.plan.is_empty() and n.plan[0] is Dictionary else ""
 		_update_npc(n, dt)
+		if profiling and Time.get_ticks_usec() - tn > 30000:      # B25-MOVE-STUTTER-INV: one villager's tick over 30 ms (diagnostics)
+			slow_npcs.append([minutes, n.id, n.role, (Time.get_ticks_usec() - tn) / 1000.0, step0, str(n.plan[0]).left(160) if not n.plan.is_empty() else "(no plan)", not n.journey.is_empty()])
 		n.trail.append(n.pos)
 	if profiling:
 		t = _prof("villagers (all)", t)

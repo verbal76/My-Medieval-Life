@@ -97,7 +97,7 @@ func _begin() -> void:
 	main.ow_view.set("log_made", true)
 	main.view.set("log_made", true)
 	w.tile_changed.connect(func(c: Vector2i, layer: String, v: int): emits.append([c, layer, v]))
-	main.aerial_background = true
+	main.set("aerial_background", true)
 	csv.store_line(",".join(PackedStringArray(["frame", "t_game", "wall_ms", "delta_ms", "ticks", "hour", "minutes", "x", "y",
 			"step", "vx", "vy", "level", "where", "chunks_built_ms", "tiles_made", "snap", "nodes", "render_ms"] \
 			+ keys_world.map(func(k): return "w:" + k.replace(",", ";")) + keys_main.map(func(k): return "m:" + k.replace(",", ";")) + keys_ow.map(func(k): return "m:" + k))))
