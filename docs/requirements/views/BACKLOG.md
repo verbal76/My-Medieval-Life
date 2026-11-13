@@ -97,7 +97,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B25-CI-ACTIONS-01 | GitHub Actions is the default test environment; targeted, split, evidenced runs | approved | OWNER APPROVED | INTEGRATED |
 | B25-CONT-INV-01 | Continued investigation, validation and merge preparation (Build 25) | approved | OWNER APPROVED | NOT STARTED |
 | B25-CONTRACT-FUNDS-D1 | Contract acceptance accounts for committed coins (bids, contracts, obligations) | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
-| B25-DEMO-KEPT-WORLDS | Kept Worlds list on the title screen (demo) | approved | OWNER APPROVED | NOT STARTED |
+| B25-DEMO-KEPT-WORLDS | Kept Worlds list on the title screen (demo) | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B25-DISK-CLEAN-D1 | Verified safe disk cleanup of the lead machine | approved | OWNER APPROVED | INTEGRATED |
 | B25-ECON-P7 | Recover stranded settlement treasury ore | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B25-EMIG-MARRIAGE-D1 | A married adult emigrating for work takes the spouse along; no solo emigration that frees the spouse | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |

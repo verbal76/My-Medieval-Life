@@ -25,6 +25,12 @@
   - History lives in `docs/DEVELOPMENT_CHANGELOG.md`.
 - **Recovery after lost context:** `docs/handoffs/CURRENT_SESSION_RECOVERY.md`.
 
+> **Checkpoint 2026-11-12 23:35 EST:** Build 40 Extra Life private preview: `wip/b25-preview` `a5a0b7c`, CI 43362745451, Windows full and
+> demo smoke pass (exit 0, no script errors, no leaks), packages private CI artifacts until 2026-12-13; checklist
+> `docs/release/EXTRA_LIFE_B40_HARDWARE_PLAYTEST.md`. Branches kept out of Build 40: B25-DEMO-KEPT-WORLDS `wip/b25-demo-kept-worlds`
+> `111cb27`; B25-ANIMAL-BOAR-LIVESTOCK `wip/b25-animal-boar-livestock` (worker); B25-ND29-BAND-CAMPFIRE `wip/b25-nd29-band-campfire`
+> (worker, homesteaders and player gathering); INV-02 counters `wip/b25-inv02-android` `2d6a3aa`.
+
 > **Checkpoint 2026-11-12 21:00 EST (owner directives of the evening: chain 12 direction, baseline/economic investigation, Build 25
 > stabilization, ND-29/kept worlds/ND-22, Q33/ND-29 gathering; all in docs/directives/2026-11-12_*):**
 > - Development line unchanged: `wip/b25r2-rev2` = `b3c9eb5` (chain 12). Baseline candidate inactive; release gate not bypassed.

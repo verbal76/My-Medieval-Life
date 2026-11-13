@@ -7454,7 +7454,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7463,9 +7463,19 @@
      "date": "2026-11-13",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-12_b25_owner_decisions_nd29_kept_worlds_nd22.md"
+    },
+    {
+     "date": "2026-11-13",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> kept-worlds worker (lead session); branch: None -> wip/b25-demo-kept-worlds; commits + 111cb27",
+     "why": "worker: 111cb27 on wip/b25-demo-kept-worlds (base baa0a72): Kept worlds list, nothing deleted or overwritten, expired worlds export only; demo_kept_worlds_test 55/0 (24 failures without the change); full-game import verified by test (validation, coins/items/position/day kept; v22->v23 migration path exercised); demo 35/0, demo_journey 65/0, player_journey 92/0, wiki 144/0, start 523/0, save suites pass; lead looked at the screenshot"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "kept-worlds worker (lead session)",
+   "branch": "wip/b25-demo-kept-worlds",
+   "commits": [
+    "111cb27"
+   ]
   },
   {
    "id": "B25-DISK-CLEAN-D1",
