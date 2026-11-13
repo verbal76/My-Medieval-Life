@@ -5582,6 +5582,36 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "B25-ANIMAL-HUNT-AI",
+   "kind": "approved",
+   "title": "Animal reactions to melee attacks (hunting AI)",
+   "description": "Animal reactions to melee attacks (hunting AI)",
+   "source": "docs/directives/2026-11-12_b25_stabilization_animal_ai_extra_life_preview.md",
+   "owner_wording": "Animals often turn away from the player, remain in idle movement, and back into the player while being repeatedly struck. Required: interrupt idle when attacked; orient toward the attacker; prey escape after reacting with controlled direction changes, zigzags, occasional hesitation and obstacle avoidance; never repeatedly reverse into the attacker; face the movement direction while fleeing; bears keep defensive or aggressive behaviour; no idle/alert/flee loops; melee hunting stays achievable; harvesting, loot, death, persistence and combat preserved; no bows or new weapons.",
+   "approval": "owner, 2026-11-12",
+   "acceptance": [
+    "deterministic automated tests for reactions, escape decisions, collision avoidance, state transitions and attack/death behaviour pass",
+    "a visual gameplay test (screenshots or recording looked at) shows natural reactions"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-13",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-12_b25_stabilization_animal_ai_extra_life_preview.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25-AUD-BIZ-03",
    "kind": "approved",
    "title": "Payroll before owner withdrawals; hiring budgets the whole payroll (audit BIZ-03, Option B)",
