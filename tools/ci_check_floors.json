@@ -315,5 +315,6 @@
  "reg01_journey_reload_route_test": 8,
  "player_journey_test": 80,
  "extra_life_session_test": 25,
+ "d2_talk_unreachable_test": 7,
  "demo_journey_test": 60
 }

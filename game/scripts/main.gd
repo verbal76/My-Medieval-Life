@@ -64,6 +64,9 @@ var travel := TravelDriver.new()       # B25R1-006: walks to the destination cho
 var paving := Paving.new()             # B25R1-011: paving mode, the player laying stone on a road (scripts/paving.gd)
 var walk_stuck := 0.0                  # seconds without progress along the route
 var talk_to: NPC = null                # a tapped villager the player walks up to, to talk
+var _talk_anchor := Vector2.INF        # D2 (Extra Life preview): where the player stood when it last made headway toward `talk_to`
+var _talk_still := 0.0                 # D2: seconds the player has stood still (under 0.3 tiles) while walking to `talk_to`
+const TALK_GIVE_UP := 3.0              # D2: seconds standing still before the walk to a villager is given up
 var talk_traveller := -1               # B25R1-002: the key of a tapped countryside traveller the player walks up to, to talk
 var talk_player := 0                   # MP-INTERACT-01: the pid of a tapped or clicked player the player walks up to (0: none)
 var reach_to := Vector2.INF            # a tapped shop counter, stall or container the player walks up to, to use
@@ -2702,7 +2705,7 @@ func _player_step(delta: float) -> void:
 			recenter()                    # walking with keys or the stick brings the view back
 	_gather_step()
 	_chase_step()
-	_talk_step()
+	_talk_step(delta)
 	_traveller_step()
 	_talk_player_step()
 	_reach_step()
@@ -2882,7 +2885,7 @@ func _route_step(_delta: float) -> Vector2:
 
 
 ## Walk up to a tapped villager, following as they move, and talk once beside them.
-func _talk_step() -> void:
+func _talk_step(delta: float) -> void:
 	if talk_to == null:
 		return
 	if not talk_to.alive or _covered(talk_to) or talk_to.pos.distance_to(world.player.pos) > 25.0 or talk_to.depth != world.player_level:     # MIN-A: not through rock
@@ -2892,12 +2895,30 @@ func _talk_step() -> void:
 	world.presence.lock(talk_to.id, world.minutes)   # B25R1-020: the one the player is walking up to stays available
 	var d := talk_to.pos - world.player.pos
 	if d.length() > 1.3:
+		# D2 (Extra Life preview session): a villager the player cannot reach (behind a field's fence, across water) was walked
+		# toward for ever, the walk pulled back to them each frame, with no word: the player stood against the obstacle for
+		# game days. When the player has stood still (under 0.3 tiles) for TALK_GIVE_UP seconds the walk is given up and the
+		# player told so; following a villager who walks away, or a detour round a building, keeps the player moving and goes on.
+		if _talk_anchor == Vector2.INF or world.player.pos.distance_to(_talk_anchor) > 0.3:
+			_talk_anchor = world.player.pos
+			_talk_still = 0.0
+		else:
+			_talk_still += delta
+		if _talk_still > TALK_GIVE_UP:
+			ui.message("You can't reach %s from here." % talk_to.name, 5.0)
+			talk_to = null
+			move_to = Vector2.INF
+			_talk_anchor = Vector2.INF
+			_talk_still = 0.0
+			return
 		move_to = talk_to.pos
 		return
 	move_to = Vector2.INF
 	player_sprite.face(d)
 	var who := talk_to
 	talk_to = null
+	_talk_anchor = Vector2.INF
+	_talk_still = 0.0
 	approach(who)
 
 
@@ -6006,6 +6027,8 @@ func _tap(screen_pos: Vector2) -> void:
 	var tapped := _creature_at(wpos)
 	if tapped is NPC and tapped.role != "bandit":
 		talk_to = tapped                  # walk up to them (following if they move) and talk
+		_talk_anchor = Vector2.INF
+		_talk_still = 0.0
 		return
 	talk_traveller = -1
 	if tapped == null:
