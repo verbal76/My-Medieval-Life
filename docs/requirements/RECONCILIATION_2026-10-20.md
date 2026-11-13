@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 897 (501 of them still open) |
-| **Open entries now** (rules excluded) | | **659** |
+| Entries added since | | 899 (503 of them still open) |
+| **Open entries now** (rules excluded) | | **661** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (897)
+## Added since the baseline (899)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -159,6 +159,8 @@ None.
 | B21-LAN-PLAYTEST | Build 21: host/join interface, Android networking, animal sync, recorder audit and a private playtest build | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | multiplayer |
 | B25-AMBITION-D4 | Activate the career ambition system? | decision | APPROVED | owner decision |
 | B25-AMBITION-IMPL | Activate and correct the skill-aware career ambition (job_choice) system | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
+| B25-ANDROID-RELEASE-EXPORT | Android packages exported with --export-release, signing identity unchanged | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
+| B25-ANIMAL-BOAR-LIVESTOCK | Boars sometimes charge when struck; struck livestock flee within their pens | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-ANIMAL-HUNT-AI | Animal reactions to melee attacks (hunting AI) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | B25-AUD-BIZ-03 | Payroll before owner withdrawals; hiring budgets the whole payroll (audit BIZ-03, Option B) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
 | B25-AUD-BIZ-04 | A migrating household keeps its business money (audit BIZ-04) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |

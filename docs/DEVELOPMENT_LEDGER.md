@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (857)
+## Approved requirement (859)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -77,6 +77,8 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B19-RECOVERY | Build 19 carryover recovery within Expansion 20: audit the 18 unfinished Build 19 requirements and the 9 awaiting verification against the code, then integrate, finish or implement them on the Expansion 20 line | 20 | OWNER APPROVED | PARTIALLY IMPLEMENTED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B21-LAN-PLAYTEST | Build 21: host/join interface, Android networking, animal sync, recorder audit and a private playtest build | multiplayer | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | B25-AMBITION-IMPL | Activate and correct the skill-aware career ambition (job_choice) system | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
+| B25-ANDROID-RELEASE-EXPORT | Android packages exported with --export-release, signing identity unchanged | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25-ANIMAL-BOAR-LIVESTOCK | Boars sometimes charge when struck; struck livestock flee within their pens | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-ANIMAL-HUNT-AI | Animal reactions to melee attacks (hunting AI) | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B25-AUD-BIZ-03 | Payroll before owner withdrawals; hiring budgets the whole payroll (audit BIZ-03, Option B) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | B25-AUD-BIZ-04 | A migrating household keeps its business money (audit BIZ-04) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |

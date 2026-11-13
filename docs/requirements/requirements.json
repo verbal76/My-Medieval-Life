@@ -5582,6 +5582,64 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "B25-ANDROID-RELEASE-EXPORT",
+   "kind": "approved",
+   "title": "Android packages exported with --export-release, signing identity unchanged",
+   "description": "Android packages exported with --export-release, signing identity unchanged",
+   "source": "docs/directives/2026-11-12_b25_complete_owner_direction_evening.md",
+   "owner_wording": "Approve release exports for future Android builds while retaining the existing signing identity. Verify installation, launch, saving, and update compatibility before distribution. Do not publish or deploy.",
+   "approval": "owner, 2026-11-12",
+   "acceptance": [
+    "release.yml exports Android with --export-release; the APK is not debuggable; signed with the permanent key; installs over a debug-exported build keeping saves (device check)"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-13",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-12_b25_complete_owner_direction_evening.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B25-ANIMAL-BOAR-LIVESTOCK",
+   "kind": "approved",
+   "title": "Boars sometimes charge when struck; struck livestock flee within their pens",
+   "description": "Boars sometimes charge when struck; struck livestock flee within their pens",
+   "source": "docs/directives/2026-11-12_b25_complete_owner_direction_evening.md",
+   "owner_wording": "Boars may charge and defend themselves when attacked, but should not always charge. Preserve believable flight and defensive responses. Keep current reaction timing provisionally until hardware playtesting. Struck livestock should flee naturally within their enclosures without passing through fences. Add deterministic regression coverage.",
+   "approval": "owner, 2026-11-12",
+   "acceptance": [
+    "deterministic tests: a struck boar sometimes charges and sometimes flees; livestock flee inside their pen and never cross a fence"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-13",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-12_b25_complete_owner_direction_evening.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25-ANIMAL-HUNT-AI",
    "kind": "approved",
    "title": "Animal reactions to melee attacks (hunting AI)",
@@ -8697,10 +8755,15 @@
      "date": "2026-11-13",
      "change": "assigned_worker: None -> lead",
      "why": "assigned worker recorded"
+    },
+    {
+     "date": "2026-11-13",
+     "change": "owner_answer",
+     "why": "owner 2026-11-12 23:10: deadwood for ordinary homesteaders and the player approved; 60 min/log, one log a tree every 4 days, 40 tiles provisionally accepted; three hearth logs protected; keep separate from Build 40"
     }
    ],
    "lifecycle": "ACTIVE",
-   "owner_answer": "Fuel only; plus limited gathering of fallen branches and deadwood without an axe through existing gathering systems: consumes time, respects available resources, conserves inventory, no unlimited firewood, no cold health or stamina penalties; regression tests for gather, consume, exhaust",
+   "owner_answer": "Band, homesteaders without an axe and the player may gather deadwood (existing interaction systems); 60 minutes a log, one log per tree every four days, 40-tile radius (provisional); three hearth logs protected from nonessential building; verify conservation, determinism, save/load and long-term sustainability; kept out of Build 40 until simulation consequences are approved",
    "branch": "wip/b25-nd29-band-campfire",
    "commits": [
     "fbfe146"

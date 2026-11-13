@@ -81,10 +81,12 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | approved | OWNER APPROVED | NOT STARTED |
 | X20-TRADER-PAY-INV | Investigate why reopened settlement trader households fail to sustain themselves (insufficient sales, insufficient profit, the 85% reserve, household expenses, the profession-change decision), reconcile where the lower village coins reside, and later propose a sustainable trader compensation model from Living Economy results | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 
-## Approved, no build assigned (69)
+## Approved, no build assigned (71)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
+| B25-ANDROID-RELEASE-EXPORT | Android packages exported with --export-release, signing identity unchanged | approved | OWNER APPROVED | NOT STARTED |
+| B25-ANIMAL-BOAR-LIVESTOCK | Boars sometimes charge when struck; struck livestock flee within their pens | approved | OWNER APPROVED | NOT STARTED |
 | B25-ANIMAL-HUNT-AI | Animal reactions to melee attacks (hunting AI) | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B25-AUDIT-69-01 | Status audit of the original 69 open items | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-AUDIT-CONT-01 | Build 25 audit continuation: merge sequence KI-09, MP-03/TRD-05, batch 3 under evidence from GitHub Actions | approved | OWNER APPROVED | NOT STARTED |
