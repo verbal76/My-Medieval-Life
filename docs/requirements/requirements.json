@@ -42989,7 +42989,7 @@
    "kind": "approved",
    "title": "Rename the game to Forge My Life (FML)",
    "description": "Rename the game to Forge My Life (FML)",
-   "source": "docs/directives/2026-11-13_game_name_forge_my_life.md",
+   "source": "docs/directives/2026-11-13_game_name_forge_my_life.md; docs/directives/2026-11-13_name01_forge_my_life_master_directive.md",
    "owner_wording": "i just registered forge my life",
    "approval": "owner, 2026-11-13",
    "acceptance": [
@@ -43002,7 +43002,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -43011,9 +43011,16 @@
      "date": "2026-11-13",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-13_game_name_forge_my_life.md"
+    },
+    {
+     "date": "2026-11-13",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> NAME-01 workstreams A-D (lead session); branch: None -> wip/name-01-forge-my-life; source",
+     "why": "owner master directive 2026-11-13 (docs/directives/2026-11-13_name01_forge_my_life_master_directive.md): implement and locally verify on wip/name-01-forge-my-life from a5a0b7c; save directory renamed with no legacy migration; Android id kept, label renamed; Steam App ID 5615690; four workstreams; acceptance replaced by the directive's twelve checks; no merge, CI, packaging or publishing"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "NAME-01 workstreams A-D (lead session)",
+   "branch": "wip/name-01-forge-my-life"
   },
   {
    "id": "OD-01",

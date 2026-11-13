@@ -143,7 +143,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | ID-01 | One persistent person identity across migration (between settlements, away and back), save/load, household and relationship changes, death and inheritance, and future detailed/abstract transitions; no replacement people, no reused identities; existing saves migrated without discarding or reassigning history | approved | OWNER APPROVED | INTEGRATED |
 | MML-CONSERVE-01 | Credit conservation: MML second priority behind Upwardly; one worker; finish and integrate KI-HOME-DOOR only; pause farming Phase 2 and the flight-finding investigations; no 365-day campaign, new features or scheduled follow-up without owner approval; standby when done | approved | OWNER APPROVED | INTEGRATED |
 | MP-ADOPTION-AGENCY | Adoption agency concept (future, separate design item) | approved | DEFERRED | NOT STARTED |
-| NAME-01 | Rename the game to Forge My Life (FML) | approved | OWNER APPROVED | NOT STARTED |
+| NAME-01 | Rename the game to Forge My Life (FML) | approved | OWNER APPROVED | IN DEVELOPMENT |
 | RECON-01 | Reconcile overlaps: one calculation for tolerance (temperament life shifts vs personality drift) and one reservation mechanism per inventory quantity (contract holds vs economic reservations); behaviour unchanged with flags off | approved | OWNER APPROVED | INTEGRATED |
 | REQ-CTRL-01 | One authoritative requirements and decision register with separate status dimensions, validation, generated views and divergence control | approved | OWNER APPROVED | INTEGRATED |
 | REQ-CTRL-02 | Requirements recovery audit: dry run, immutable sources, conflict and evidence audit, recovered-work classification, Builds 18-21 status | approved | OWNER APPROVED | INTEGRATED |

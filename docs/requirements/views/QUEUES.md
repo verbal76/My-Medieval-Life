@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (33)
+## Workers and task branches (34)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -33,6 +33,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | HAG-FORENSICS-01 | unassigned | IN DEVELOPMENT | documentation agent | docs/history-recovery-2026-11 |
 | JUICE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | none |  |
+| NAME-01 | unassigned | IN DEVELOPMENT | NAME-01 workstreams A-D (lead session) | wip/name-01-forge-my-life |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
 | X20-CAREER-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
 | X20-COMPLETE | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
