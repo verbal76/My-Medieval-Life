@@ -853,10 +853,13 @@ func _flee_struck(a: Animal, dt: float) -> void:
 	var foe := _foe_pos(a.alarm) if a.alarm != "" else Vector2.INF
 	if a.startle_left > 0.0:
 		a.startle_left -= dt
-		a.moving = false
-		if foe != Vector2.INF and foe.distance_to(a.pos) > 0.001:
-			a.facing = foe - a.pos
-		return
+		if a.startle_left > 0.0 or foe == Vector2.INF:
+			a.moving = false
+			if foe != Vector2.INF and foe.distance_to(a.pos) > 0.001:
+				a.facing = foe - a.pos
+			return
+		dt = -a.startle_left                            # the rest of the step is the first of the flight (a tick is 0.5 s)
+		a.startle_left = 0.0
 	a.alarm_left -= dt
 	if foe == Vector2.INF or (a.alarm_left <= 0.0 and foe.distance_to(a.pos) > float(st.calm_distance)):
 		_calm_down(a)
@@ -940,7 +943,7 @@ func _open_heading(a: Animal, want: Vector2, away: Vector2, step: float, foe: Ve
 				var h := want.rotated(turn * float(k) * float(sgn))
 				if h.dot(away) < -0.01:
 					continue
-				if _open(a, a.pos + h * step) and _open(a, a.pos + h * 0.6) and _open(a, a.pos + h * ahead):
+				if _clear_way(a, h, step) and _clear_way(a, h, ahead):
 					a.slide = sgn if k > 0 else 0
 					return h
 	var wide := cos(deg_to_rad(float(st.break_degrees)))
@@ -959,9 +962,24 @@ func _open_heading(a: Animal, want: Vector2, away: Vector2, step: float, foe: Ve
 ## Whether a break-out step along `h` is open ground and keeps it break_clearance tiles from the foe.
 func _break_ok(a: Animal, h: Vector2, foe: Vector2, step: float) -> bool:
 	var clear := float(wl().struck.break_clearance)
-	if (a.pos + h * 0.3).distance_to(foe) < clear or (a.pos + h * 0.6).distance_to(foe) < clear:
-		return false
-	return _open(a, a.pos + h * step) and _open(a, a.pos + h * 0.6)
+	var far := maxf(step, 0.6)
+	var d := 0.3
+	while d < far + 0.15:
+		if (a.pos + h * minf(d, far)).distance_to(foe) < clear:
+			return false
+		d += 0.3
+	return _clear_way(a, h, step) and _clear_way(a, h, 0.6)
+
+
+## Whether the way along `h` is open ground of its own ground every 0.3 tiles out to `dist` (a world tick's step is half a
+## second, over a tile and a half running, so the cells between are checked, not only the end).
+func _clear_way(a: Animal, h: Vector2, dist: float) -> bool:
+	var d := 0.3
+	while d < dist:
+		if not _open(a, a.pos + h * d):
+			return false
+		d += 0.3
+	return _open(a, a.pos + h * dist)
 
 
 ## Whether an animal may stand at `p`: _move's rule (open ground; on its own area once it is on it).

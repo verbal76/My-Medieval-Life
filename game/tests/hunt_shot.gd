@@ -17,8 +17,13 @@ var cd := 0.0
 var shots := []        # [Image, label]
 var plan := []         # times (seconds after the first blow) to capture
 var chase := true
+var chase_until := 2.5
+var pending := ""     # the label of the frame to capture next tick
 const DT := 1.0 / 30.0
-const CROP := Vector2i(480, 300)
+const CROP := Vector2i(576, 384)
+const STEP := 0.15
+var order := ["deer", "boar", "bear"]
+var log_lines := []
 
 
 func _init() -> void:
@@ -34,12 +39,12 @@ func _setup() -> void:
 	main.save_path = "user://test_saves/hunt_shot/save1.json"
 	main.new_game()
 	main.ui.hide_all()
-	main.camera.zoom = Vector2(4, 4)
+	main.camera.zoom = Vector2(3, 3)
 	main.camera.position_smoothing_enabled = false
 	main._start(true)
 	main.paused = true
 	main.ui.dismiss_message()
-	_stage("deer")
+	_stage(order.pop_front())
 	process_frame.connect(_tick)
 
 
@@ -63,7 +68,11 @@ func _stage(species: String) -> void:
 		b.hunger = 100.0
 		b.anger = ""
 	a = w.fauna.animals.filter(func(x): return x.alive and x.species == species and x.area == "woods_w" and x.adult(w.minutes))[0]
-	var c := _open_cell("woods_w", 3)
+	var c := _open_cell("woods_w", 5)
+	if c.x < 0:
+		c = _open_cell("woods_w", 4)
+	if c.x < 0:
+		c = _open_cell("woods_w", 3)
 	a.pos = Vector2(c) + Vector2(0.5, 0.5)
 	a.goal = Vector2.INF
 	a.wait = 30.0
@@ -76,8 +85,14 @@ func _stage(species: String) -> void:
 	w.player.hp = float(GameData.b("player_max_hp"))
 	t = -0.5
 	cd = 0.0
-	chase = species == "deer"
-	plan = [-0.4, 0.05, 0.3, 0.7, 1.1, 1.6, 2.4, 3.2, 4.0] if species == "deer" else [-0.4, 0.05, 0.4, 0.9, 1.4, 2.0]
+	chase = species != "bear"
+	chase_until = 2.5 if species == "deer" else 3.0
+	var span := 6.0 if species == "deer" else (5.0 if species == "boar" else 3.0)
+	plan = []
+	var k := -0.3
+	while k <= span:
+		plan.append(k)
+		k += STEP
 	phase = species
 
 
@@ -98,6 +113,17 @@ func _tick() -> void:
 		return
 	if phase == "done":
 		return
+	if pending != "":                        # the frame drawn after the last step: the state the label describes
+		var img: Image = root.get_texture().get_image()
+		var r := Rect2i((img.get_size() - CROP) / 2, CROP)
+		img.get_region(r).save_png(out.path_join("%s_%03d.png" % [phase, shots.size()]))
+		shots.append(pending)
+		log_lines.append("%s_%03d %s" % [phase, shots.size() - 1, pending])
+		print(log_lines[-1])
+		pending = ""
+		if plan.is_empty():
+			_next()
+		return
 	if t < 0.0 and t + DT >= 0.0:
 		_strike()
 		cd = float(Combat.cfg().swing_time)
@@ -105,52 +131,36 @@ func _tick() -> void:
 		w.fauna.update(DT)
 		if a.anger != "":
 			a.bite_cd = 99.0                 # the bear comes on but the picture is of its approach, not of the player falling
-		if chase:
+		if chase and t < chase_until:
 			var gap := a.pos - w.player.pos
 			if gap.length() > 0.9:
 				w.player.pos += gap.normalized() * minf(float(GameData.b("player_tiles_per_second")) * 0.9 * DT, gap.length() - 0.9)
 				main.player_sprite.face(gap)
 			cd -= DT
-			if cd <= 0.0 and gap.length() <= float(Combat.cfg().reach) and t < 2.5:
+			if cd <= 0.0 and gap.length() <= float(Combat.cfg().reach) :
 				_strike()
 				cd = float(Combat.cfg().swing_time) * 1.5
 	t += DT
-	main.camera.position = w.player.pos * main.T
+	var mid := (w.player.pos + a.pos) / 2.0
+	main.cam_free = true                     # the camera on the hunter and the hunted (main's own follow keeps to cam_at)
+	main.cam_at = mid * main.T
+	main.camera.position = main.cam_at
 	main._sync_sprites()
-	main.camera.position = w.player.pos * main.T
 	if not plan.is_empty() and t >= float(plan[0]):
 		plan.pop_front()
-		var img: Image = root.get_texture().get_image()
-		var size := img.get_size()
-		var r := Rect2i((size - CROP) / 2, CROP)
-		shots.append([img.get_region(r), "%s t=%.2fs %s%s face(%.1f,%.1f)" % [a.species, t, "moving" if a.moving else "standing",
-			(" act=" + a.act) if a.act != "" else "", a.facing.normalized().x, a.facing.normalized().y]])
-		print("shot ", shots[-1][1], " deer-player %.2f" % a.pos.distance_to(w.player.pos))
-	if plan.is_empty():
-		_sheet(phase)
-		shots.clear()
-		if phase == "deer":
-			_stage("bear")
-		else:
-			phase = "done"
-			quit(0)
+		pending = "%s t=%.2f %s%s%s face=(%.2f,%.2f) gap=%.2f pos=(%.2f,%.2f) player=(%.2f,%.2f)" % [a.species, t,
+			"RUN" if a.moving else "STAND", (" act=" + a.act) if a.act != "" else "",
+			(" startle" if a.startle_left > 0.0 else "") + (" lookback" if a.pause_left > 0.0 else "") + (" atbay" if a.at_bay else "") + (" break" if a.breaking else "") + (" anger" if a.anger != "" else ""),
+			a.facing.normalized().x, a.facing.normalized().y, a.pos.distance_to(w.player.pos), a.pos.x, a.pos.y, w.player.pos.x, w.player.pos.y]
 
 
-## The frames side by side, three to a row.
-func _sheet(name: String) -> void:
-	var cols := 3
-	var rows := ceili(shots.size() / float(cols))
-	var sheet := Image.create(CROP.x * cols, CROP.y * rows, false, Image.FORMAT_RGBA8)
-	for i in shots.size():
-		var im: Image = shots[i][0]
-		im.convert(Image.FORMAT_RGBA8)
-		sheet.blit_rect(im, Rect2i(Vector2i.ZERO, CROP), Vector2i((i % cols) * CROP.x, (i / cols) * CROP.y))
-	var half := sheet.duplicate()
-	half.resize(sheet.get_width() / 2, sheet.get_height() / 2, Image.INTERPOLATE_NEAREST)
-	var p := out.path_join("hunt_%s.png" % name)
-	sheet.save_png(p)
-	half.save_png(out.path_join("hunt_%s_half.png" % name))
-	var labels := []
-	for s in shots:
-		labels.append(s[1])
-	print("saved ", p, " ", sheet.get_size(), " frames: ", " | ".join(labels))
+func _next() -> void:
+	shots.clear()
+	if not order.is_empty():
+		_stage(order.pop_front())
+	else:
+		phase = "done"
+		var f := FileAccess.open(out.path_join("frames.txt"), FileAccess.WRITE)
+		f.store_string("\n".join(log_lines) + "\n")
+		f.close()
+		quit(0)

@@ -5,7 +5,7 @@ extends SceneTree
 ## the attacker, facing where they go, in zigzags with an occasional look back, round trees, walls, water and the edge of
 ## their wood, never back into the attacker; wolves and bears turn and fight; nothing flaps between standing and running;
 ## a hunter with a sword still kills a deer or a boar in a fair number of swings; death, loot and saves are as before.
-## Deterministic: the world's seed, the fauna's own movement stream (Fauna.move_rng), fixed steps.
+## The animals move on the world's ticks, as in play (_frame). Deterministic: the world's seed, the fauna's own movement stream (Fauna.move_rng), fixed steps.
 
 var failures := 0
 var checks := 0
@@ -86,10 +86,20 @@ func _stage(w: World, species: String, off: Vector2) -> Animal:
 	return a
 
 
+## One drawn frame (30 a second). The animals move as in play: on the world's ticks (World.TICK, half a second; World.update
+## runs Fauna.update then), so between ticks they stand where the last tick left them and the view draws them gliding.
+var acc := 0.0
+func _frame(w: World) -> void:
+	acc += DT
+	if acc >= World.TICK - 0.000001:
+		acc -= World.TICK
+		w.fauna.update(World.TICK)
+
+
 func _step(w: World, t: float) -> void:
 	var n := int(round(t / DT))
 	for i in n:
-		w.fauna.update(DT)
+		_frame(w)
 
 
 func test_reaction(w: World) -> void:
@@ -119,7 +129,8 @@ func test_chase(w: World, species: String) -> void:
 	var pspeed := float(GameData.b("player_tiles_per_second"))
 	var cd := 0.0
 	var strikes := 0
-	var into := 0                  # frames it moved toward the player while near them
+	var into := 0                  # frames it moved toward the player while near them (not breaking out of a corner)
+	var breaks := 0                # steps past the player's side out of a corner
 	var into_cell := 0             # steps that took it within 0.6 tiles of the player (into them)
 	var wrong_face := 0            # frames it ran facing away from where it ran
 	var off_ground := 0            # frames on a solid cell or off its wood
@@ -138,14 +149,18 @@ func test_chase(w: World, species: String) -> void:
 	cd = float(Combat.cfg().swing_time)
 	for f in frames:
 		var before := a.pos
-		w.fauna.update(DT)
+		_frame(w)
 		var mv := a.pos - before
 		var to_p := w.player.pos - before
 		var dist := to_p.length()
-		if mv.length() > 0.0001:
+		if a.moving:
 			moving_frames += 1
+		if mv.length() > 0.0001:
 			if dist < 3.0 and mv.normalized().dot(to_p.normalized()) > 0.2:
-				into += 1
+				if a.breaking:
+					breaks += 1              # darting out of a corner past the player's side
+				else:
+					into += 1
 			var pc := Vector2i(floori(w.player.pos.x), floori(w.player.pos.y))
 			if a.pos.distance_to(w.player.pos) < 0.6 and a.pos.distance_to(w.player.pos) < dist:
 				into_cell += 1
@@ -165,7 +180,7 @@ func test_chase(w: World, species: String) -> void:
 				bay_open += 1
 		elif not a.moving and dist <= reach and a.startle_left <= 0.0 and a.pause_left <= 0.0:
 			still_near += 1
-		if f % 15 == 0 and mv.length() > 0.0001:
+		if mv.length() > 0.0001:
 			dirs.append(mv.normalized())
 		# the player: runs after it, never closer than 0.8, strikes in reach once a swing
 		var gap := a.pos - w.player.pos
@@ -182,7 +197,8 @@ func test_chase(w: World, species: String) -> void:
 			turns += 1
 	print("     %s chase: %d strikes, %d/%d frames moving, %d changes, %d looks back, %d turns, %d standing in reach, %d at bay" % [
 		species, strikes, moving_frames, frames, changes, looks, turns, still_near, at_bay])
-	check(into == 0, "%s: never steps toward the player while near them (%d frames)" % [species, into])
+	check(into == 0, "%s: never steps toward the player while near them, but to dart out of a corner (%d frames; %d darts)" % [species, into, breaks])
+	check(breaks <= 8, "%s: darts past the player's side only now and then (%d in 40 s)" % [species, breaks])
 	check(into_cell == 0, "%s: never runs into the player (%d steps within 0.6 tiles)" % [species, into_cell])
 	check(wrong_face == 0, "%s: faces the way it runs (%d frames otherwise)" % [species, wrong_face])
 	check(off_ground == 0, "%s: never runs into a tree, a wall, water or out of its wood" % species)
@@ -223,7 +239,7 @@ func test_edge(w: World) -> void:
 	for f in int(4.0 / DT):
 		var before := a.pos
 		var d0 := a.pos.distance_to(w.player.pos)
-		w.fauna.update(DT)
+		_frame(w)
 		var mv := a.pos - before
 		if w.map.is_solid(a.cell()) or not w.fauna.in_area(area, a.cell()):
 			bad += 1
@@ -258,7 +274,7 @@ func test_look_back_and_calm(w: World) -> void:
 	var reflee := 0
 	var t := 0.0
 	for f in int(60.0 / DT):
-		w.fauna.update(DT)
+		_frame(w)
 		t += DT
 		if a.pause_left > 0.0 and not was_pause:
 			looks += 1
@@ -277,7 +293,7 @@ func test_look_back_and_calm(w: World) -> void:
 	print("     unchased deer: %d looks back, calm after %.1f s, %d changes in a minute" % [looks, calm_at, changes])
 	check(looks >= 1, "running from a player who stays behind, it stops to look back (%d)" % looks)
 	check(looked_at, "facing the player when it looks back")
-	check(calm_at > float(GameData.b("wildlife").struck.flee_seconds), "the fright lasts at least flee_seconds (%.1f s)" % calm_at)
+	check(calm_at > float(GameData.b("wildlife").struck.flee_seconds) - World.TICK, "the fright lasts at least flee_seconds (to the tick) (%.1f s)" % calm_at)
 	check(reflee == 0, "calmed, nothing puts it back to flight without a blow")
 	check(changes <= 30, "standing and running change at most 30 times in a minute (%d)" % changes)
 
@@ -293,7 +309,7 @@ func test_bear(w: World) -> void:
 	var faced := 0
 	var n := int(3.0 / DT)
 	for f in n:
-		w.fauna.update(DT)
+		_frame(w)
 		if a.facing.normalized().dot((w.player.pos - a.pos).normalized()) > 0.7:
 			faced += 1
 	check(a.pos.distance_to(w.player.pos) < d0, "it comes for the player rather than running")
@@ -336,7 +352,7 @@ func test_achievable(w: World, species: String, weapon: String) -> void:
 	var swing_t := -1.0
 	var landed := false
 	while a.alive and t < 60.0:
-		w.fauna.update(DT)
+		_frame(w)
 		t += DT
 		if not a.alive:
 			break
@@ -392,7 +408,7 @@ func test_deterministic() -> void:
 		w.player_hit_animal(a, 0.01)
 		var s := ""
 		for f in int(10.0 / DT):
-			w.fauna.update(DT)
+			_frame(w)
 			var gap := a.pos - w.player.pos
 			if gap.length() > 0.8:
 				w.player.pos += gap.normalized() * minf(4.5 * DT, gap.length() - 0.8)
