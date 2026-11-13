@@ -5,7 +5,7 @@ changed. Times are UTC unless marked EST.
 
 ## Part A: MML-INV-02 storage spoilage switched on (long-sims run 43332363247)
 
-**Status: PENDING** (this section is filled in when the run finishes).
+**Status: seeds 1 and 2 finished (365 days, exit 0, no FATAL, 0 script errors, currency leak 0, item leaks none); seeds 3 and 4 still running at 02:22 UTC.** Full results follow when they finish.
 
 | | |
 |---|---|
