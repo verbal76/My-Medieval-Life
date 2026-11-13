@@ -405,7 +405,11 @@ func provoke(a: Animal, who: String) -> void:
 
 ## B25-ANIMAL-BOAR-LIVESTOCK: a kind's charge numbers (balance wildlife struck "charge"), {} for a kind that never charges.
 static func charge_cfg(a: Animal) -> Dictionary:
-	return (wl().struck.get("charge", {}) as Dictionary).get(a.species, {}) if a.wild() else {}
+	return charge_cfg_of(a.species) if a.wild() else {}
+
+
+static func charge_cfg_of(species: String) -> Dictionary:
+	return (wl().struck.get("charge", {}) as Dictionary).get(species, {})
 
 
 ## Whether a struck boar charges: at its chance, hurt_chance once below hurt_below of its health, cornered_chance when

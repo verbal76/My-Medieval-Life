@@ -642,7 +642,10 @@ func _animals() -> void:
 		elif wild:                                 # B25-ANIMAL-HUNT-AI (Fauna.provoke, _flee_struck)
 			diet += (" It runs from you when you come within %s tiles." % str(a.flee) if float(a.get("flee", 0.0)) > 0.0 else " It lets you come close.") \
 				+ " Struck, it starts and turns to look at you, then runs, zigzagging away round trees, water and the edge of its wood, now and then stopping to look back while you are well behind, and keeps running while you are near. Cornered, it may dart past your side; boxed in, it stands facing you."
-		var kept := "Animals get hungry and die unfed like villagers; a well-fed male and female breed, and young are half size until grown."
+			if not Fauna.charge_cfg_of(id).is_empty():       # B25-ANIMAL-BOAR-LIVESTOCK (Fauna.provoke, _charges)
+				var ch := Fauna.charge_cfg_of(id)
+				diet += " Not always, though: struck, a boar may stand and fight instead, more often when it is badly hurt or has nowhere to run. It charges you, stops face to face and gores (%d a gore), and gives up after a few seconds or once you are well away; it never goes for anyone who leaves it alone." % int(ch.gore)
+		var kept := "Animals get hungry and die unfed like villagers; a well-fed male and female breed, and young are half size until grown. Struck, one starts, turns to look at you, then runs about inside its pen, never through the fence or out of the gate, and calms down once you leave it be."
 		if id == "horse":                          # B14-11
 			kept = "The plough horse is bought from the visiting caravan (%d coins) into your own horse pen, one at a time. It gets hungry and dies unfed like the other pen animals; it does not breed. With it and the hand plough in your pack, you till a cell in %.1f second for %.0f stamina." % [
 					int(Farming.cfg().caravan_horse.price), float(Farming.cfg().till.horse.seconds), float(Farming.cfg().till.horse.stamina)]
