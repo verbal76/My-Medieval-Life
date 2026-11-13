@@ -29,6 +29,7 @@ func _init() -> void:
 	test_chase(w, "rabbit")
 	test_chase(w, "boar")
 	test_edge(w)
+	test_look_back_and_calm(w)
 	test_bear(w)
 	test_kill_and_loot(w)
 	test_achievable(w, "deer", "copper_sword")
@@ -240,6 +241,45 @@ func test_edge(w: World) -> void:
 	check(closer == 0, "and never moves back toward the player, but to break out of a corner past their side")
 	check(reversals <= 2, "without jittering back and forth (%d reversals)" % reversals)
 	check(a.pos.distance_to(start) > 1.0, "it slips away along the edge (%.2f tiles)" % a.pos.distance_to(start))
+
+
+## Struck once and not chased, a deer runs, now and then stops to look back at the player (facing them), and calms down
+## once it is far enough and the fright has passed; over a minute it changes between standing and running a bounded
+## number of times (no idle / alert / flee loop).
+func test_look_back_and_calm(w: World) -> void:
+	var a := _stage(w, "deer", Vector2(-1.0, 0.0))
+	w.player_hit_animal(a, 0.01)
+	var looks := 0
+	var looked_at := true
+	var was_pause := false
+	var calm_at := -1.0
+	var changes := 0
+	var was_moving := false
+	var reflee := 0
+	var t := 0.0
+	for f in int(60.0 / DT):
+		w.fauna.update(DT)
+		t += DT
+		if a.pause_left > 0.0 and not was_pause:
+			looks += 1
+			if a.facing.normalized().dot((w.player.pos - a.pos).normalized()) < 0.9:
+				looked_at = false
+		was_pause = a.pause_left > 0.0
+		if a.moving != was_moving:
+			changes += 1
+			was_moving = a.moving
+		if calm_at < 0.0 and a.alarm == "" and a.startle_left <= 0.0:
+			calm_at = t
+			check(a.pos.distance_to(w.player.pos) > float(GameData.b("wildlife").struck.calm_distance),
+				"it calms down only once it is clear of the player (%.1f tiles, after %.1f s)" % [a.pos.distance_to(w.player.pos), t])
+		if calm_at >= 0.0 and a.alarm != "":
+			reflee += 1
+	print("     unchased deer: %d looks back, calm after %.1f s, %d changes in a minute" % [looks, calm_at, changes])
+	check(looks >= 1, "running from a player who stays behind, it stops to look back (%d)" % looks)
+	check(looked_at, "facing the player when it looks back")
+	check(calm_at > float(GameData.b("wildlife").struck.flee_seconds), "the fright lasts at least flee_seconds (%.1f s)" % calm_at)
+	check(reflee == 0, "calmed, nothing puts it back to flight without a blow")
+	check(changes <= 30, "standing and running change at most 30 times in a minute (%d)" % changes)
 
 
 func test_bear(w: World) -> void:
