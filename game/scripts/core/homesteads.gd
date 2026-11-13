@@ -38,6 +38,7 @@ var last_left := {}                  # str(household) -> the day a homesteader l
 var returning := {}                  # str(npc id) -> true: walking back to the village from the country
 var trips := {}                      # str(npc id) -> {claim, leg: out | market | back, n: errands, day, tried: {}}
 var counts := {}                     # decided, claimed, built, failed, abandoned, returned, relocated, gate_<why>
+var deadwood := {}                   # ND-29: "x,y" of a mature tree -> the game day its fallen wood can be gathered again (saved)
 var _roads := {}                     # "gate:sid" -> the road route (a pure function of the seed; not saved)
 var _seen_cell := {}                 # player pid -> the last cell discovery was checked from (not saved)
 var _claim_cache := {}               # player cell -> the refusal there (cleared when claims change; not saved)
@@ -972,6 +973,9 @@ func _why_text(sc: Dictionary, sid: String) -> String:
 func dawn() -> void:
 	var vp := village_people()
 	pop_history.append([w.day(), int(vp.alive)])
+	for k in deadwood.keys():
+		if int(deadwood[k]) <= w.day():
+			deadwood.erase(k)                           # ND-29: the tree's fallen wood is there again (no record needed)
 	var keep := int(cfg().health_days) + 1
 	while pop_history.size() > keep:
 		pop_history.pop_front()
@@ -1167,6 +1171,8 @@ func plan(n: NPC) -> void:
 		return                                          # water, the claim's works, its animals, its workshop
 	if hr >= NPCBrain.WORK_START and hr < NPCBrain.WORK_END and w.wilds != null and w.wilds.plan_hunt(n, c):
 		return                                          # game in the open country round the claim, when food runs low (or a hunter's trade)
+	if hr >= NPCBrain.WORK_START and hr < NPCBrain.WORK_END and plan_deadwood(n, c):
+		return                                          # ND-29: the band's camp fire, from fallen wood (no axe)
 	if hr >= NPCBrain.WORK_START and hr < NPCBrain.WORK_END and _plan_livelihood(n, c):
 		return
 	_idle(n, home, "about the homestead")
@@ -1386,6 +1392,90 @@ func _near_tree(c: Dictionary, n: NPC) -> Vector2i:
 					bd = d
 					best = at
 	return best
+
+
+## ND-29 (owner 2026-11-12: "limited gathering of fallen branches and deadwood without an axe, using existing gathering systems
+## wherever possible ... Do not create unlimited free firewood"): one of the outlaw band's people with no axe, the camp's hearth
+## below keep_logs, walks to the nearest mature tree within deadwood_radius of the camp whose fallen wood is there, gathers it by
+## hand (deadwood_minutes of work, act "deadwood": one log) and carries it to the hearth (act "store_logs"), where the nightly
+## burn (World.burn_firewood) takes it. One of the band at a time. A tree gives again deadwood_seasons later (`deadwood`, saved);
+## a sapling, a young tree or a stump gives nothing. No new random number, no cold effect (the owner: fuel only).
+func plan_deadwood(n: NPC, c: Dictionary) -> bool:
+	if n.household < 0 or n.household >= w.households.size() or not w.households[n.household].get("band", false) or n.inv.has("axe"):
+		return false
+	var cf := cfg()
+	if (w.households[n.household].pantry as Inventory).count("log") + n.inv.count("log") >= int(cf.keep_logs):
+		return false
+	for o: NPC in w.brain._members(n.household):
+		if o != n and o.doing == "gathering deadwood" and not o.plan.is_empty():
+			return false
+	var t := deadwood_tree(c, n)
+	if t.x == 1 << 30:
+		return false
+	var b: NPCBrain = w.brain
+	n.doing = "gathering deadwood"
+	n.plan = [b.go(b.beside(t, n.cell(), 0, true)), b.work(float(cf.deadwood_minutes), "homestead", {"step": "deadwood", "x": t.x, "y": t.y}, "gather", t),
+		b.go(step_of(c)), b.doit("homestead", {"step": "store_logs"})]
+	return true
+
+
+## The nearest mature tree of the open country within deadwood_radius of the claim's house whose fallen wood can be gathered
+## today (Vector2i(1 << 30, 0) for none): the overworld's own trees (chunk_trees), in chunk and cell order, ties to the
+## top-left, so the choice is the same in every world of one seed.
+func deadwood_tree(c: Dictionary, n: NPC) -> Vector2i:
+	var o: Overworld = w.map.overworld
+	var best := Vector2i(1 << 30, 0)
+	if o == null:
+		return best
+	var home := house_of(c).get_center()
+	var r := int(cfg().deadwood_radius)
+	var lo := Overworld.chunk_of(home - Vector2i(r, r))
+	var hi := Overworld.chunk_of(home + Vector2i(r, r))
+	var bd := 1 << 30
+	for cy in range(lo.y, hi.y + 1):
+		for cx in range(lo.x, hi.x + 1):
+			for t in o.chunk_trees(Vector2i(cx, cy)):
+				if t.is_empty() or str(t.state) != "grown":
+					continue
+				var at := Vector2i(int(t.x), int(t.y))
+				if absi(at.x - home.x) > r or absi(at.y - home.y) > r or o.is_top(at) or w.map.in_village(at) or house_of(c).grow(1).has_point(at):
+					continue
+				if int(deadwood.get("%d,%d" % [at.x, at.y], 0)) > w.day():
+					continue
+				var d := absi(at.x - n.cell().x) + absi(at.y - n.cell().y)
+				if d < bd or (d == bd and (at.y < best.y or (at.y == best.y and at.x < best.x))):
+					bd = d
+					best = at
+	return best
+
+
+## The work's end (act "deadwood"): beside a mature tree whose fallen wood is there, one log into the pack, counted made_log
+## (the item ledger's produced, as picked fruit is) and gathered_deadwood; the tree gives again deadwood_seasons later.
+func _deadwood_act(n: NPC, c: Dictionary, cell: Vector2i) -> bool:
+	if n.cell().distance_to(cell) > 2.5 or n.inv.has("axe") or not w.households[n.household].get("band", false):
+		return false
+	var t := w.tree_at(cell)
+	var key := "%d,%d" % [cell.x, cell.y]
+	if t.is_empty() or str(t.state) != "grown" or int(deadwood.get(key, 0)) > w.day():
+		return false
+	deadwood[key] = w.day() + roundi(Life.seasons_to_days(float(cfg().deadwood_seasons)))
+	n.inv.add("log", 1)
+	w.stat("made_log")
+	w.stat("gathered_deadwood")
+	_count("deadwood")
+	_rec("wild_production", {"claim": str(c.id), "by": n.id, "action": "deadwood", "goods": {"log": 1}})
+	return true
+
+
+## The gathered wood onto the claim's hearth (its household's pantry), up to keep_logs; more stays in the pack.
+func _store_logs(n: NPC, c: Dictionary) -> bool:
+	if n.cell().distance_to(step_of(c)) > float(cfg().home_radius):
+		return false
+	var pantry: Inventory = w.households[n.household].pantry
+	var k := mini(int(cfg().keep_logs) - pantry.count("log"), n.inv.count("log"))
+	if k > 0:
+		w.transfer(n.inv, pantry, "log", k)
+	return true
 
 
 func _near_boulder(c: Dictionary, n: NPC) -> Vector2i:
@@ -1766,6 +1856,10 @@ func act(n: NPC, a: Dictionary) -> bool:
 			return true
 		"firewood":
 			return _sell_firewood(n, int(a.get("hh", -1)))
+		"deadwood":
+			return _deadwood_act(n, c, Vector2i(int(a.get("x", 0)), int(a.get("y", 0))))
+		"store_logs":
+			return _store_logs(n, c)
 		"farm_till", "farm_sow", "farm_harvest":
 			return _field_act(n, c, step, Vector2i(int(a.get("x", 0)), int(a.get("y", 0))))
 		"deliver":
@@ -1865,7 +1959,17 @@ func to_dict() -> Dictionary:
 		d.store = (c.store as Inventory).to_dict()
 		cl.append(d)
 	return {"format": FORMAT, "claims": whole(cl), "next_id": next_id, "pop_history": whole(pop_history.duplicate(true)),
-		"last_left": whole(last_left.duplicate()), "returning": returning.duplicate(), "trips": whole(trips.duplicate(true)), "counts": whole(counts.duplicate())}
+		"last_left": whole(last_left.duplicate()), "returning": returning.duplicate(), "trips": whole(trips.duplicate(true)), "counts": whole(counts.duplicate()), "deadwood": _sorted_deadwood()}
+
+
+## The trees' deadwood days in cell-key order (a save writes the same however they were gathered).
+func _sorted_deadwood() -> Dictionary:
+	var out := {}
+	var keys := deadwood.keys()
+	keys.sort()
+	for k in keys:
+		out[k] = int(deadwood[k])
+	return out
 
 
 ## Whole-valued floats as ints, all through `v` (a fresh claim holds ints, a loaded one the JSON reader's floats): a save
@@ -1904,6 +2008,10 @@ func load_dict(d: Dictionary) -> void:
 	returning = (d.get("returning", {}) as Dictionary).duplicate()
 	trips = (d.get("trips", {}) as Dictionary).duplicate(true)
 	counts = (d.get("counts", {}) as Dictionary).duplicate()
+	deadwood = {}
+	var dw: Dictionary = d.get("deadwood", {})               # (older saves: none, every tree's wood is there)
+	for k in dw:
+		deadwood[str(k)] = int(dw[k])
 	_claim_cache.clear()
 	_sync_overworld()
 
