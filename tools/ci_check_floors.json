@@ -313,5 +313,6 @@
  "npc05_noted_growth_test": 3,
  "reg01_journey_reload_route_test": 8,
  "player_journey_test": 80,
- "demo_journey_test": 60
+ "demo_journey_test": 61,
+ "demo_kept_worlds_test": 55
 }

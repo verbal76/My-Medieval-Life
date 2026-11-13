@@ -221,7 +221,8 @@ func _run() -> void:
 	var prev := SAVE.get_basename() + ".previous.json"
 	var kept: bool = FileAccess.file_exists(prev) and str((SaveStore.inspect(prev, World.SAVE_VERSION).data as Dictionary).get("meta", {}).get("save_id", "")) == id0
 	check(kept, "the used-up world is kept beside it (%s)" % prev.get_file())
-	note("FINDING: the kept world (%s) is not offered anywhere in the game's menus: it is reached only by Settings, Saves, Import a save file and choosing that file by hand" % prev.get_file())
+	check(main.kept_worlds().any(func(e): return str(e.get("save_id", "")) == id0 and bool(e.get("expired", false))),
+		"the kept world (%s) is offered on the title's Kept worlds list, marked used up (B25-DEMO-KEPT-WORLDS)" % prev.get_file())
 	# journey finding 3 (DEMO-01: "Do not delete expired worlds"): a further new world puts Bea's world aside as the previous game;
 	# the used-up world it would have replaced is kept under its own name, never removed
 	var bea := str(main.save_meta.get("save_id", ""))
