@@ -99,5 +99,5 @@ static func warning(mark: int) -> String:
 	return "Demo: less than a minute of play left in this world."
 
 
-const CREATION_NOTE := "This is the demo of My Medieval Life. Each world you start has 120 minutes of play: the clock runs only while you play, never while the game is paused or on a menu. You may start as many worlds as you like. A demo world saves as normal and can be continued, with nothing lost, in the full game."
-const EXPIRED_NOTE := "This world's 120 minutes of demo play are used up. It has been saved, and it is kept: the full game of My Medieval Life continues it exactly where you left off, with everyone and everything in it. You can start a new world in the demo at any time."
+const CREATION_NOTE := "This is the demo of Forge My Life. Each world you start has 120 minutes of play: the clock runs only while you play, never while the game is paused or on a menu. You may start as many worlds as you like. A demo world saves as normal and can be continued, with nothing lost, in the full game."
+const EXPIRED_NOTE := "This world's 120 minutes of demo play are used up. It has been saved, and it is kept: the full game of Forge My Life continues it exactly where you left off, with everyone and everything in it. You can start a new world in the demo at any time."

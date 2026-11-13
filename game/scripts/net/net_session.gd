@@ -35,7 +35,7 @@ signal world_synced(mark: int)       # guest (MP C): the host's sections taken i
 signal verb_answered(rid: int, result: Variant)    # X20: the host's result of one of this guest's verbs (Main._on_verb_answered)
 
 const REFUSALS := {
-	"version": "That game runs a different version of My Medieval Life. Both players need the same version.",
+	"version": "That game runs a different version of Forge My Life. Both players need the same version.",
 	"password": "Wrong password.",
 	"full": "That world is full.",
 	"duplicate": "You are already playing in that world (from this device or with the same identity).",

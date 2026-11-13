@@ -376,6 +376,7 @@ jobs:
           res://tests/jus04_witness_knowledge_test.gd   # JUS-04: witness's kin do not learn crimes automatically
           res://tests/dialogue_perspective_test.gd   # REPAIR S1-S2: who speaks to whom, from what they know
           res://tests/save_transfer_test.gd
+          res://tests/name01_save_dir_test.gd   # NAME-01: Forge My Life save folder, export name, import
           res://tests/housing_test.gd
           res://tests/conservation_test.gd
           res://tests/recf1_test.gd

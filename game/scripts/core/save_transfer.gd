@@ -21,7 +21,7 @@ extends RefCounted
 ## older than MIN_VERSION is claimed to load.
 
 const BACKUP_DIR := "user://save_backups/"
-const FILE_FILTER := "*.json;My Medieval Life save;application/json"
+const FILE_FILTER := "*.json;Forge My Life save;application/json"
 
 ## Raw-data steps that must run before World.load_dict, keyed by the version they upgrade from (to the
 ## next). Every supported version (MIN_VERSION 14 to World.SAVE_VERSION) is otherwise read directly by World.load_dict;
@@ -178,4 +178,4 @@ static func suggested_name(d: Dictionary) -> String:
 	var p: Dictionary = d.get("player", {})
 	var day := int(float(d.get("minutes", 0.0)) / 1440.0) + 1
 	var date := Time.get_date_string_from_system().replace("-", "")
-	return "MyMedievalLife-%s-day%d-%s.json" % [str(p.get("name", "save")).replace(" ", ""), day, date]
+	return "ForgeMyLife-%s-day%d-%s.json" % [str(p.get("name", "save")).replace(" ", ""), day, date]

@@ -108,7 +108,7 @@ A `FileDialog` with `use_native_dialog = true` therefore opens the Android syste
 
 ## 5. Recovery instructions (requirement 14)
 
-**Copies the game keeps, in its storage folder** (`user://`: on PC `~/.local/share/godot/app_userdata/My Medieval Life/` on Linux, `%APPDATA%\Godot\app_userdata\My Medieval Life\` on Windows; on Android, inside the app until uninstalled):
+**Copies the game keeps, in its storage folder** (`user://`: on PC `~/.local/share/godot/app_userdata/Forge My Life/` on Linux, `%APPDATA%\Godot\app_userdata\Forge My Life\` on Windows; on Android, inside the app until uninstalled):
 - `save1.json`: the save.
 - `save1.json.bak`: the save before the last one.
 - `save1.previous.json`: the game before the last New game.

@@ -239,6 +239,7 @@
  "save_continuity_test": 5,
  "save_exact_test": 15,
  "save_transfer_test": 21,
+ "name01_save_dir_test": 16,
  "seed_traveler_test": 48,
  "services_d2_test": 92,
  "services_test": 51,

@@ -69,10 +69,16 @@ func _test_steam() -> void:
 	SteamPromo.opener = func(u: String) -> int:
 		opened.append(u)
 		return OK
+	# NAME-01 (owner 2026-11-13): the shipped file names Forge My Life's App ID, 5615690 (never the store item id 1442556)
 	SteamPromo.set_override({})
-	check(SteamPromo.url() == "https://store.steampowered.com/" and SteamPromo.label() == "Coming Soon on Steam" and not SteamPromo.has_page(), "until the store page is set: the Steam store's front page, 'Coming Soon on Steam' (no claim it can be wishlisted)")
-	check(SteamPromo.open() == "" and opened == ["https://store.steampowered.com/"], "the button opens the generic destination")
+	check(str(SteamPromo.cfg().get("app_id", "")) == "5615690" and SteamPromo.url() == "https://store.steampowered.com/app/5615690/" and SteamPromo.label() == "Wishlist on Steam" and SteamPromo.has_page(),
+			"game/data/steam.json: Forge My Life's store page (App ID 5615690), 'Wishlist on Steam'")
 	var c: Dictionary = SteamPromo.cfg().duplicate(true)
+	c.app_id = ""
+	c.store_url = ""
+	SteamPromo.set_override(c)
+	check(SteamPromo.url() == "https://store.steampowered.com/" and SteamPromo.label() == "Coming Soon on Steam" and not SteamPromo.has_page(), "with no store page set: the Steam store's front page, 'Coming Soon on Steam' (no claim it can be wishlisted)")
+	check(SteamPromo.open() == "" and opened == ["https://store.steampowered.com/"], "the button opens the generic destination")
 	c.app_id = "1234560"
 	SteamPromo.set_override(c)
 	check(SteamPromo.url() == "https://store.steampowered.com/app/1234560/" and SteamPromo.label() == "Wishlist on Steam", "with an app id set: the game's page, 'Wishlist on Steam'")

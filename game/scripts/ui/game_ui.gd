@@ -1747,7 +1747,7 @@ func _item_row(id: String, count: int, text: String, btn: String, cb: Callable, 
 
 # ---------------------------------------------------------------- title / pause / death ------
 func show_title(can_continue: bool) -> void:
-	_open("title", "My Medieval Life  (working title: The Well)" + ("  Demo" if Demo.is_demo() else ""), false)
+	_open("title", "Forge My Life" + ("  Demo" if Demo.is_demo() else ""), false)
 	_label("A living village of a hundred people who work, trade, eat and sleep whether or not you are watching. You are one of them.")
 	if Demo.is_demo():
 		_label("Demo: each world you start has 120 minutes of play, and continues in the full game.", 14)
@@ -1824,7 +1824,7 @@ func show_credits() -> void:
 	var c: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/credits.json"))
 	_open("credits", "Credits", true)
 	panel_back = func(): show_title(main.can_continue())
-	_label("My Medieval Life, by Hot Attic Games.", 18)
+	_label("Forge My Life, by Hot Attic Games LLC.", 18)
 	for p in c.packs:
 		_label("%s: %s (%s)" % [p.creator if p.creator != "to be confirmed" else "Creator to be confirmed", p.packs, p.licence], 15)
 		for key in ["url", "licence_url"]:          # GP-BANDIT-CAMP-ART: the creator's page and the licence, opened in the browser
@@ -2428,7 +2428,7 @@ func _settings_saves() -> void:
 	var save := SaveTransfer.read_save(main.save_path)
 	_label("Your game is saved inside the app. Uninstalling it, or installing a test build that cannot update the old one, deletes that save, so keep a copy outside the game and import it into the new build.", 16)
 	_label(("Your save: " + SaveTransfer.describe(save.data)) if save.ok else "No save yet.", 16, Color(1, 0.85, 0.5))
-	var suggested: String = SaveTransfer.suggested_name(save.data) if save.ok else "MyMedievalLife.json"
+	var suggested: String = SaveTransfer.suggested_name(save.data) if save.ok else "ForgeMyLife.json"
 	_button("Copy my save to a file...", func():
 		_pick_file(FileDialog.FILE_MODE_SAVE_FILE, "Copy the save to", suggested, func(target: String):
 			var r: Dictionary = main.export_save_to(target)

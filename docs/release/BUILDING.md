@@ -1,10 +1,16 @@
-# Building My Medieval Life
+# Building Forge My Life
 
 All three platforms are built by `.github/workflows/release.yml`, started by hand on an approved
 commit (never on a push; CLAUDE.md section 5). One run builds Linux, Windows and Android from the
 same commit with the same build number (the run number) and publishes them together as a GitHub
 Release (a pre-release unless built from `main`), with `SHA256SUMS.txt` and release notes that name
 the commit and include `docs/release/TESTING_CHECKLIST.md`.
+
+The packages are named `ForgeMyLife-B<n>-Android.apk`, `ForgeMyLife-B<n>-Windows.zip` (holding `ForgeMyLife.exe`) and
+`ForgeMyLife-B<n>-Linux.zip` (holding `ForgeMyLife.x86_64`), with `-Demo` before the platform for the demo edition
+(owner rename to Forge My Life, 2026-11-13, NAME-01). Builds up to Build 40 were named `MyMedievalLife-...`; their
+records keep those names. The Android application id stays `com.hotatticgames.mymedievallife.dev` (`ANDROID_SIGNING.md`).
+Steam: the game's App ID is 5615690; nothing is uploaded to Steam without the owner's explicit authorization.
 
 ## Build dependencies
 
@@ -30,7 +36,7 @@ on a mismatch (Godot's default icon differs by about 80 out of 255 per channel; 
 
     cd game
     godot --headless --path . --import
-    godot --headless --path . --export-release "Linux" ../out/pc/linux/MyMedievalLife.x86_64
-    godot --headless --path . --export-release "Windows Desktop" ../out/pc/windows/MyMedievalLife.exe
-    python3 ../tools/check_exe_icon.py ../out/pc/windows/MyMedievalLife.exe
-    godot --headless --path . --export-debug "Android" ../out/mymedievallife-dev.apk   # needs the Android SDK and a keystore in the editor settings
+    godot --headless --path . --export-release "Linux" ../out/pc/linux/ForgeMyLife.x86_64
+    godot --headless --path . --export-release "Windows Desktop" ../out/pc/windows/ForgeMyLife.exe
+    python3 ../tools/check_exe_icon.py ../out/pc/windows/ForgeMyLife.exe
+    godot --headless --path . --export-debug "Android" ../out/forgemylife-dev.apk   # needs the Android SDK and a keystore in the editor settings

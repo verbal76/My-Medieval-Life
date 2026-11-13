@@ -1,6 +1,6 @@
-# My Medieval Life: project instructions
+# Forge My Life: project instructions
 
-Hot Attic Games. Repository `verbal76/My-Medieval-Life`. This file is the single source of project
+Hot Attic Games LLC. Repository `verbal76/My-Medieval-Life`. This file is the single source of project
 rules for every agent and contributor. If another document disagrees with it, this file wins until
 the owner says otherwise. Update it in the same PR as any change to the workflow it describes.
 
@@ -55,7 +55,17 @@ At each meaningful checkpoint, and before a session ends, a context handoff or a
 
 ## 1. Purpose and status
 
-My Medieval Life is a 2D medieval game built from 16x16 pixel-art packs (mostly by Shade). The
+**Name (owner, 2026-11-13, NAME-01, `docs/directives/2026-11-13_name01_forge_my_life_master_directive.md` on `wip/requirements-control`).** The game's
+official player-facing name is **Forge My Life** (studio Hot Attic Games LLC; FML may be used internally, never in
+marketing); it was called My Medieval Life (working title *The Well*) until then. Unchanged on purpose: the repository
+name `verbal76/My-Medieval-Life` and its URLs, branch names such as `staging/my-medieval-life`, the Android application
+id `com.hotatticgames.mymedievallife.dev` (and `.demo`), data format ids (`mml-*`), source asset archive names
+(`My_Medieval_Life_Icon_Pack.zip`), owner directive file names, and historical records (directives, past build packets,
+audits, commits). Release packages are `ForgeMyLife-B<n>-Android.apk`, `-Windows.zip` and `-Linux.zip` (holding
+`ForgeMyLife.exe` and `ForgeMyLife.x86_64`); the Steam App ID is **5615690** (1442556 is a store item id, not the App ID).
+Inventory of the remaining old-name references: `docs/audits/2026-11-13_NAME01_OLD_NAME_INVENTORY.md`.
+
+Forge My Life is a 2D medieval game built from 16x16 pixel-art packs (mostly by Shade). The
 GitHub repo describes it as a "Mini RPG". Its direction is set by the owner's directives (`docs/directives/`) and
 World Design Rules (`docs/WORLD_DESIGN_RULES.md`): a living medieval village that sustains itself without the player,
 summarised in `docs/PROJECT_MEMORY.md`. **Its founding principle (owner, 2026-10-20, World Design Rule 022): "A village is allowed to fail. The simulation
