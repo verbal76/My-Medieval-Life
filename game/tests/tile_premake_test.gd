@@ -67,6 +67,23 @@ func _run() -> void:
 	var made := after.keys().filter(func(k): return not before.has(k))
 	check(places.size() > 20, "the overworld drawn round %d places: every settlement and landmark and the road south to %s" % [places.size(), str(south.get("name", "?"))])
 	check(made.is_empty(), "no tile is made while the overworld is drawn (%d made: %s)" % [made.size(), str(made.slice(0, 8))])
+	# Stream fix (B25-MOVE-STUTTER-INV, source #2): the village tiles the simulation draws in play (every field state's 4x4 edge
+	# set, ore, worked-out rock, stumps, saplings, frames, awnings, fences, fittings) are made at the start too: drawing each one,
+	# as the world's tile_changed draws it, makes no tile.
+	var play: Array = MapView.village_play_tiles(w.map)
+	var field_base := int(w.map.data.tiles.field.tilled)
+	check(play.has(field_base + 3 * int(w.map.data.atlases[0].columns) + 3) and play.has(int(w.map.data.tiles.field.ripe)), "the fields' edge variants are among the village's play tiles (%d values)" % play.size())
+	var vals := {}
+	MapView._tile_values(play, vals)
+	var before_play := tiles()
+	var cell := Vector2i(w.map.w - 2, w.map.h - 2)
+	var n := 0
+	for atlas in vals:
+		for t in vals[atlas]:
+			w.tile_changed.emit(cell, "field" if atlas == 0 else "below", int(atlas) * 100000 + int(t))
+			n += 1
+	var made_play := tiles().keys().filter(func(k): return not before_play.has(k))
+	check(n > 60 and made_play.is_empty(), "drawing the %d village tiles the simulation draws in play makes no tile (%d made: %s)" % [n, made_play.size(), str(made_play.slice(0, 8))])
 	var ts: TileSet = main.view.tileset
 	var water := ts.get_source(MapView.WATER_ATLAS) as TileSetAtlasSource
 	check(water.get_tiles_count() > 0 and water.get_tile_animation_frames_count(water.get_tile_id(0)) == MapView.WATER_FRAMES, "the water's tiles keep their %d frames" % MapView.WATER_FRAMES)

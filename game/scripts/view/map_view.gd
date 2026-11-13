@@ -221,6 +221,7 @@ func _make_all_tiles() -> void:
 	for path in OVERWORLD_TILE_DATA:
 		if FileAccess.file_exists(path):
 			_tile_values(JSON.parse_string(FileAccess.get_file_as_string(path)), named)
+	_tile_values(village_play_tiles(map), named)
 	for atlas in sources.size():
 		var src := sources[atlas]
 		if src.texture == null:
@@ -244,6 +245,32 @@ func _make_all_tiles() -> void:
 			if src.has_tile(coords) or src.get_tile_at_coords(coords) != Vector2i(-1, -1):
 				continue
 			_make_tile(atlas, coords, t)
+
+
+## Stream fix (B25-MOVE-STUTTER-INV, source #2): the village tiles the simulation draws during play that its layers may not hold at
+## the start, as tile values, so _make_all_tiles makes them with the rest. A field cleared or tilled by villagers drew an edge
+## variant not made before, and the TileSet change cost 113-222 ms. The field states' 4x4 edge sets (World.field_cell_tile,
+## Farming/FarmPlots.tile_for), ore, worked-out rock, stumps, saplings and site frames (village.json "tiles"), the stalls' awnings,
+## pens' fences and gates, fittings, the stamps' side wall and the wild fences and stone heaps.
+static func village_play_tiles(m: VillageMap) -> Array:
+	var out: Array = []
+	if m != null and m.data.has("tiles"):
+		var tiles: Dictionary = m.data.tiles
+		for k in tiles:
+			if str(k) != "field":
+				out.append(tiles[k])
+		var cols := int(m.data.atlases[0].columns)
+		for state in tiles.get("field", {}):
+			var base := int(tiles.field[state])
+			for row in 4:
+				for col in 4:
+					out.append(base + row * cols + col)
+	out.append_array(Business.AWNING)
+	for t in Farming.FENCE.values() + [Farming.GATE_TILE, Wilds.STONE_HEAP_TILE]:
+		out.append(Farming.COZY + int(t))
+	out.append_array(Fitting.ART.values())
+	out.append_array([Doorways.WALL, Wilds.FENCE_H, Wilds.FENCE_V, Wilds.FENCE_GATE])
+	return out
 
 
 ## Every whole number in parsed JSON `o` read as a tile value (atlas * 100000 + index), into `out` (atlas -> {index: true}).
