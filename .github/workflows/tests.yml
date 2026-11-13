@@ -178,6 +178,7 @@ jobs:
           res://tests/furniture_test.gd
           res://tests/play_test.gd
           res://tests/player_journey_test.gd   # Stage E (B25): a player's journey through the title, creation, work, trade, food, save and days
+          res://tests/extra_life_session_test.gd   # Extra Life preview (2026-11-12): a continuous session: talk, pack, fell, mine, hunt, craft, reeve, trade, eat, save and Continue
           res://tests/overworld_test.gd
           res://tests/atlas_test.gd
           res://tests/settlement_folk_test.gd
