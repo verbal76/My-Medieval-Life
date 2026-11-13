@@ -54657,6 +54657,11 @@
      "date": "2026-10-23",
      "change": "schema v2: COMPLETE AND VERIFIED -> approval OWNER APPROVED; implementation INTEGRATED; verification INTEGRATION VERIFIED; release UNKNOWN; COMPLETE",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-11-13",
+     "change": "note",
+     "why": "NAME-01 (owner 2026-11-13, docs/directives/2026-11-13_name01_forge_my_life_master_directive.md): the player-facing name is now Forge My Life and the working title The Well is retired; the repository name, Android id and internal identifiers still stay as REC-005 recorded; the save folder and package file names now follow the new name"
     }
    ],
    "integrated_in": [],
