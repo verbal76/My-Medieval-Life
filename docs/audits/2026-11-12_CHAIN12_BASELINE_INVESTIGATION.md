@@ -110,7 +110,7 @@ Household-nights without firewood: 7 on `df67e8e`, 29-48 on every Build 25R1 and
   firewood has no effect but this count and the player's daily message, so the band inflates the message ("N households had
   no firewood") with the outlaws' camp. **Classified: unintended (a counting and message defect introduced with the band's
   own household, `bf20dc9`).** Recorded as ND-29. Proposed fix: skip the band's household in the count, as ND-23 skips it
-  for relief; or, if the owner prefers, the band keeps its own fire. Not merged: it would not change the world's state.
+  for relief; or, if the owner prefers, the band keeps its own fire. Owner decision 2026-11-12: the band keeps a fire through the existing fuel system (answer "fuel only for now"); cause found: a claim's market errand bought seed before firewood; fixed on `wip/b25-nd29-band-campfire` `fbfe146` (firewood before seed, for every claim).
 - Household 10 is a poor village household (one adult, coins spread below a log's price in each purse): 7 nights on
   `df67e8e`, 9-15 now. A legitimate outcome (WDR-022), recorded.
 
@@ -147,15 +147,42 @@ an unchanged merge reproduced the gate's values exactly, as the local runs did.
 So every difference after `1f2ff4f` is accounted for by six merges: LIFE-03/04, audit-sim2 (JUS-02, NPC-02, REG-02 journeys),
 NPC-04, F015/P99, the probe findings (traveller paths), ND-23.
 
-## 6. Unresolved
+## 6. The first link isolated: merge `a9e9f6e` (B25R1 econ5, owner decisions 32 and 33)
 
-- The step from `bfce680` to `a9e9f6e` (Build 25R1 economy and map merges) is where outside income and the wealth tax
-  first fall; which merge does it is not yet isolated. Isolating it needs about 8 more paired runs (2 seeds each) on the
-  merges in that interval; their aggregate values are noisy on 2 seeds (seed 2 partly recovers), so the 365-day
-  four-seed campaigns are the better evidence of sustainability.
-- Sustainability over long periods (item 5): the chain 12 campaigns (runs 43332151718 seeds 1-2 and 43332156022 seeds
-  3-4, 365 days, recorded) are running; the earlier 365-day campaign on `1f2ff4f` (run 42297637074) reached 365 of 365 days
-  on both seeds with 0 CRITICAL and 0 confirmed defects.
+CI runs of the eight merges between `bfce680` and `a9e9f6e` (long-sims, seeds 1 and 2, 30 days, on `wip/b25-attr-<sha>`). Day 30:
+
+| Merge | seed 1 coins in / tax / repairs / mends | seed 2 coins in / tax / repairs / mends |
+|---|---|---|
+| `a995397` axe kept when courting | 2959 / 1922 / 240 / 57 | 2049 / 1774 / 276 / 68 |
+| `6c25674` int2 (generator 5, houses) | identical to `a995397` | identical |
+| `edf1854` econ1 (P1 founding, P2 first tool) | 3033 / 1973 / 192 / 51 | 2049 / 1789 / 280 / 69 |
+| `c3d9d91` econ2 (P4 ore on consignment, P5 land cleared by labour) | 3098 / 1977 / 211 / 56 | 1983 / 1745 / 243 / 60 |
+| `e097fab` econ3 (traders carry a traderless place's ore) | 3098 / 1969 / 208 / 55 | 1983 / 1745 / 243 / 60 |
+| `81c102a` visual (rivers, castle way) | 2889 / 1610 / 234 / 63 | 2029 / 1693 / 322 / 80 |
+| `fc35629` wood (generation 7) | 2833 / 1641 / 213 / 53 | 2307 / 1440 / 235 / 63 |
+| `fb64eab` traveller journey in save form | identical to `fc35629` | identical |
+| **`a9e9f6e` econ5 (gate 42124898077)** | **1923 / 955 / 111 / 21** | **1903 / 1310 / 202 / 47** |
+
+The village's outside income stays at 2833-3098 (seed 1) through every Build 25R1 merge and falls at `a9e9f6e` alone. That merge
+carries owner decisions 32 and 33 (2026-11-05): (Q32) a neighbouring trader may collect a place's spare ore after that place's own
+trader has first claim (`OffMapSettlement.consign_spare`); (Q33) settlement traders keep the 80-coin founding reserve: the line that
+kept 85% of a trader's till as protected trading capital ("only the margin above it is paid out") was removed. At day 30 on seed 1,
+from `fb64eab` to `a9e9f6e`, the caravans bought fewer iron bars (163 -> 109), planks (149 -> 111), ale (41 -> 20) and no eggs or
+feathers (60 -> 0), while the settlements' total coins rose (12317 -> 13087).
+
+Reading: the settlements' traders now keep a smaller protected reserve, so more of their till is paid out and less is left to buy
+the village's goods; the village's export income falls by about a third, and the chain of section 4.1 follows (cash, wealth tax,
+repairs, mends, carpentry, miners). This is **an emergent consequence of an owner decision (Q33, perhaps Q32 too)**, not a code
+defect; the two decisions' shares have not been separated (one more pair of runs, each with one of the two reverted, would do it).
+**Owner question:** is the village's lower export income (and the treasury's fewer repairs that follow) the intended effect of the
+80-coin trader reserve, or should the traders' buying capital be looked at again?
+
+## 6a. Still open
+
+- Sustainability over a year (item 5): the chain 12 campaigns (runs 43332151718 seeds 1-2 and 43332156022 seeds 3-4, 365 days,
+  recorded) are running; the earlier 365-day campaign on `1f2ff4f` (run 42297637074, after econ5) reached 365 of 365 days on both
+  seeds with 0 CRITICAL and 0 confirmed defects.
+- The miner-post rule (section 4.4): posts from reachable ore regardless of seams worked out; a pre-existing weakness, for the owner.
 
 ## 7. Recommendation (interim)
 
