@@ -288,7 +288,7 @@
       "owner": "Nobody: trees belong to no one.",
       "theft": "Never theft.",
       "npc_harvest": true,
-      "npc_note": "Woodcutters (NPCBrain._woodcutter, act \"chop\"): the nearest mature tree within 70 tiles nobody has claimed; they fell it in one go and do not replant.",
+      "npc_note": "Woodcutters (NPCBrain._woodcutter, act \"chop\"): the nearest mature tree within 70 tiles nobody has claimed; they fell it in one go and do not replant. The outlaw band, who hold no axe, gather fallen deadwood instead (Homesteads.plan_deadwood, ND-29): one log from a mature tree within homestead.deadwood_radius of their camp in homestead.deadwood_minutes, that tree again only homestead.deadwood_seasons later; the tree stands.",
       "player_harvest": true,
       "gather": true,
       "range": 1,
@@ -1099,6 +1099,7 @@
   },
   "code_sources": [
     {"items": ["pickaxe", "axe", "meat", "log", "plank", "hammer", "iron_bar", "coal", "iron_ore", "iron_sword", "leather", "hide", "wheat", "pottage", "roast_meat", "ale", "stone", "copper_sword", "leather_armor"], "text": "The villagers' starting stock (a one-time source: each job starts with its tools and some goods).", "source": "game/scripts/core/population.gd::_equip"},
+    {"items": ["log"], "text": "The outlaw band gathers fallen deadwood by hand for its camp fire (ND-29): one log from a mature tree near the camp, that tree again only some days later; the tree stands. Counted made_log.", "source": "game/scripts/core/homesteads.gd::_deadwood_act"},
     {"items": ["pottage", "wheat"], "text": "Each household's pantry starts with 3 pottage and start_household_wheat_per_member wheat a member.", "source": "game/scripts/core/population.gd::populate"},
     {"items": ["wheat_seed"], "text": "With the shared manor farming switch on (FSE-12, on in the game since FARM-YIELD-D1), the manor fields' farmers start with one wheat seed a field cell, shared among them: at world setup (Population.populate), or once when a save made before the shared model is loaded (World.start_shared_farming), never again.", "source": "game/scripts/core/farming.gd::give_seed_corn"},
     {"items": ["copper_sword"], "text": "Each bandit starts with a copper sword.", "source": "game/scripts/core/population.gd::populate"},

@@ -273,6 +273,7 @@ jobs:
           res://tests/reg08_stranded_route_job_test.gd   # REG-08 (owner 2026-11-12): a delivery nobody carries ends after 7 days, goods back, fee refunded
           res://tests/nd23_band_no_relief_test.gd   # ND-23 (owner 2026-11-12): the manor's relief is for the village's households, not the outlaw band
           res://tests/nd29_band_firewood_test.gd   # ND-29 (owner 2026-11-12): the band's camp fire fuelled by the villagers' firewood system; firewood before seed
+          res://tests/nd29_deadwood_test.gd   # ND-29 (owner 2026-11-12): the band gathers fallen deadwood without an axe: time, per-tree limit, saved, burned and exhausted
           res://tests/reg06_household_change_live_test.gd    # REG-06: a live resident is folded before their household changes
           res://tests/npc03_field_takeover_bookkeeping_test.gd    # NPC-03: a manor hand taking a field is counted and recorded
           res://tests/npc01_path_backoff_test.gd    # NPC-01: a villager whose walks keep failing waits, longer each time, before deciding again
