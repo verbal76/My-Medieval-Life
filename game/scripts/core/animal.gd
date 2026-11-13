@@ -28,6 +28,14 @@ var anger_left := 0.0        # real seconds the fight lasts unless renewed
 var bite_cd := 0.0           # real seconds before it can bite again
 var act := ""                # a one-off animation playing: "attack", "hit" ("" for none)
 var act_left := 0.0
+# B25-ANIMAL-HUNT-AI: a struck animal's reaction (not saved, as a fight is not: it loads calm and reacts to the next blow)
+var startle_left := 0.0      # real seconds it stands startled, facing whoever struck it
+var alarm := ""              # who it is running from after a blow ("player" / "npc:<id>"), "" for nobody
+var alarm_left := 0.0        # real seconds the flight lasts at least (renewed by each blow)
+var run_dir := Vector2.ZERO  # the heading of its flight (a leg of the zigzag)
+var zig_left := 0.0          # real seconds before the next leg
+var zig_side := 1            # which side of straight away the next leg bends to (they alternate)
+var pause_left := 0.0        # real seconds of a look back (a hesitation) while running
 
 
 func cell() -> Vector2i:
