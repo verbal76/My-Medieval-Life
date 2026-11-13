@@ -181,7 +181,7 @@ def offsite(dest: Path) -> list:
     count = git("rev-list", "--count", f"{remote}..HEAD") if have else "all"
     readme = dest / f"mml-{stamp}-README.txt"
     readme.write_text(
-        f"My Medieval Life: off-machine backup {stamp}\n\n"
+        f"Forge My Life: off-machine backup {stamp}\n\n"
         f"Bundle file: {text.name} (base64 of a git bundle)\nsha256 of the decoded bundle: {sha}\n"
         f"Bundle size: {len(raw)} bytes\nBuilds on (already on GitHub): {have or 'nothing: full history'}\n"
         f"Commits not on GitHub: {count}\n\nRefs in the bundle:\n{heads}\n\n"
