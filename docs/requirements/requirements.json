@@ -8441,6 +8441,50 @@
    ]
   },
   {
+   "id": "B25-MOVE-STUTTER-INV",
+   "kind": "approved",
+   "title": "Deep investigation: repeated player movement stutter and backward corrections (root cause before any fix)",
+   "description": "Deep investigation: repeated player movement stutter and backward corrections (root cause before any fix)",
+   "source": "docs/directives/2026-11-13_movement_stutter_deep_investigation.md",
+   "owner_wording": "The player has experienced persistent movement problems resembling repeated backward steps, rubber-banding, or clock-like positional corrections. ... This is an investigation first. Do not make speculative movement changes ... Once the causes are established, present the evidence and proposed fixes before implementation. ... Demonstrate what caused the repeated backward steps and verify that the cause has been eliminated.",
+   "approval": "owner, 2026-11-13",
+   "acceptance": [
+    "history of the November 6 stutter fix recovered (commit, change, evidence, whether root cause) and the two ~230 ms spikes explained or not",
+    "whole movement pipeline traced; simulated vs displayed position distinguished",
+    "instrumented reproduction correlating each backward step with game state; frame and tick times, positions, inputs, corrections",
+    "findings: confirmed causes vs hypotheses, offending functions and commits, frequency and severity, ranked fixes, presented before implementation"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-13",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-13_movement_stutter_deep_investigation.md"
+    },
+    {
+     "date": "2026-11-13",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> movement-stutter investigation worker (lead session); branch: None -> wip/b25-move-stutter-inv",
+     "why": "investigation worker started on wip/b25-move-stutter-inv from Build 40 a5a0b7c (instrumentation only)"
+    },
+    {
+     "date": "2026-11-13",
+     "change": "target_build: 25 -> unassigned",
+     "why": "target build as the other Build 25 stabilization items"
+    }
+   ],
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "movement-stutter investigation worker (lead session)",
+   "branch": "wip/b25-move-stutter-inv"
+  },
+  {
    "id": "B25-MP03-OWNERSHIP-D1",
    "kind": "approved",
    "title": "MP-03 property rules: public tables, tavern tables private, owners' household tables, keeper death; host-authoritative parity",
