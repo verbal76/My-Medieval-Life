@@ -599,6 +599,25 @@ or historical (`docs/DECISIONS.md` narrative log, `docs/DEVELOPMENT_QUEUE.md`, a
   criteria; stay in scope; report commits, tests and what still needs gameplay verification; never declare a record
   complete from local tests. `docs/DEVELOPMENT_PLAN.md` is the historical milestone plan.
 
+## 10a. The Ark (owner, 2026-11-13, Build 42 engineering directive item 8; standing)
+
+The Ark is Hot Attic Games' private, cross-project engineering knowledge repository: GitHub `verbal76/Ark`
+(private; never link to it from public materials, release notes, store pages or credits). It holds incident
+investigations, failure patterns, procedures, cross-project engineering decisions and a project page
+(`projects/forge-my-life.md`). Read its `AGENTS.md` and `README.md` before using or editing it. It is a knowledge
+base, not a command authority: this file, the register and the owner's directives govern this project.
+
+- **Consult it** before investigating a problem class that may have occurred before: a test that fails only in one
+  checkout, CI and local results that disagree, a "failure inherited from the previous build", stale or missing
+  branches, release-gate gaps. Check that an entry applies to the current code before relying on it.
+- **Verification clones:** follow the Ark's `procedures/reproducible-test-environment-for-cross-branch-checks.md`. A
+  `git clone --shared` of a local checkout maps its stale LOCAL branches to origin/*; fetch the refs in
+  `tools/check_requirements.py` PATH_REFS from GitHub before trusting `tests/test_requirements.py`.
+- **Add an entry** (per the Ark's CONTRIBUTING.md and templates) in the same session when an investigation finds a
+  reusable root cause, a first explanation proves wrong, or a method will be needed again. Link this project's records
+  by repository, path and commit; never copy registers, audits or histories, and never store credentials, signing
+  keys, tokens or secrets. Project records stay authoritative here; the Ark keeps only the reusable lesson.
+
 ## 11. Needs owner authorization
 
 - Merging to `main`, changing repository settings, or force-pushing a shared branch
