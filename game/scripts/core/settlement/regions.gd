@@ -423,10 +423,8 @@ func road_trade() -> void:
 ##   settle   every trader (or the treasury a closed trader left them to) that holds pay set aside for another place's sources, or that
 ##            place's goods held unsold for rules.consign_hold_days (a treasury's at once: it does not trade them), sends one walker
 ##            there with the coins and the goods (SettlementTrips "consign": pay, give); a trader's walker collects again while there;
-##   collect  a place whose businesses hold goods of rules.consign above their keep, beyond what its own trader (if any) still has carry
-##            room for (OffMapSettlement.consign_spare: its own trader keeps first claim; owner 2026-11-05, question 32), is visited by
-##            the nearest other trader (road length, then id) with carry room for them that has a walker to send, one a round
-##            (SettlementTrips "consign").
+##   collect  a place with no trader of its own whose businesses hold goods of rules.consign above their keep is visited by the nearest
+##            trader (road length, then id) with carry room for them that has a walker to send, one a round (SettlementTrips "consign").
 ## The goods stay their source's (the trader's `consign` "<place>/<type>"), are sold only to the village, and pay their source
 ## trader_pays_share when sold (OffMapSettlement._consign_sold). Nobody is told to keep trading or to start: only real walkers, stock and
 ## coins (WDR-022: no walker, no room, no surplus: nothing moves).
@@ -445,11 +443,16 @@ func consign_round(d: int) -> void:
 				if by_id.has(src) and not _trip_to(s, str(src), "consign"):
 					_consign_settle(s, owner, rec, str(src), d, hold)
 	for src: OffMapSettlement in list:
+		if not src.trader().is_empty():
+			continue
 		var spare := {}
-		for item in items:
-			var n := src.consign_spare(str(item))           # Q32: above what its own trader has first claim to
-			if n > 0:
-				spare[item] = n
+		var bts: Array = src.biz.keys()
+		bts.sort()
+		for bt in bts:
+			for item in items:
+				var n := int(src.biz[bt].stock.get(item, 0)) - int(src._keep(src.biz[bt]).get(item, 0))
+				if n > 0:
+					spare[item] = int(spare.get(item, 0)) + n
 		if spare.is_empty():
 			continue
 		var carriers := []
