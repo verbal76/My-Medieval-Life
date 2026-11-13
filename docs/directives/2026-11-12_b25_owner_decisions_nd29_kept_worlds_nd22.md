@@ -21,3 +21,11 @@ Prioritize the Extra Life Windows preview once the animal fix is integrated and 
 Do not activate the candidate simulation baseline without approval. No Steam uploads or public releases.
 
 Update the tracker and decision register with these decisions and their rationale.
+
+---
+
+Follow-up (owner answer, 2026-11-12 about 20:30 EST, to the lead's question that the game has no cold exposure today: a household
+without firewood is only counted and mentioned; nobody loses health or rest from cold): **"Fuel only for now (Rec.)"** — the band
+gathers and burns logs at its camp through the same nightly log burn villagers use, and the campfire shows lit or out; the band then
+counts as cold, like a villager household, only when its fire really is out. No new health effect for anyone until the owner designs
+cold exposure.

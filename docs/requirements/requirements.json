@@ -8654,9 +8654,15 @@
      "date": "2026-11-13",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-12_b25_owner_decisions_nd29_kept_worlds_nd22.md"
+    },
+    {
+     "date": "2026-11-13",
+     "change": "owner_answer",
+     "why": "owner answer 2026-11-12: fuel only for now; no new cold health effect for anyone until the owner designs cold exposure (DCR-01: the game has no cold exposure today)"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "owner_answer": "Fuel only for now: the band gathers and burns logs at its camp through the villagers' nightly log burn; the campfire shows lit or out; cold counted only when its fire is out; no new health effect"
   },
   {
    "id": "B25-NINE",
