@@ -258,6 +258,7 @@ func _init() -> void:
 			print("JOBS " + JSON.stringify(_jobs_line(d + 1)))
 			print("ORE " + JSON.stringify(_ore_line(d + 1)))
 			print("LAND " + JSON.stringify(_land_line(d + 1)))
+			print("FIREWOOD " + JSON.stringify(_firewood_line(d + 1)))
 			dev_series.append(_dev(d + 1))
 			print("ECON10 " + JSON.stringify(dev_series[-1]))
 			# B25-CAPABILITY: the village's current industry levels, its milestone record (first days), the milestones announced
@@ -1643,6 +1644,45 @@ func _ore_line(day: int) -> Dictionary:
 
 
 ## B25-ECON-P5: the ground cleared into manor fields (read only): blocks left, cells tilled, fields made, the want and the board.
+## ND-29 (owner 2026-11-12 23:10: "Verify ... long-term sustainability"): read only. Each claim: its kind (band or an ordinary
+## homestead), status, living members, axes held, hearth logs, cold nights so far (cold_hh_<h>), and the mature overworld trees
+## within deadwood_radius of its house with how many of them are waiting for their deadwood (Homesteads.deadwood). Totals: logs
+## gathered as deadwood (all, by claims, by players), made and burned logs.
+func _firewood_line(day: int) -> Dictionary:
+	var hs: Homesteads = w.homesteads
+	var r := int(Homesteads.cfg().deadwood_radius)
+	var o: Overworld = w.map.overworld
+	var claims := []
+	for c in hs.claims:
+		var h := -1
+		for hi in w.households.size():
+			if str(w.households[hi].get("homestead", "")) == str(c.id):
+				h = hi
+		var alive := 0
+		var axes := 0
+		if h >= 0:
+			for m: NPC in w.brain._members(h):
+				alive += 1
+				axes += 1 if m.inv.has("axe") else 0
+		var grown := 0
+		var waiting := 0
+		if o != null and str(c.status) != "abandoned":
+			var home := Homesteads.house_of(c).get_center()
+			for cy in range(Overworld.chunk_of(home - Vector2i(r, r)).y, Overworld.chunk_of(home + Vector2i(r, r)).y + 1):
+				for cx in range(Overworld.chunk_of(home - Vector2i(r, r)).x, Overworld.chunk_of(home + Vector2i(r, r)).x + 1):
+					for t in o.chunk_trees(Vector2i(cx, cy)):
+						if t.is_empty() or str(t.state) != "grown" or absi(int(t.x) - home.x) > r or absi(int(t.y) - home.y) > r:
+							continue
+						grown += 1
+						if int(hs.deadwood.get("%d,%d" % [int(t.x), int(t.y)], 0)) > w.day():
+							waiting += 1
+		claims.append({"id": str(c.id), "band": str(c.get("path", "")) == "band", "status": str(c.status), "h": h, "alive": alive, "axes": axes,
+			"hearth": (w.households[h].pantry as Inventory).count("log") if h >= 0 else 0, "cold": int(_st("cold_hh_%d" % h)) if h >= 0 else 0,
+			"trees": grown, "waiting": waiting})
+	return {"day": day, "gathered": int(_st("gathered_deadwood")), "by_claims": int(_st("homestead_deadwood")), "by_players": int(_st("player_deadwood")),
+		"made_log": int(_st("made_log")), "burned_log": int(_st("burned_log")), "felled_log": int(_st("felled_log")), "claims": claims}
+
+
 func _land_line(day: int) -> Dictionary:
 	var lc: LandClearing = w.clearing
 	var per := []
