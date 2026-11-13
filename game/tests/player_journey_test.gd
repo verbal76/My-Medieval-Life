@@ -250,6 +250,12 @@ func _manor_work(when: String) -> bool:
 			took = true
 	else:
 		note("%s, %s: no board work: %s" % [when, w.clock_text(), _talk_text()])
+		# journey finding 2: the opening hint sends a new player to the reeve, whose board is set at five in the evening; with
+		# nothing on it yet the reeve says when to come back and who else hires, so the first morning is no dead end
+		if w.manor_work.jobs.is_empty():
+			var said := _talk_text()
+			var due := "this evening" if w.last_reeve_day != w.day() else "tomorrow evening"
+			check(said.contains(due) and said.contains("Any work for me?"), "%s: with nothing on the board the reeve says when to ask again (%s) and who else hires" % [when, due])
 	var mj: Dictionary = w.manor_work.job_of("player")
 	var manor_done := false
 	if took and not mj.is_empty():

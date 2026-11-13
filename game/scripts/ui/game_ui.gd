@@ -3316,8 +3316,11 @@ func show_manor_jobs(reeve: NPC) -> void:
 	var open := mw.open_for("player")
 	if open.is_empty():
 		var any := mw.jobs.any(func(j): return j.taker == "")
+		# journey finding 2: the reeve reckons up the manor's work at five in the evening (World: hour 17, reeve_day); with nothing
+		# on the board yet (a new game's first morning) the reeve says when to ask again and who else hires
+		var due := "this evening" if w.last_reeve_day != w.day() else "tomorrow evening"
 		_talk_view(reeve, "The manor's chest can't spare a wage today. Ask me another day." if any
-				else "There's nothing the manor needs carried, quarried or mended just now.")
+				else "There's nothing the manor needs carried, quarried or mended just now. I reckon up the manor's work at five; ask me again %s. Farmers, miners and woodcutters may have work for you: ask them \"Any work for me?\"" % due)
 		return
 	_open("manor_jobs", "Work for the manor  ·  you have %d coins" % w.player.coins)
 	_label("%s: \"This is what the manor needs doing. You're paid from the manor's chest when it's done.\"" % reeve.name, 18, Color(1, 0.85, 0.5))
