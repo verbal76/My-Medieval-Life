@@ -8840,13 +8840,19 @@
      "date": "2026-11-13",
      "change": "owner_answer",
      "why": "owner 2026-11-12 23:10: deadwood for ordinary homesteaders and the player approved; 60 min/log, one log a tree every 4 days, 40 tiles provisionally accepted; three hearth logs protected; keep separate from Build 40"
+    },
+    {
+     "date": "2026-11-13",
+     "change": "commits + 0b8b1b8",
+     "why": "worker: deadwood extended to ordinary homesteaders (claims without an axe) and the player (18 s, one log, no axe; guest via host C2 verb), hearth logs also protected from the claim workshop (Wilds.craft_spare, food recipes excepted); nd29_homestead_deadwood_test 45/0 (floor 45), world 339/0, start 524/0, wilds 72, nd29_deadwood 34, band_firewood 7, homestead 49, multiplayer_c 326, net_mp4 148, wiki 144, save suites, farming 224 all 0 failures; 120-day seed 1 fingerprint identical to d4f63ab (no ordinary homestead gathered: they buy an axe); seed 2 new-only 120 days leaks 0; no-axe probe 40 days: 37 logs, 0 cold nights, no depletion. Needs ND-28 PACED entry on merge. Kept out of Build 40"
     }
    ],
    "lifecycle": "ACTIVE",
    "owner_answer": "Band, homesteaders without an axe and the player may gather deadwood (existing interaction systems); 60 minutes a log, one log per tree every four days, 40-tile radius (provisional); three hearth logs protected from nonessential building; verify conservation, determinism, save/load and long-term sustainability; kept out of Build 40 until simulation consequences are approved",
    "branch": "wip/b25-nd29-band-campfire",
    "commits": [
-    "fbfe146"
+    "fbfe146",
+    "0b8b1b8"
    ],
    "assigned_worker": "lead"
   },
