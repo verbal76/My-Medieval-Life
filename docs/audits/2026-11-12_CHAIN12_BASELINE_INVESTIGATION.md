@@ -38,8 +38,8 @@ outputs (36 gate runs) and local or CI reruns of single merges.
 | 1 | `df67e8e` -> `1f2ff4f` (109 commits) | Build 25R1 scope: the outlaw band as its own household (`bf20dc9`, owner B25R1-Q2 a: households 25 -> 26 at the founding), the region, settlements, water, homesteads, presence and roads merges, overworld generations 5-8, the economy merges P1-P5 and owner decisions 32/33 | gates at f60772f, bfce680, a995397, a9e9f6e, 20e579e, 832f711, 1f2ff4f; founding bisect (`SIM_BASELINE_DIFFERENCES_B25R2.md`) | Expected (approved scope), but its economic effects are examined in section 4 and two problems are raised there |
 | 2 | seed 2 only, at `229f76e` | LIFE-03/LIFE-04 merge (sage succession; a widow(er) may remarry) | local run: `f0a854c` (brush-off guard) keeps the old seed 2 values; `229f76e` gives the new ones | Expected (owner decisions) |
 | 3 | seed 1 day 30, at `acc24b2` | audit-sim2 merge: JUS-02, NPC-02, REG-02 journey part | local runs: `e44d6b8`, `b3a1696` (EMP-03), `dd0ba5b` (audit-sim1) keep the old values | Expected (audit fixes) |
-| 4 | chain 8 `5503614` -> `e21bfc6` | emigration with spouse, BIZ-06, TRD-04, NPC-04 | CI runs on each merge (section 5) | see section 5 |
-| 5 | chain 9 `e21bfc6` -> `57583fb` | REG-02 debt, F015/P99, probe findings and traveller paths, SAV-04/NPC-01 | CI runs on each merge (section 5) | see section 5 |
+| 4 | chain 8, at `e21bfc6` | NPC-04 (the other three chain 8 merges change nothing) | CI runs on each merge (section 5) | Expected (audit fix) |
+| 5 | chain 9, at `9da9e47` and `f04782f` | F015/P99 and the probe findings (traveller paths); REG-02 debt and SAV-04/NPC-01 change nothing | CI runs on each merge (section 5) | Expected (owner-approved fix; defect fix) |
 | 6 | chain 11, at `5c712cf` | ND-23: the manor's grain relief no longer goes to the outlaw band (owner "Exclude the band") | local runs: `0ed4c8b` (guest trust) and `3f94e2b` (MP-07) keep chain 10's values; `5c712cf` gives chain 12's exactly | Expected (owner decision) |
 | - | no effect | `f0a854c`, `e44d6b8` (audit fixes), `b3a1696`, `dd0ba5b`, chain 10 (owner decisions, INV-02 off, MP-06, NPC-01 fix), guest trust, MP-07, journey tests, the chain-scenario harness fix, ND-26, station_tap fix | identical values | - |
 
@@ -129,7 +129,23 @@ Household-nights without firewood: 7 on `df67e8e`, 29-48 on every Build 25R1 and
 
 ## 5. Chain 8 and chain 9 merges
 
-(filled from the CI runs on `wip/b25-attr-*`; see below)
+CI runs of each merge (long-sims, seeds 1 and 2, 30 days, on `wip/b25-attr-<sha>`; runs 43340320854-43340343765). A CI run of
+an unchanged merge reproduced the gate's values exactly, as the local runs did.
+
+| Merge | Values (s1 d10, s1 d30, s2 d10, s2 d30: households/alive/currency/treasury) | Effect |
+|---|---|---|
+| chain 7 `5503614` (gate) | 26/110/2957/70, 26/119/3295/37, 26/107/2973/107, 26/112/3760/185 | - |
+| `e9ee6f4` emigration with spouse | identical to `5503614` | none |
+| `b0faa1a` BIZ-06 | identical | none |
+| `0d0ecd0` TRD-04 | identical | none |
+| `e21bfc6` NPC-04 (evening companion away or underground) | 26/109/2957/70, 26/117/3321/76, (s2 d10 same), 26/112/3799/298 | **moves the values**: expected (audit fix; owner-approved list) |
+| `3bb486d` REG-02 debt part | identical to `e21bfc6` | none |
+| `9da9e47` F015/P99 (food held vs purchasing power; fallback food purchase) | 26/114/3037/56, 26/122/3386/90, 26/111/3032/87, 26/118/3691/146 | **moves the values**: more villagers alive on both seeds; expected (owner approved 2026-11-12) |
+| `f04782f` probe findings (travellers walk round settlement buildings; village map) | 26/109/2997/95, 26/115/3286/193, 26/107/3010/106, 26/112/3688/107 | **moves the values** to chain 9's exactly: expected (defect fix) |
+| `57583fb` SAV-04 test and NPC-01 walk back-off | identical to `f04782f` | none |
+
+So every difference after `1f2ff4f` is accounted for by six merges: LIFE-03/04, audit-sim2 (JUS-02, NPC-02, REG-02 journeys),
+NPC-04, F015/P99, the probe findings (traveller paths), ND-23.
 
 ## 6. Unresolved
 
