@@ -4,6 +4,8 @@ extends SceneTree
 ##   (1) swings at a seam (player_mine) faster than the single-player swing takes are refused; at the player's own pace each is
 ##       taken, so legitimate mining goes on; over many requests the guest gets no more swings than the time allows;
 ##   (2) the same for the blows of a felling (player_chop: the felling's time over its blows);
+##   (2b) a cell tilled (farm.till) faster than the till takes is refused; at its pace it is tilled, and the host credits the
+##       guest's farming work record with the till's time (the guest names no figure);
 ##   (3) sword blows (player_melee_npc, player_melee_animal) faster than a swing are refused; at a swing's pace they land;
 ##   (4) a seam or tree more than the single-player cell reach away (World.player_reach_cell), but within the screen's 24 tiles,
 ##       is refused; a pickaxe or axe the guest does not hold is refused;
@@ -149,6 +151,39 @@ func _init() -> void:
 			var r := verb(w, g, "player_chop", [far_tree, 1, "axe"])
 			check(not r.ok and str(far_tree.state) == "grown" and int(w.tree_hits(Vector2i(int(far_tree.x), int(far_tree.y)))) == 0,
 				"a tree more than 5 tiles off (within the screen's 24) takes no blow (%s)" % r.text)
+
+	# 2b. Farm work: a cell tilled is paced by the till's time and credited to the guest's work record by the host.
+	g.coins = 3000
+	var gref: String = w.player_ref(g)
+	var rect: Rect2i = w.construction.find_ground("house", Vector2i(30, 30), gref)
+	var land: Dictionary = w.property.claim(rect, gref, false)
+	check(not land.is_empty() and w.holds(gref, land), "setup: the guest holds a parcel of open ground (%s)" % w.property.why)
+	if not land.is_empty():
+		var cells := []
+		for j in range(1, int(land.h) - 1):
+			for i in range(1, int(land.w) - 1):
+				var c := Vector2i(int(land.x) + i, int(land.y) + j)
+				if cells.size() < 3 and str(w.as_actor(g, func(): return w.farm.till_refusal(c, g))) == "":
+					cells.append(c)
+		check(cells.size() == 3, "setup: three cells the guest may till")
+		if cells.size() == 3:
+			g.pos = Vector2(cells[0]) + Vector2(0.5, 1.5)
+			g.stamina = g.stamina_cap()
+			var till_secs := float(w.farm.till_cost(g).seconds)
+			var gm := float(GameData.b("game_minutes_per_second"))
+			var fd0 := w.experience.days(gref, "farming")
+			now += 100.0
+			var r1 := verb(w, g, "farm.till", [cells[0], g])
+			var r2 := verb(w, g, "farm.till", [cells[1], g])
+			check(r1.ok and w.farm.cells.has(cells[0]) and not r2.ok and not w.farm.cells.has(cells[1]),
+				"a cell tilled is taken; a second sent at once is refused (%s)" % r2.text)
+			now += till_secs
+			g.stamina = g.stamina_cap()
+			var r3 := verb(w, g, "farm.till", [cells[1], g])
+			check(r3.ok and w.farm.cells.has(cells[1]), "a till's time later (%.1f s) the next cell is tilled (%s)" % [till_secs, r3.text])
+			var want := 2.0 * till_secs * gm / float(WorkExperience.cfg().get("minutes_per_day", 480))
+			var got := w.experience.days(gref, "farming") - fd0
+			check(absf(got - want) < want * 0.01 + 0.00001, "the two cells are credited to the guest's farming record by the host (+%.5f days, want %.5f)" % [got, want])
 
 	# 3 and 5. The sword: a swing's pace, a sword's reach.
 	var villager: NPC = null
