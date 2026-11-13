@@ -1,12 +1,12 @@
 ; Engine configuration file.
-; Godot 4.7 project for My Medieval Life (working title: The Well).
+; Godot 4.7 project for Forge My Life (NAME-01, 2026-11-13; formerly My Medieval Life).
 
 config_version=5
 
 [application]
 
-config/name="My Medieval Life"
-config/description="Working title: The Well. A living medieval village built on Bob's Game Designer spec."
+config/name="Forge My Life"
+config/description="Forge My Life by Hot Attic Games LLC. A living medieval village."
 run/main_scene="res://scenes/main.tscn"
 config/icon="res://assets/icon/icon_512.png"
 boot_splash/bg_color=Color(0, 0, 0, 1)

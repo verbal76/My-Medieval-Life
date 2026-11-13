@@ -90,7 +90,7 @@ func test_export() -> void:
 	var r := SaveTransfer.export_save(save, out)
 	check(r.ok and _raw(out) == _raw(save), "a copy of the save is written to the chosen file and reads back the same")
 	check(SaveTransfer.export_save(DIR + "nothing/save1.json", out + "2").ok == false, "with no save there is nothing to copy")
-	check(SaveTransfer.suggested_name(JSON.parse_string(_raw(save))).begins_with("MyMedievalLife-"), "the suggested file name names the game")
+	check(SaveTransfer.suggested_name(JSON.parse_string(_raw(save))).begins_with("ForgeMyLife-"), "the suggested file name names the game (NAME-01: Forge My Life)")
 
 
 ## Requirement 12: every kind of persistent world data comes through an import intact.
