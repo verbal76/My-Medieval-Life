@@ -27,6 +27,9 @@ jobs:
           for b in staging/my-medieval-life wip/build18 wip/build17 wip/expansion18-preparation wip/expansion19-preparation wip/expansion20-preparation wip/expansion21-preparation; do
             git fetch --depth=1 origin "$b:refs/remotes/origin/$b" || echo "note: $b not fetched"
           done
+          # audit 2026-11-13 (docs/audits/2026-11-13_INHERITED_FAILURES_AUDIT.md): a branch not fetched makes the register's
+          # path check undecidable and silently weaker, so fail here, loudly, instead of passing with less checked
+          python3 tools/check_test_env.py --strict
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
