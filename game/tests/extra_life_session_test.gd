@@ -14,6 +14,7 @@ extends "res://tests/player_journey_test.gd"
 ##   godot --headless --path game --script res://tests/extra_life_session_test.gd -- --rounds 99 --wall 40
 
 const SESSION_SAVE := "user://test_saves/extra_life_session_test/save1.json"
+const STUCK_SAVE := "user://test_saves/extra_life_session_test/stuck.json"
 
 var rounds := 1
 var wall_minutes := 0.0
@@ -26,6 +27,7 @@ var events := {}                   # what happened how often (felled, hunted, cr
 var misses := {}                   # what could not be done this round, and why (counted)
 var talked_to := {}
 var phase := ""
+var stuck_saved := false
 var spike_phases := {}             # the phase each frame over 50 ms fell in
 var reload_loop := 0              # --reload-loop N: after the rounds, N saves and Continues in a row (memory per reload)
 var shots := ""                    # --shots DIR: save the screen at key moments of round 1 (needs a display: xvfb-run, no --headless)
@@ -42,6 +44,50 @@ func _frames(n: int) -> void:
 		if ms > 50.0:
 			spikes += 1
 			spike_phases[phase] = "%s %.0f" % [str(spike_phases.get(phase, "")), ms]
+
+
+## The walk, and when it fails, what is around the player (stuck reports: the level, the solid cells about them, the route).
+func _walk_to(goal: Vector2, within := 1.4, max_frames := 900) -> bool:
+	var ok := super._walk_to(goal, within, max_frames)
+	if not ok:
+		var w: World = main.world
+		var p := w.player
+		var c := Vector2i(p.pos.floor())
+		var rows := []
+		for dy in range(-2, 3):
+			var row := ""
+			for dx in range(-2, 3):
+				row += "@" if dx == 0 and dy == 0 else ("#" if w.solid_for_player(c + Vector2i(dx, dy)) else ".")
+			rows.append(row)
+		var route := w.path_for_player(c, Vector2i(goal.floor()))
+		if not stuck_saved and route.size() > 0 and p.alive:
+			stuck_saved = true                # a copy of the world as it is when a walk with a route fails, to look at after
+			var keep: String = main.save_path
+			main.save_path = STUCK_SAVE
+			main.save_game(false)
+			main.save_path = keep
+			note("STUCK? the world saved to %s" % ProjectSettings.globalize_path(STUCK_SAVE))
+		note("STUCK? walk to %s failed: player at %s, level %d, place '%s', around %s, a route of %d steps, walk_stuck %.1f, hp %.0f, hunger %.0f" % [
+			str(goal), str(p.pos), w.player_level, w.place_of(p.pos), "/".join(rows), route.size(), main.walk_stuck, p.hp, p.hunger])
+		note("STUCK? main: chase %s, talk_to %s, reach_to %s, travel route %d (set_to %s), gather %s, action '%s', furn %s, window '%s', move_to %s, walk_path %d at %d" % [
+			str(main.chase.get("species") if main.chase is Animal else (main.chase.name if main.chase != null else null)), str(main.talk_to.name if main.talk_to != null else null),
+			str(main.reach_to), main.travel.route.size(), str(main.travel.set_to), str(main.gather.keys()), str(main.action.get("label", "")),
+			str(main.furn.get("kind", "")), main.ui.panel_kind, str(main.move_to), main.walk_path.size(), main.walk_i])
+		var trace := []
+		main.move_to = goal
+		for i in 60:
+			if main.ui.modal():
+				trace.append("[%s]" % main.ui.panel_kind)
+				main.ui.hide_all()
+			if main.move_to != goal:
+				trace.append("<move_to %s>" % str(main.move_to))
+				main.move_to = goal
+			main._process(DT)
+			if i % 5 == 0:
+				trace.append("%.1f,%.1f" % [p.pos.x, p.pos.y])
+		main.move_to = Vector2.INF
+		note("STUCK? 60 more frames: %s" % " ".join(trace))
+	return ok
 
 
 func _count(d: Dictionary, k: String) -> void:
@@ -114,10 +160,11 @@ func _dialogue(r: int) -> void:
 	# a player looks for someone free to talk: not asleep, not minding a shop (a shopkeeper at a post opens the trade window),
 	# not busy at work (Dialogue.busy: a busy villager answers with a brush-off line, by design)
 	var free := func(n): return n.role == "adult" and not w.asleep(n) and not w.at_post(n) and not Dialogue.busy(n)
-	var cands := _npc_with(func(n): return free.call(n) and not talked_to.has(n.id))
+	var near := func(n): return n.pos.distance_to(w.player.pos) < 60.0      # not one on the road to another settlement
+	var cands := _npc_with(func(n): return free.call(n) and near.call(n) and not talked_to.has(n.id))
 	if cands.is_empty():
 		talked_to = {}
-		cands = _npc_with(free)
+		cands = _npc_with(func(n): return free.call(n) and near.call(n))
 	note("round %d: %d villagers free to talk now (%s)" % [r, _npc_with(free).size(), w.clock_text()])
 	var said := ""
 	for n: NPC in cands.slice(0, 5):
@@ -125,6 +172,8 @@ func _dialogue(r: int) -> void:
 			note("talking to %s (%s, doing '%s') did not open the talk window (window '%s', %.1f tiles away, walk_stuck %.1f)" % [n.name, n.job,
 				str(n.doing), main.ui.panel_kind, main.world.player.pos.distance_to(n.pos), main.walk_stuck])
 			main.ui.hide_all()
+			main.talk_to = null                # a player gives up on someone out of reach and looks for another (see the report, D2)
+			main.move_to = Vector2.INF
 			continue
 		talked_to[n.id] = true
 		if _press("What do you do?"):
@@ -465,6 +514,8 @@ func _run() -> void:
 				main.ui.hide_all()
 				_frames(3)
 			note("round %d: slept through the night (%d rests) to %s" % [r, g, w.clock_text()])
+		mem_samples.append(OS.get_static_memory_usage())
+		note("round %d: the player at %s, level %d, place '%s'" % [r, str(p.pos), w.player_level, w.place_of(p.pos)])
 		note("---- round %d: %s, coins %d, hunger %.0f, health %.0f" % [r, w.clock_text(), p.coins, p.hunger, p.hp])
 		await _shot("01_start", r)
 		await _dialogue(r)
@@ -476,9 +527,15 @@ func _run() -> void:
 			main.ui.hide_all()
 		_fell_tree(r)
 		await _shot("03_after_felling", r)
+		if not main.world.player.alive:
+			break
 		_mine(r)
+		if not main.world.player.alive:
+			break
 		_hunt(r)
 		await _shot("04_after_hunt", r)
+		if not main.world.player.alive:
+			break
 		_craft(r)
 		if w.hour() >= 20.0 or w.hour() < 6.0:
 			main._rest_now()                  # the reeve is abed at night: sleep first, as a player would
@@ -515,6 +572,7 @@ func _run() -> void:
 			w.minutes - rm0, p.coins, mem / 1048576.0, wall, frame_ms_max])
 		if wall_minutes > 0.0 and wall >= wall_minutes:
 			break
+	check(main.world.player.alive, "the player is alive at the end of the session (health %.0f, hunger %.0f)" % [main.world.player.hp, main.world.player.hunger])
 	if reload_loop > 0:
 		# saves alone, then Continues alone, so a growth can be put down to the one or the other
 		var mb := func(): return "%.1f MB / %d objects" % [OS.get_static_memory_usage() / 1048576.0, int(Performance.get_monitor(Performance.OBJECT_COUNT))]
@@ -539,7 +597,7 @@ func _run() -> void:
 	note("SESSION misses %s" % str(misses))
 	note("SESSION frames %d, Main._process mean %.2f ms, max %.1f ms, over 50 ms %d" % [frame_count, frame_ms_sum / maxf(1.0, frame_count), frame_ms_max, spikes])
 	note("SESSION frames over 50 ms by phase: %s" % str(spike_phases))
-	note("SESSION static memory MB per round: %s" % ", ".join(mem_samples.map(func(m): return "%.1f" % (m / 1048576.0))))
+	note("SESSION static memory MB (each round start and end): %s" % ", ".join(mem_samples.map(func(m): return "%.1f" % (m / 1048576.0))))
 	check(game_min > 0.0 and r >= 1, "the session played %d rounds over %.0f game minutes" % [r, game_min])
 	_conserved("at the end of the session")
 	print("%d checks, %d failures" % [checks, failures])
