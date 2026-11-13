@@ -42993,7 +42993,9 @@
    "owner_wording": "i just registered forge my life",
    "approval": "owner, 2026-11-13",
    "acceptance": [
-    "every player-facing name (window title, title screen, credits, wiki, store text, export package names) reads Forge My Life; the scope list approved by the owner before any rename; Android package id unchanged unless the owner decides otherwise"
+    "owner's twelve checks (directive section 9): launch shows Forge My Life; window/taskbar title; credits and Hot Attic Games LLC branding; new saves in the Forge My Life directory; saves load after restart; exported saves use the new filename; imported saves load; Android id com.hotatticgames.mymedievallife.dev unchanged, label Forge My Life; export presets and package names; Steam App ID 5615690 verified; gameplay unchanged; deterministic fingerprints match the reference",
+    "no legacy save-directory migration code; old-name occurrences inventoried and classified (player-facing, active infrastructure, internal identifier, historical record)",
+    "completion report per directive section 11; no CI, packaging, publishing or merge without approval"
    ],
    "target_build": "unassigned",
    "parent": null,
