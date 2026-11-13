@@ -8443,16 +8443,16 @@
   {
    "id": "B25-MOVE-STUTTER-INV",
    "kind": "approved",
-   "title": "Deep investigation: repeated player movement stutter and backward corrections (root cause before any fix)",
-   "description": "Deep investigation: repeated player movement stutter and backward corrections (root cause before any fix)",
-   "source": "docs/directives/2026-11-13_movement_stutter_deep_investigation.md",
-   "owner_wording": "The player has experienced persistent movement problems resembling repeated backward steps, rubber-banding, or clock-like positional corrections. ... This is an investigation first. Do not make speculative movement changes ... Once the causes are established, present the evidence and proposed fixes before implementation. ... Demonstrate what caused the repeated backward steps and verify that the cause has been eliminated.",
+   "title": "Deep investigation: repeated whole-game micro-freezes while walking (\"step, freeze, step, freeze\"; the game freezes then catches up); root cause before any fix",
+   "description": "Deep investigation: repeated whole-game micro-freezes while walking (\"step, freeze, step, freeze\"; the game freezes then catches up); root cause before any fix",
+   "source": "docs/directives/2026-11-13_movement_stutter_deep_investigation.md; docs/directives/2026-11-13_movement_stutter_clarification.md",
+   "owner_wording": "\"Step, freeze, step, freeze, step, freeze. The whole game freezes momentarily and then catches up.\" This is NOT primarily a report of rubber-banding or the character being pulled backward. ... The goal is consistently smooth movement without periodic freezing, not simply preventing position corrections. (Original 2026-11-13 direction, preserved: investigation first; recover the history of the November 6 fix and the two ~230 ms spikes; trace the whole movement pipeline; instrument and reproduce; present evidence and proposed fixes before implementation.)",
    "approval": "owner, 2026-11-13",
    "acceptance": [
-    "history of the November 6 stutter fix recovered (commit, change, evidence, whether root cause) and the two ~230 ms spikes explained or not",
-    "whole movement pipeline traced; simulated vs displayed position distinguished",
-    "instrumented reproduction correlating each backward step with game state; frame and tick times, positions, inputs, corrections",
-    "findings: confirmed causes vs hypotheses, offending functions and commits, frequency and severity, ranked fixes, presented before implementation"
+    "history of the November 6 stutter fix recovered (commit, change, evidence, whether root cause) and the two ~230 ms world-frame spikes explained and their relation to the freezes established",
+    "operations that periodically block the main thread identified (world ticks, NPC updates, pathfinding, settlement processing, rendering sync, scheduled work), with the specific functions responsible",
+    "frame-time distribution, individual long frames and stall frequency measured while walking, on journeys and in populated settlements; simulation stalls distinguished from rendering-only freezes; whether the game catches up by processing accumulated work established",
+    "findings: confirmed causes vs hypotheses, offending functions and commits, frequency and severity, ranked fixes, presented to the owner before implementation; completion requires showing the cause eliminated, not only smoother play"
    ],
    "target_build": "unassigned",
    "parent": null,
@@ -8478,6 +8478,11 @@
      "date": "2026-11-13",
      "change": "target_build: 25 -> unassigned",
      "why": "target build as the other Build 25 stabilization items"
+    },
+    {
+     "date": "2026-11-13",
+     "change": "title, owner_wording, source, acceptance corrected",
+     "why": "owner clarification 2026-11-13: the symptom is whole-game micro-freezes (step, freeze, catch up), not rubber-banding; previous investigation requirements kept"
     }
    ],
    "lifecycle": "ACTIVE",
