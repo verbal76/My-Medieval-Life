@@ -221,7 +221,20 @@ func _run() -> void:
 	var prev := SAVE.get_basename() + ".previous.json"
 	var kept: bool = FileAccess.file_exists(prev) and str((SaveStore.inspect(prev, World.SAVE_VERSION).data as Dictionary).get("meta", {}).get("save_id", "")) == id0
 	check(kept, "the used-up world is kept beside it (%s)" % prev.get_file())
-	note("FINDING: the kept world (%s) is not offered anywhere in the game's menus: it is reached only by Settings, Saves, Import a save file and choosing that file by hand; a further new world replaces it (one previous game is kept)" % prev.get_file())
+	note("FINDING: the kept world (%s) is not offered anywhere in the game's menus: it is reached only by Settings, Saves, Import a save file and choosing that file by hand" % prev.get_file())
+	# journey finding 3 (DEMO-01: "Do not delete expired worlds"): a further new world puts Bea's world aside as the previous game;
+	# the used-up world it would have replaced is kept under its own name, never removed
+	var bea := str(main.save_meta.get("save_id", ""))
+	main.save_game(false)
+	main.running = false
+	ui.show_title(true)
+	check(_press("New game") and _new_world("Cid"), "a third world begun from the title")
+	await process_frame
+	var kept_as := DIR + "save1.expired-%s.json" % id0
+	var arch: Dictionary = SaveStore.inspect(kept_as, World.SAVE_VERSION).data if FileAccess.file_exists(kept_as) else {}
+	var prev_id := str((SaveStore.inspect(prev, World.SAVE_VERSION).data as Dictionary).get("meta", {}).get("save_id", "")) if FileAccess.file_exists(prev) else ""
+	check(not arch.is_empty() and str(arch.get("meta", {}).get("save_id", "")) == id0 and Demo.expired(arch.get("meta", {})) and prev_id == bea,
+		"the used-up world is not deleted by the next new world: it is kept as %s, still marked used up; Bea's world is the previous game" % kept_as.get_file())
 	print("%d checks, %d failures" % [checks, failures])
 	Demo.force = -1
 	SteamPromo.opener = Callable()

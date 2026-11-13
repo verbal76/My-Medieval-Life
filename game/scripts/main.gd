@@ -6188,9 +6188,31 @@ func _keep_previous_game() -> void:
 	var src := save_path if r.state == "ok" else save_path + SaveStore.BAK
 	if SaveStore.inspect(src, World.SAVE_VERSION).state != "ok":
 		return
-	if FileAccess.file_exists(prev):
+	if FileAccess.file_exists(prev) and not _keep_expired_demo(prev):
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(prev))
 	DirAccess.rename_absolute(ProjectSettings.globalize_path(src), ProjectSettings.globalize_path(prev))
+
+
+## DEMO-01 ("Do not delete expired worlds"; journey finding 3): in the demo, a previous game whose demo time is used up is never
+## removed to make room for the next: it is moved aside as "save1.expired-<save_id>.json" (its stable world id, so it stays
+## identifiable; a number added if that name is taken) and can be exported or imported as any save. True when it was moved.
+func _keep_expired_demo(prev: String) -> bool:
+	if not Demo.is_demo():
+		return false
+	var r := SaveStore.inspect(prev, World.SAVE_VERSION)
+	if r.state != "ok":
+		return false
+	var meta: Dictionary = (r.data as Dictionary).get("meta", {}).duplicate(true)
+	if not meta.has("demo") or not Demo.expired(meta):
+		return false
+	var id := str(meta.get("save_id", "")).validate_filename()
+	var base := save_path.get_basename() + ".expired-" + (id if id != "" else "world")
+	var to := base + ".json"
+	var k := 2
+	while FileAccess.file_exists(to):
+		to = "%s-%d.json" % [base, k]
+		k += 1
+	return DirAccess.rename_absolute(ProjectSettings.globalize_path(prev), ProjectSettings.globalize_path(to)) == OK
 
 
 ## X20 (net_recorder_quit_test): a recording ends when its world is closed in an orderly way: "Save and quit to title", or the game
