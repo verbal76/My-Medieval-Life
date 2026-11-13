@@ -5598,7 +5598,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -5607,9 +5607,18 @@
      "date": "2026-11-13",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-12_b25_stabilization_animal_ai_extra_life_preview.md"
+    },
+    {
+     "date": "2026-11-13",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; branch: None -> wip/b25-animal-hunt-ai; commits + fe1c4e5",
+     "why": "worker: fix fe1c4e5 on wip/b25-animal-hunt-ai (animal_hunt_ai_test 54 checks/20 red before, 64/0 after; wildlife 61/0, wilds 72/0, net_fauna 14/0, countryside 38/0, mp06 42/0, recorder_neutrality 5/0, sav04 13/0); visual gameplay check and remaining suites in progress"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "branch": "wip/b25-animal-hunt-ai",
+   "commits": [
+    "fe1c4e5"
+   ]
   },
   {
    "id": "B25-AUD-BIZ-03",
@@ -8645,7 +8654,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -8664,10 +8673,19 @@
      "date": "2026-11-13",
      "change": "owner_answer",
      "why": "owner 2026-11-12: limited deadwood gathering without an axe approved (existing gathering systems; time, resources, conservation; no free firewood; no cold penalties); first fix fbfe146 (firewood before seed) on wip/b25-nd29-band-campfire"
+    },
+    {
+     "date": "2026-11-13",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; branch: None -> wip/b25-nd29-band-campfire; commits + fbfe146",
+     "why": "lead: fbfe146 firewood before seed (nd29_band_firewood_test 7/1 red before, 7/0 after; homestead 49/0, homestead_food_held 14/0); deadwood gathering pending"
     }
    ],
    "lifecycle": "ACTIVE",
-   "owner_answer": "Fuel only; plus limited gathering of fallen branches and deadwood without an axe through existing gathering systems: consumes time, respects available resources, conserves inventory, no unlimited firewood, no cold health or stamina penalties; regression tests for gather, consume, exhaust"
+   "owner_answer": "Fuel only; plus limited gathering of fallen branches and deadwood without an axe through existing gathering systems: consumes time, respects available resources, conserves inventory, no unlimited firewood, no cold health or stamina penalties; regression tests for gather, consume, exhaust",
+   "branch": "wip/b25-nd29-band-campfire",
+   "commits": [
+    "fbfe146"
+   ]
   },
   {
    "id": "B25-NINE",
