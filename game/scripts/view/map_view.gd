@@ -185,7 +185,13 @@ func _put(layer: TileMapLayer, cell: Vector2i, v: int) -> void:
 
 ## The tile at `coords` of atlas `atlas` (index `t` there), made as the layers draw it: its sort origin and, for water and the
 ## village's animated tiles, its frames.
+var made_log: Array = []            # B25-MOVE-STUTTER-INV (diagnostics, off by default): [atlas, index] of each tile made while log_made
+var log_made := false
+
+
 func _make_tile(atlas: int, coords: Vector2i, t: int) -> void:
+	if log_made:
+		made_log.append([atlas, t, animated.has(t)])
 	var src := sources[atlas]
 	src.create_tile(coords)
 	src.get_tile_data(coords, 0).y_sort_origin = SORT_ORIGIN
