@@ -179,7 +179,7 @@ const STATUS_PAD := 6.0
 const STATUS_ICON := 20.0
 const STATUS_BAR := Vector2(136, 16)
 const SCHEME_NAMES :={"touch": "Touch", "kbm": "Keyboard and mouse", "gamepad": "Gamepad"}
-const MODAL_NO_HUD := ["title", "creation", "origin", "death", "demo_expired"]   # B25R1-008: windows with no HUD behind them
+const MODAL_NO_HUD := ["title", "creation", "origin", "death", "demo_expired", "kept_worlds", "kept_expired"]   # B25R1-008: windows with no HUD behind them
 
 
 func build(m) -> void:
@@ -1754,6 +1754,9 @@ func show_title(can_continue: bool) -> void:
 	var spent: bool = can_continue and main.demo_save_expired()      # DEMO-01: a world whose demo time is used up, kept and marked
 	_button("Continue (demo time used: continue it in the full game)" if spent else "Continue", func(): main.continue_game(), can_continue)
 	_button("New game", func(): show_creation({}))
+	if Demo.is_demo():
+		var kw := _button("Kept worlds", show_kept_worlds)      # B25-DEMO-KEPT-WORLDS: every world the demo has kept
+		kw.name = "KeptWorlds"
 	_button("Host a game", show_host_start)        # B25R2-HOSTMENU (owner 2026-11-07): your world, open to friends, from the start
 	_button("Join a game", func(): NetWindow.show_join(self))      # Build 21: a friend's world on this network
 	_button("Settings", func(): show_settings(func(): show_title(main.can_continue()), "audio"))
@@ -1809,6 +1812,58 @@ func show_demo_expired() -> void:
 	_button("Main menu", func(): show_title(main.can_continue()))
 	if not main.settings.phone:
 		_button("Exit", func(): main.get_tree().quit())
+	_steam_button()
+
+
+## B25-DEMO-KEPT-WORLDS (owner 2026-11-12, option A): every world the demo keeps (KeptWorlds: the current one, the previous one, the
+## used-up and the set-aside ones), each with its character, settlement, day and when it was last played. A world with demo time
+## left can be continued; a used-up one opens its end screen (show_kept_expired), from which it can be exported for the full game.
+## Nothing here deletes or writes over a file.
+func show_kept_worlds() -> void:
+	_open("kept_worlds", "Kept worlds", false)
+	panel_back = func(): show_title(main.can_continue())
+	var list: Array = main.kept_worlds()
+	_label("Every world you have started in the demo is kept on this device, never deleted. A world with demo time left can be continued here; a world whose time is used up continues in the full game: export it, then import it there (Settings, Saves).", 15)
+	if list.is_empty():
+		_label("No worlds yet: start one with New game.", 15, Color(1, 0.85, 0.5))
+	var i := 0
+	for e in list:
+		i += 1
+		var role := {"current": "Your current world", "previous": "Your previous world", "expired": "A kept world", "kept": "A kept world"}
+		var l := _label("%s: %s" % [role.get(str(e.role), "A kept world"), KeptWorlds.describe(e)], 15, Color(1, 0.85, 0.5) if bool(e.get("expired", false)) else Color8(246, 236, 214))
+		l.name = "KeptInfo%d" % i
+		if not bool(e.get("ok", false)):
+			continue
+		var path := str(e.path)
+		var b: Button
+		if bool(e.expired):
+			b = _button("Demo time used up: %s" % str(e.character), func(): show_kept_expired(path))
+		else:
+			b = _button("Continue %s" % str(e.character), func():
+				var why: String = main.continue_kept_world(path)
+				if why != "":
+					message("Not continued: %s." % why, 8.0)
+					show_kept_worlds())
+		b.name = "KeptWorld%d" % i
+	_button("Back", func(): show_title(main.can_continue()))
+	_scroll_to_top()
+
+
+## B25-DEMO-KEPT-WORLDS: a used-up kept world: the demo's end screen (DEMO-01's words), never played on in the demo, and its Export.
+func show_kept_expired(path: String) -> void:
+	var e: Dictionary = KeptWorlds.info(path, main.save_path)
+	_open("kept_expired", "Demo time is up for this world", false)
+	panel_back = show_kept_worlds
+	_label(KeptWorlds.describe(e), 15, Color(1, 0.85, 0.5))
+	_label(Demo.EXPIRED_NOTE)
+	var save := SaveTransfer.read_save(path)
+	var ex := _button("Export this world...", func():
+		_pick_file(FileDialog.FILE_MODE_SAVE_FILE, "Copy this world to", SaveTransfer.suggested_name(save.data) if save.ok else "MyMedievalLife.json", func(target: String):
+			var r: Dictionary = main.export_kept_world(path, target)
+			message(("Copied: %s. Import it in the full game (Settings, Saves)." % r.info) if r.ok else ("Not copied: %s." % r.reason), 10.0)), save.ok)
+	ex.name = "KeptExport"
+	_button("Start a new world", func(): show_creation({}))
+	_button("Back", show_kept_worlds)
 	_steam_button()
 
 
