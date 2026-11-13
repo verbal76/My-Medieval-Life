@@ -119,10 +119,12 @@ func test_chase(w: World, species: String) -> void:
 	var cd := 0.0
 	var strikes := 0
 	var into := 0                  # frames it moved toward the player while near them
-	var into_cell := 0             # steps that took it into the player's cell
+	var into_cell := 0             # steps that took it within 0.6 tiles of the player (into them)
 	var wrong_face := 0            # frames it ran facing away from where it ran
 	var off_ground := 0            # frames on a solid cell or off its wood
-	var still_near := 0            # frames standing within reach outside a startle or a look back
+	var still_near := 0            # frames standing within reach outside a startle, a look back or being at bay
+	var at_bay := 0                # frames at bay (boxed in: its ground's edge, trees or water round it and the player)
+	var bay_open := 0              # of those, frames with open ground on three sides (not really boxed in)
 	var moving_frames := 0
 	var changes := 0               # state changes (standing / running), per the whole chase
 	var looks := 0                 # look-backs (a hesitation while running)
@@ -144,7 +146,7 @@ func test_chase(w: World, species: String) -> void:
 			if dist < 3.0 and mv.normalized().dot(to_p.normalized()) > 0.2:
 				into += 1
 			var pc := Vector2i(floori(w.player.pos.x), floori(w.player.pos.y))
-			if a.cell() == pc and Vector2i(floori(before.x), floori(before.y)) != pc:
+			if a.pos.distance_to(w.player.pos) < 0.6 and a.pos.distance_to(w.player.pos) < dist:
 				into_cell += 1
 			if a.facing.normalized().dot(mv.normalized()) < 0.7:
 				wrong_face += 1
@@ -156,7 +158,11 @@ func test_chase(w: World, species: String) -> void:
 		if a.pause_left > 0.0 and not was_pause:
 			looks += 1
 		was_pause = a.pause_left > 0.0
-		if not a.moving and dist <= reach and a.startle_left <= 0.0 and a.pause_left <= 0.0:
+		if a.at_bay:
+			at_bay += 1
+			if not _boxed(w, a):
+				bay_open += 1
+		elif not a.moving and dist <= reach and a.startle_left <= 0.0 and a.pause_left <= 0.0:
 			still_near += 1
 		if f % 15 == 0 and mv.length() > 0.0001:
 			dirs.append(mv.normalized())
@@ -173,16 +179,27 @@ func test_chase(w: World, species: String) -> void:
 	for i in range(1, dirs.size()):
 		if (dirs[i] as Vector2).dot(dirs[i - 1]) < 0.97:
 			turns += 1
-	print("     %s chase: %d strikes, %d/%d frames moving, %d changes, %d looks back, %d turns, %d standing in reach" % [
-		species, strikes, moving_frames, frames, changes, looks, turns, still_near])
+	print("     %s chase: %d strikes, %d/%d frames moving, %d changes, %d looks back, %d turns, %d standing in reach, %d at bay" % [
+		species, strikes, moving_frames, frames, changes, looks, turns, still_near, at_bay])
 	check(into == 0, "%s: never steps toward the player while near them (%d frames)" % [species, into])
-	check(into_cell == 0, "%s: never steps into the player's cell" % species)
+	check(into_cell == 0, "%s: never runs into the player (%d steps within 0.6 tiles)" % [species, into_cell])
 	check(wrong_face == 0, "%s: faces the way it runs (%d frames otherwise)" % [species, wrong_face])
 	check(off_ground == 0, "%s: never runs into a tree, a wall, water or out of its wood" % species)
 	check(moving_frames > frames / 2, "%s: keeps running while chased (%d of %d frames)" % [species, moving_frames, frames])
 	check(turns >= 3, "%s: runs in zigzags, not one straight line (%d turns)" % [species, turns])
 	check(changes <= 80, "%s: no flapping between standing and running (%d changes in 40 s)" % [species, changes])
-	check(still_near * 4 < frames, "%s: does not stand idle in reach of the blows (%d frames)" % [species, still_near])
+	check(still_near * 20 < frames, "%s: does not stand idle in reach of the blows (%d frames)" % [species, still_near])
+	check(bay_open == 0, "%s: stands at bay only when really boxed in (%d frames otherwise)" % [species, bay_open])
+
+
+## Boxed in: at least two of the four cells beside it are not open ground of its wood.
+func _boxed(w: World, a: Animal) -> bool:
+	var shut := 0
+	for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+		var q: Vector2i = a.cell() + d
+		if w.map.is_solid(q) or not w.fauna.in_area(a.area, q):
+			shut += 1
+	return shut >= 2
 
 
 ## Driven against the edge of its wood (the player on the inside), a deer runs along the edge, not into it nor back.
@@ -199,15 +216,29 @@ func test_edge(w: World) -> void:
 	var start := a.pos
 	var bad := 0
 	var closer := 0
-	for f in int(3.0 / DT):
+	var breaks := 0
+	var reversals := 0
+	var last := Vector2.ZERO
+	for f in int(4.0 / DT):
+		var before := a.pos
 		var d0 := a.pos.distance_to(w.player.pos)
 		w.fauna.update(DT)
+		var mv := a.pos - before
 		if w.map.is_solid(a.cell()) or not w.fauna.in_area(area, a.cell()):
 			bad += 1
 		if a.pos.distance_to(w.player.pos) < d0 - 0.001:
-			closer += 1
+			if a.breaking:
+				breaks += 1
+			else:
+				closer += 1
+		if mv.length() > 0.0001:
+			if last != Vector2.ZERO and mv.normalized().dot(last) < -0.5:
+				reversals += 1
+			last = mv.normalized()
+	print("     edge: %d frames breaking out past the player, %d reversals" % [breaks, reversals])
 	check(bad == 0, "at the edge of its wood it stays inside it")
-	check(closer == 0, "and never moves back toward the player")
+	check(closer == 0, "and never moves back toward the player, but to break out of a corner past their side")
+	check(reversals <= 2, "without jittering back and forth (%d reversals)" % reversals)
 	check(a.pos.distance_to(start) > 1.0, "it slips away along the edge (%.2f tiles)" % a.pos.distance_to(start))
 
 

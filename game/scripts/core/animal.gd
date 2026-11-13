@@ -35,7 +35,10 @@ var alarm_left := 0.0        # real seconds the flight lasts at least (renewed b
 var run_dir := Vector2.ZERO  # the heading of its flight (a leg of the zigzag)
 var zig_left := 0.0          # real seconds before the next leg
 var zig_side := 1            # which side of straight away the next leg bends to (they alternate)
+var slide := 0               # the side it last turned to get round something in its way (0: none), kept for the next leg
 var pause_left := 0.0        # real seconds of a look back (a hesitation) while running
+var breaking := false        # this leg breaks out of a corner past the attacker's side (kept to for the leg)
+var at_bay := false          # boxed in while running (no open way but toward the attacker): it stands facing them
 
 
 func cell() -> Vector2i:

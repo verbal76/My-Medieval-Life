@@ -361,12 +361,31 @@ func _raid(a: Animal, gm: float) -> bool:
 
 
 ## Someone struck it: a wolf or a bear fights back for anger_seconds (`who`: "player" or "npc:<id>").
+## B25-ANIMAL-HUNT-AI: whatever it was doing stops and it turns to the one who struck it; any other animal, startled
+## for a moment (the first blow only), then runs from them (_flee_struck; balance wildlife "struck").
 func provoke(a: Animal, who: String) -> void:
 	a.act = "hit"
 	a.act_left = 0.4
+	var foe := _foe_pos(who)
+	var fresh := a.alarm == "" or a.alarm_left <= 0.0     # not already running from a blow (one keeps running, facing its way)
+	if foe != Vector2.INF and foe.distance_to(a.pos) > 0.001 and (fresh or bool(a.spec().get("people", false))):
+		a.facing = foe - a.pos
 	if bool(a.spec().get("people", false)):
 		a.anger = who
 		a.anger_left = float(wl().anger_seconds)
+		a.goal = Vector2.INF
+		a.wait = 0.0
+		return
+	var st: Dictionary = wl().struck
+	if fresh:
+		a.startle_left = float(st.startle_seconds)      # a fresh fright: it stops and looks
+		a.run_dir = Vector2.ZERO
+		a.pause_left = 0.0
+		a.goal = Vector2.INF
+		a.wait = 0.0
+		a.moving = false
+	a.alarm = who
+	a.alarm_left = float(st.flee_seconds)
 
 
 ## The position of whoever `who` names, or INF if they are gone.
@@ -742,11 +761,16 @@ func _move(a: Animal, dt: float) -> void:
 	var flee := float(s.get("flee", 0.0))
 	var fleeing := false
 	_hunt_people(a)
+	if a.anger == "" and (a.startle_left > 0.0 or a.alarm != ""):     # B25-ANIMAL-HUNT-AI: struck, startled, then running
+		_flee_struck(a, dt)
+		return
 	if a.anger != "":                                       # fighting someone: after them, biting in reach
 		var foe := _foe_pos(a.anger)
 		_bite(a, foe)
 		a.goal = foe
 		a.wait = 0.0
+		if foe != Vector2.INF and foe.distance_to(a.pos) > 0.001:
+			a.facing = foe - a.pos                          # B25-ANIMAL-HUNT-AI: it faces whoever it fights, in reach too
 	elif a.hunt != -1 and by_id(a.hunt) != null:            # a hunter's chase, seen near the player
 		var prey := by_id(a.hunt)
 		if prey.pos.distance_to(a.pos) <= float(wl().kill_range):
@@ -756,14 +780,23 @@ func _move(a: Animal, dt: float) -> void:
 		a.wait = 0.0
 	else:
 		var threat := Vector2.INF
+		var from_player := false
 		for pl: PlayerState in w.active_players():   # MP C6: the first player in play near enough (single player: the one)
 			if pl.alive and pl.map_level == 0 and pl.pos.distance_to(a.pos) < flee:
 				threat = pl.pos
+				from_player = true
 				break
 		if flee > 0.0:
 			for b: Animal in animals:                       # prey run from a hunter that could take them (the last one found)
 				if b.alive and b.area == a.area and b.pos.distance_to(a.pos) < flee and (b.spec().get("prey", []) as Array).has(a.species):
 					threat = b.pos
+					from_player = false
+		if threat != Vector2.INF and from_player:
+			_flee_step(a, threat, dt)                       # B25-ANIMAL-HUNT-AI: from a player, as from a blow (no startle)
+			return
+		if threat == Vector2.INF and a.run_dir != Vector2.ZERO:
+			_calm_down(a)                                   # out of a player's flee distance: it stops and rests a moment
+			return
 		if threat != Vector2.INF:
 			a.goal = a.pos + (a.pos - threat).normalized() * 3.0
 			a.wait = 0.0
@@ -811,6 +844,137 @@ func _move(a: Animal, dt: float) -> void:
 	a.facing = d
 	a.pos = nxt
 	a.moving = true
+
+
+## B25-ANIMAL-HUNT-AI: a struck animal (Fauna.provoke) stands startled, facing whoever struck it, then runs from them at
+## least flee_seconds and on while they are within calm_distance, then calms down (balance wildlife "struck").
+func _flee_struck(a: Animal, dt: float) -> void:
+	var st: Dictionary = wl().struck
+	var foe := _foe_pos(a.alarm) if a.alarm != "" else Vector2.INF
+	if a.startle_left > 0.0:
+		a.startle_left -= dt
+		a.moving = false
+		if foe != Vector2.INF and foe.distance_to(a.pos) > 0.001:
+			a.facing = foe - a.pos
+		return
+	a.alarm_left -= dt
+	if foe == Vector2.INF or (a.alarm_left <= 0.0 and foe.distance_to(a.pos) > float(st.calm_distance)):
+		_calm_down(a)
+		return
+	_flee_step(a, foe, dt)
+
+
+## The end of a flight: it stands, rests calm_rest_seconds, then strolls as before.
+func _calm_down(a: Animal) -> void:
+	var st: Dictionary = wl().struck
+	a.alarm = ""
+	a.alarm_left = 0.0
+	a.startle_left = 0.0
+	a.run_dir = Vector2.ZERO
+	a.pause_left = 0.0
+	a.zig_left = 0.0
+	a.at_bay = false
+	a.breaking = false
+	a.goal = Vector2.INF
+	a.moving = false
+	a.wait = move_rng.randf_range(float(st.calm_rest_seconds[0]), float(st.calm_rest_seconds[1]))
+
+
+## One step of a flight from `foe`: legs of leg_seconds bent leg_degrees to alternate sides of straight away (a zigzag), an
+## occasional look back between legs while the foe is look_back_distance or more behind, each step round what is in the
+## way (_open_heading) and never toward the foe, facing the way it goes; with no way open it stands at bay facing them.
+func _flee_step(a: Animal, foe: Vector2, dt: float) -> void:
+	var st: Dictionary = wl().struck
+	var away := a.pos - foe
+	away = away.normalized() if away.length() > 0.001 else Vector2.RIGHT
+	if a.pause_left > 0.0:                              # looking back
+		a.pause_left -= dt
+		a.moving = false
+		a.facing = -away
+		return
+	a.zig_left -= dt
+	var step := _speed(a) * float(st.flee_speed) * dt
+	if a.breaking:                                      # breaking out of a corner: it keeps to that way for the leg
+		if a.zig_left > 0.0 and _break_ok(a, a.run_dir, foe, step):
+			a.pos += a.run_dir * step
+			a.facing = a.run_dir
+			a.moving = true
+			a.at_bay = false
+			return
+		a.breaking = false
+		a.zig_left = 0.0
+	if a.run_dir == Vector2.ZERO or a.zig_left <= 0.0 or a.run_dir.dot(away) < 0.2:   # a new leg (also when the foe has come round)
+		if a.run_dir != Vector2.ZERO and a.zig_left <= 0.0 and foe.distance_to(a.pos) >= float(st.look_back_distance) \
+				and move_rng.randf() < float(st.look_back_chance):
+			a.pause_left = move_rng.randf_range(float(st.look_back_seconds[0]), float(st.look_back_seconds[1]))
+			a.run_dir = Vector2.ZERO                    # the next leg follows the look back (never two in a row)
+			a.moving = false
+			a.facing = -away
+			return
+		a.zig_side = a.slide if a.slide != 0 else -a.zig_side       # along an obstacle it keeps to the side it slid
+		var bend := deg_to_rad(move_rng.randf_range(float(st.leg_degrees[0]), float(st.leg_degrees[1]))) * float(a.zig_side)
+		a.run_dir = away.rotated(bend)
+		a.zig_left = move_rng.randf_range(float(st.leg_seconds[0]), float(st.leg_seconds[1]))
+	var dir := _open_heading(a, a.run_dir, away, step, foe)
+	a.at_bay = dir == Vector2.ZERO
+	if a.at_bay:                                        # boxed in on every side: at bay
+		a.moving = false
+		a.facing = -away
+		return
+	a.pos += dir * step
+	a.facing = dir
+	a.moving = true
+
+
+## The heading nearest `want` (turned by turn_step_degrees to either side, the side it last slid first, at most
+## turn_max_degrees) that does not lead toward the foe (`away`: the way from them) and is open ground of its own ground
+## for this step and look_ahead tiles on (else 0.6 tiles on). Cornered (no such way), it breaks out past the foe's side: the nearest open heading
+## within break_degrees of straight away that keeps it break_clearance tiles from them. ZERO if there is neither.
+func _open_heading(a: Animal, want: Vector2, away: Vector2, step: float, foe: Vector2) -> Vector2:
+	var st: Dictionary = wl().struck
+	var turn := deg_to_rad(float(st.turn_step_degrees))
+	var first := a.slide if a.slide != 0 else a.zig_side
+	for ahead in [float(st.look_ahead), 0.6]:           # a way open further ahead first (no running into a dead end)
+		for k in range(0, int(float(st.turn_max_degrees) / float(st.turn_step_degrees)) + 1):
+			for sgn in ([first] if k == 0 else [first, -first]):
+				var h := want.rotated(turn * float(k) * float(sgn))
+				if h.dot(away) < -0.01:
+					continue
+				if _open(a, a.pos + h * step) and _open(a, a.pos + h * 0.6) and _open(a, a.pos + h * ahead):
+					a.slide = sgn if k > 0 else 0
+					return h
+	var wide := cos(deg_to_rad(float(st.break_degrees)))
+	for k in range(1, int(180.0 / float(st.turn_step_degrees)) + 1):
+		for sgn in [first, -first]:
+			var h := away.rotated(turn * float(k) * float(sgn))
+			if h.dot(away) >= wide and _break_ok(a, h, foe, step):
+				a.slide = sgn
+				a.breaking = true                       # the leg is a break-out: kept to (_flee_step), not re-aimed
+				a.run_dir = h
+				a.zig_left = move_rng.randf_range(float(st.leg_seconds[0]), float(st.leg_seconds[1]))
+				return h
+	return Vector2.ZERO
+
+
+## Whether a break-out step along `h` is open ground and keeps it break_clearance tiles from the foe.
+func _break_ok(a: Animal, h: Vector2, foe: Vector2, step: float) -> bool:
+	var clear := float(wl().struck.break_clearance)
+	if (a.pos + h * 0.3).distance_to(foe) < clear or (a.pos + h * 0.6).distance_to(foe) < clear:
+		return false
+	return _open(a, a.pos + h * step) and _open(a, a.pos + h * 0.6)
+
+
+## Whether an animal may stand at `p`: _move's rule (open ground; on its own area once it is on it).
+func _open(a: Animal, p: Vector2) -> bool:
+	var c := Vector2i(floori(p.x), floori(p.y))
+	if a.area == COUNTRY:
+		return not w.map.is_solid_world(c)
+	return not w.map.is_solid(c) and (in_area(a.area, c) or not in_area(a.area, a.cell()))
+
+
+## Its walking speed (tiles a second): the species', slower when elderly.
+func _speed(a: Animal) -> float:
+	return float(a.spec().speed) * (float(GameData.b("animal_elder_speed")) if a.elderly(w.minutes) else 1.0)
 
 
 # ---------------------------------------------------------------- save -----------------------
