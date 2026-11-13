@@ -171,6 +171,7 @@
  "reg06_household_change_live_test": 15,
  "npc03_field_takeover_bookkeeping_test": 4,
  "npc01_path_backoff_test": 10,
+ "nd19_solid_cells_test": 8,
  "sav03_reservations_reload_test": 6,
  "sav04_reload_determinism_test": 13,
  "self_trade_payer_test": 11,

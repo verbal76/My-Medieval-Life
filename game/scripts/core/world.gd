@@ -761,6 +761,18 @@ func _walk_failed(n: NPC) -> void:
 	stat("walk_backoff")
 
 
+## The path of `n` from its cell to `to` (n.path from its start): below ground on its level's map, in the village on the
+## village's grid, else over the world's cells.
+func _path_to(n: NPC, to: Vector2i) -> void:
+	if n.depth != 0:
+		n.path = underground.find_path(n.depth, n.cell(), to)
+	elif map.in_village(n.cell()) and map.in_village(to):
+		n.path = map.find_path(n.cell(), to)
+	else:
+		n.path = map.find_path_world(n.cell(), to)     # REGION-NAV-01: a traveller at a neighbouring settlement walks the world's cells (the village's grid would pull them home)
+	n.path_i = 0
+
+
 ## Move along a path to s.to; returns true on arrival.
 func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 	var to: Vector2i = s.to
@@ -779,13 +791,7 @@ func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 		to = leg.from.stand
 	if not s.has("pathed"):
 		s.pathed = true
-		if n.depth != 0:
-			n.path = underground.find_path(n.depth, n.cell(), to)
-		elif map.in_village(n.cell()) and map.in_village(to):
-			n.path = map.find_path(n.cell(), to)
-		else:
-			n.path = map.find_path_world(n.cell(), to)     # REGION-NAV-01: a traveller at a neighbouring settlement walks the world's cells (the village's grid would pull them home)
-		n.path_i = 0
+		_path_to(n, to)
 		if n.path.is_empty() and n.cell() != to:
 			if recorder != null:
 				recorder.interruption(n, "walk_lost", "interrupted", "no_path")     # REC-19
@@ -810,6 +816,21 @@ func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 	var budget := speed * dt
 	n.anim = "carry" if n.inv.total() >= 4 and n.role == "adult" else "walk"
 	while budget > 0.0 and n.path_i < n.path.size():
+		# ND-19: a cell of the village that turned solid after the path was laid (a fence or a stall put up meanwhile) is not
+		# walked into: the walk finds its way again from here, once a tick at most
+		var nc := Vector2i(n.path[n.path_i].floor())
+		if n.depth == 0 and map.in_village(nc) and map.is_solid(nc) and float(s.get("repathed", -1.0)) != minutes:
+			s.repathed = minutes
+			stat("walk_repath")
+			_path_to(n, to)
+			if n.path.is_empty() and n.cell() != to:
+				if recorder != null:
+					recorder.interruption(n, "walk_lost", "interrupted", "no_path")     # REC-19
+				n.plan.clear()
+				n.doing = "lost"
+				_walk_failed(n)
+				return false
+			continue
 		var goal: Vector2 = n.path[n.path_i] + Vector2(0.5, 0.5)
 		var d := goal - n.pos
 		var l := d.length()

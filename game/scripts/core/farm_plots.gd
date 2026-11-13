@@ -266,6 +266,22 @@ func build_fence(p: Dictionary, ref: String, stores: Array) -> String:
 	return ""
 
 
+## ND-19: where a fencer stands to put up plot `p`'s fence: an open cell beside the gate that is not on the fence's own line (inside
+## the plot or outside it), the nearest to `from`; so the fence, solid once it is up, never stands under its builder. Beside the
+## gate as before when there is none.
+func fence_stand(p: Dictionary, from: Vector2i) -> Vector2i:
+	var g := gate_of(p)
+	var line: Array = w.farm.fence_cells(rect_of(p))
+	var best := Vector2i(-1, -1)
+	var bd := INF
+	for d in [Vector2i(0, 1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, -1)]:
+		var c: Vector2i = g + d
+		if not line.has(c) and not w.map.is_solid(c) and from.distance_to(c) < bd:
+			bd = from.distance_to(c)
+			best = c
+	return best if best.x >= 0 else w.brain.beside(g, from)
+
+
 func _fence_solid(p: Dictionary) -> void:
 	var g := gate_of(p)
 	for c: Vector2i in w.farm.fence_cells(rect_of(p)):
@@ -529,7 +545,7 @@ func _plan_on(n: NPC, p: Dictionary, light: bool, hired := false) -> bool:
 		if no == "":
 			n.doing = "fencing the family's farmland"
 			var g := gate_of(p)
-			n.plan = [w.brain.go(w.brain.beside(g, n.cell())), w.brain.work(15.0, "fp_fence", {"plot": str(p.id)}, "work", g)]
+			n.plan = [w.brain.go(fence_stand(p, n.cell())), w.brain.work(15.0, "fp_fence", {"plot": str(p.id)}, "work", g)]
 			return true
 		if no.begins_with("The fence and gate need"):
 			return _plan_buy_materials(n, p)
