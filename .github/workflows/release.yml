@@ -214,7 +214,7 @@ jobs:
           tools_dir="$(ls -d "$ANDROID_SDK_ROOT"/build-tools/*/ | sort -V | tail -1)"
           # 16 KB page alignment for native libraries (Android 15 devices); older build-tools know only -p (4 KB)
           "${tools_dir}zipalign" -f -P 16 4 out/unsigned.apk out/aligned.apk || "${tools_dir}zipalign" -f -p 4 out/unsigned.apk out/aligned.apk
-          apk="pkg/MyMedievalLife-B${BUILD_N}${SUFFIX}-Android.apk"
+          apk="pkg/ForgeMyLife-B${BUILD_N}${SUFFIX}-Android.apk"
           if ! "${tools_dir}apksigner" sign --ks "$RUNNER_TEMP/android-release.keystore" \
                --ks-pass env:KEYSTORE_PASSWORD --ks-key-alias "$KEY_ALIAS" --key-pass env:KEY_PASSWORD \
                --out "$apk" out/aligned.apk > out/apksigner-sign.log 2>&1; then
@@ -252,24 +252,24 @@ jobs:
         if: matrix.target == 'windows'
         run: |
           mkdir -p out/win pkg
-          exe="MyMedievalLife${SUFFIX/-/}.exe"
+          exe="ForgeMyLife${SUFFIX/-/}.exe"
           godot --headless --path game --export-release "Windows Desktop${PRESET_SUFFIX}" "../out/win/${exe}"
           # the .exe must carry the game's icon (Godot 4.7 embeds application/icon itself: no rcedit/Wine)
           python3 tools/check_exe_icon.py "out/win/${exe}"
-          (cd out/win && zip -q -9 "$GITHUB_WORKSPACE/pkg/MyMedievalLife-B${BUILD_N}${SUFFIX}-Windows.zip" "${exe}")
+          (cd out/win && zip -q -9 "$GITHUB_WORKSPACE/pkg/ForgeMyLife-B${BUILD_N}${SUFFIX}-Windows.zip" "${exe}")
 
       - name: Export Linux (${{ matrix.edition }})
         if: matrix.target == 'linux'
         run: |
           mkdir -p out/lin pkg
-          bin="MyMedievalLife${SUFFIX/-/}.x86_64"
+          bin="ForgeMyLife${SUFFIX/-/}.x86_64"
           godot --headless --path game --export-release "Linux${PRESET_SUFFIX}" "../out/lin/${bin}"
           # launch smoke check: the exported game starts headless and quits (DEMO-01: export and launch checks)
           timeout 120 "out/lin/${bin}" --headless --quit-after 300 > out/launch.log 2>&1 || { echo "::error::the Linux ${{ matrix.edition }} build did not start and quit cleanly"; tail -20 out/launch.log; exit 1; }
           if grep -q "SCRIPT ERROR" out/launch.log; then echo "::error::script errors when the Linux ${{ matrix.edition }} build started"; grep -m5 "SCRIPT ERROR" out/launch.log; exit 1; fi
           # B25R1 leak gate: a resource or object still alive at exit (a static cache holding scripts) fails the build
           if grep -qE "resources still in use at exit|ObjectDB instances? (were|was) leaked" out/launch.log; then echo "::error::leak at exit when the Linux ${{ matrix.edition }} build quit"; tail -40 out/launch.log; exit 1; fi
-          (cd out/lin && zip -q -9 "$GITHUB_WORKSPACE/pkg/MyMedievalLife-B${BUILD_N}${SUFFIX}-Linux.zip" "${bin}")
+          (cd out/lin && zip -q -9 "$GITHUB_WORKSPACE/pkg/ForgeMyLife-B${BUILD_N}${SUFFIX}-Linux.zip" "${bin}")
 
       - name: Remove the signing key from the runner
         if: always() && matrix.target == 'android'
@@ -334,24 +334,24 @@ jobs:
       - name: Check all six are here, and write the checksums and the notes
         run: |
           n="$BUILD_N"
-          for f in "MyMedievalLife-B${n}-Android.apk" "MyMedievalLife-B${n}-Windows.zip" "MyMedievalLife-B${n}-Linux.zip" \
-                   "MyMedievalLife-B${n}-Demo-Android.apk" "MyMedievalLife-B${n}-Demo-Windows.zip" "MyMedievalLife-B${n}-Demo-Linux.zip"; do
+          for f in "ForgeMyLife-B${n}-Android.apk" "ForgeMyLife-B${n}-Windows.zip" "ForgeMyLife-B${n}-Linux.zip" \
+                   "ForgeMyLife-B${n}-Demo-Android.apk" "ForgeMyLife-B${n}-Demo-Windows.zip" "ForgeMyLife-B${n}-Demo-Linux.zip"; do
             [ -s "release/$f" ] || { echo "::error::missing package: $f (a build with fewer than six packages is not complete)"; exit 1; }
           done
           (cd release && sha256sum * > SHA256SUMS.txt)
           (cd release && for f in *.apk *.zip; do printf '%s\t%s bytes\n' "$f" "$(stat -c %s "$f")"; done > SIZES.txt)
           cat release/SHA256SUMS.txt release/SIZES.txt
-          fp="$(sed -n 's/^SHA-256 fingerprint: //p' "release/MyMedievalLife-B${n}-Android-signature.txt")"
+          fp="$(sed -n 's/^SHA-256 fingerprint: //p' "release/ForgeMyLife-B${n}-Android-signature.txt")"
           { if [ "${{ inputs.visibility }}" != "public" ]; then echo "**Private testing build:** a draft release, visible only to the repository's collaborators. Not for distribution; not uploaded to Steam."; echo; fi
             echo "Build ${n}, from \`${{ github.ref_name }}\` at commit ${{ github.sha }}. All six packages are built from that one commit."
             echo
             echo "**Full game**"
-            echo "- Android: \`MyMedievalLife-B${n}-Android.apk\`, signed with the permanent release key (certificate SHA-256 \`${fp}\`). Later builds signed with this key install over it and keep the save."
-            echo "- Windows: unzip and run \`MyMedievalLife.exe\`. Linux: unzip and run \`MyMedievalLife.x86_64\`."
+            echo "- Android: \`ForgeMyLife-B${n}-Android.apk\`, signed with the permanent release key (certificate SHA-256 \`${fp}\`). Later builds signed with this key install over it and keep the save."
+            echo "- Windows: unzip and run \`ForgeMyLife.exe\`. Linux: unzip and run \`ForgeMyLife.x86_64\`."
             echo
             echo "**Demo** (120 minutes of play per world; a demo world continues in the full game)"
-            echo "- Android: \`MyMedievalLife-B${n}-Demo-Android.apk\` (its own app, beside the full game; move a world across with Settings > Saves, Export in the demo and Import in the full game)."
-            echo "- Windows: \`MyMedievalLife-B${n}-Demo-Windows.zip\`. Linux: \`MyMedievalLife-B${n}-Demo-Linux.zip\`."
+            echo "- Android: \`ForgeMyLife-B${n}-Demo-Android.apk\` (its own app, beside the full game; move a world across with Settings > Saves, Export in the demo and Import in the full game)."
+            echo "- Windows: \`ForgeMyLife-B${n}-Demo-Windows.zip\`. Linux: \`ForgeMyLife-B${n}-Demo-Linux.zip\`."
             echo
             echo "\`SHA256SUMS.txt\` lists each file's checksum, \`SIZES.txt\` its size."
             echo
@@ -396,7 +396,7 @@ jobs:
         with:
           tag_name: build-${{ inputs.build_number || github.run_number }}
           target_commitish: ${{ github.sha }}
-          name: My Medieval Life — Build ${{ inputs.build_number || github.run_number }}
+          name: Forge My Life — Build ${{ inputs.build_number || github.run_number }}
           prerelease: ${{ github.ref != 'refs/heads/main' }}
           draft: ${{ inputs.visibility != 'public' }}
           body_path: notes.md

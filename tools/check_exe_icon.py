@@ -1,9 +1,9 @@
-"""Check that a Windows .exe carries the game's icon (owner: the approved My Medieval Life artwork,
+"""Check that a Windows .exe carries the game's icon (owner: the approved app artwork from My_Medieval_Life_Icon_Pack.zip,
 not Godot's default). Reads the executable's resources (RT_GROUP_ICON and RT_ICON) and compares every
 icon image in it, pixel by pixel, with game/assets/icon/icon.ico scaled to that size (Godot's Windows
 export re-encodes the icon into its own set of sizes, so the bytes differ but the pixels match).
 
-    python3 tools/check_exe_icon.py path/to/MyMedievalLife.exe [--ico game/assets/icon/icon.ico]
+    python3 tools/check_exe_icon.py path/to/ForgeMyLife.exe [--ico game/assets/icon/icon.ico]
 
 Exit code 0 when every icon in the exe matches (mean colour difference under MAX_DIFF), 1 otherwise.
 Needs Pillow.

@@ -210,7 +210,7 @@ def build_report(recs, expect, steps, purpose="", started="", env=None):
     return {
         "format": FORMAT,
         "identification": {
-            "repository": repo, "project": "My Medieval Life", "build_number": None,
+            "repository": repo, "project": "Forge My Life", "build_number": None,
             "branch": env.get("GITHUB_REF_NAME", ""), "commit": env.get("GITHUB_SHA", ""),
             "workflow": env.get("GITHUB_WORKFLOW", ""), "run_id": run_id, "run_attempt": env.get("GITHUB_RUN_ATTEMPT", ""),
             "run_url": "%s/%s/actions/runs/%s" % (server, repo, run_id) if repo and run_id else "",
