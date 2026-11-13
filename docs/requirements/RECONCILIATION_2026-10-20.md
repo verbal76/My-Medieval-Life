@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 896 (500 of them still open) |
-| **Open entries now** (rules excluded) | | **658** |
+| Entries added since | | 897 (501 of them still open) |
+| **Open entries now** (rules excluded) | | **659** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (896)
+## Added since the baseline (897)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -245,6 +245,7 @@ None.
 | B25-NINE-D9 | Game juice phases J1 and J2 | decision | APPROVED | owner decision |
 | B25-OVN-0211 | Overnight autonomous development (2026-11-02): broad engineering discretion, parallel independent workstreams, never idle on one question; investigate the zero-business funnel, profession distribution and unemployment, and ore depletion; preserve all business paths with regression tests; consolidated report on return | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-P99-PAYER-01 | p:99: planner reserve check vs payer funds mismatch causes repeated refused buy_from | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
+| B25-Q33-TRADER-RESERVE | Q33 trader reserve (80 coins instead of 85% of the till) and the caravan economy: why it lowers caravan purchases and village income, and what correction keeps traders economically active | decision | OPEN | unassigned |
 | B25-REG02-DEBT-D1 | REG-02 migrating household loans: option (b), preserving legitimate continuing obligations | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-SAV04-D1 | SAV-04: reload deterministic; exact equivalence with an uninterrupted wildlife/combat run not required | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-SAVE-PHANTOM-D2 | Deterministic reconciliation of phantom household memberships in existing saves | approved | INTEGRATED / NOT TESTED / OPEN | unassigned |

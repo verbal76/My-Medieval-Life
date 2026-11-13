@@ -975,7 +975,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (338)
+## Owner decisions (339)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -1020,6 +1020,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25-NINE-D7 | Ordinary clothing is cosmetic | owner decision | APPROVED |  |
 | B25-NINE-D8 | Predefined capabilities and organic societal development | owner decision | APPROVED |  |
 | B25-NINE-D9 | Game juice phases J1 and J2 | owner decision | APPROVED |  |
+| B25-Q33-TRADER-RESERVE | Q33 trader reserve (80 coins instead of 85% of the till) and the caravan economy: why it lowers caravan purchases and village income, and what correction keeps traders economically active | unassigned | OPEN |  |
 | B25-SCOPE-D1 | Is Build 25 the consolidation build containing all approved expansion work and all approved recoverable work from abandoned branches? | owner decision | APPROVED |  |
 | B25R1-AUDIT-OPT1 | B25R1 requirements audit (2026-11-05): which completion path? Option 1 = finish validating the current code while continuing development of every approved B25R1 requirement, no deferral | 20 | APPROVED |  |
 | B25R1-Q1 | Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)? | 20 | APPROVED |  |

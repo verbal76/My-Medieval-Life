@@ -8659,10 +8659,15 @@
      "date": "2026-11-13",
      "change": "owner_answer",
      "why": "owner answer 2026-11-12: fuel only for now; no new cold health effect for anyone until the owner designs cold exposure (DCR-01: the game has no cold exposure today)"
+    },
+    {
+     "date": "2026-11-13",
+     "change": "owner_answer",
+     "why": "owner 2026-11-12: limited deadwood gathering without an axe approved (existing gathering systems; time, resources, conservation; no free firewood; no cold penalties); first fix fbfe146 (firewood before seed) on wip/b25-nd29-band-campfire"
     }
    ],
    "lifecycle": "ACTIVE",
-   "owner_answer": "Fuel only for now: the band gathers and burns logs at its camp through the villagers' nightly log burn; the campfire shows lit or out; cold counted only when its fire is out; no new health effect"
+   "owner_answer": "Fuel only; plus limited gathering of fallen branches and deadwood without an axe through existing gathering systems: consumes time, respects available resources, conserves inventory, no unlimited firewood, no cold health or stamina penalties; regression tests for gather, consume, exhaust"
   },
   {
    "id": "B25-NINE",
@@ -9109,6 +9114,29 @@
    "commits": [
     "3570832"
    ]
+  },
+  {
+   "id": "B25-Q33-TRADER-RESERVE",
+   "kind": "decision",
+   "title": "Q33 trader reserve (80 coins instead of 85% of the till) and the caravan economy: why it lowers caravan purchases and village income, and what correction keeps traders economically active",
+   "description": "Q33 trader reserve (80 coins instead of 85% of the till) and the caravan economy: why it lowers caravan purchases and village income, and what correction keeps traders economically active",
+   "source": "docs/directives/2026-11-12_b25_owner_decisions_q33_nd29_gathering.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-13",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-12_b25_owner_decisions_q33_nd29_gathering.md"
+    }
+   ],
+   "lifecycle": "UNDER REVIEW"
   },
   {
    "id": "B25-REG02-DEBT-D1",
