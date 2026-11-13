@@ -361,6 +361,7 @@ jobs:
           res://tests/home_test.gd
           res://tests/home_ref_test.gd
           res://tests/wildlife_test.gd
+          res://tests/animal_hunt_ai_test.gd   # B25-ANIMAL-HUNT-AI: struck animals turn, then flee in zigzags round obstacles; bears fight
           res://tests/refuge_test.gd
           res://tests/combat_test.gd
           res://tests/pursuit_test.gd   # REPAIR S3: a guard chasing the player goes round walls

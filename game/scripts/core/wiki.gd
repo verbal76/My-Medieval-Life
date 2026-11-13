@@ -638,7 +638,10 @@ func _animals() -> void:
 		if a.has("raids"):
 			diet += " At night a hungry one takes %s from the pens." % str(an[a.raids].name).to_lower()
 		if bool(a.get("people", false)):
-			diet += " Struck, it fights back (%d a bite), and a starving one goes for a person alone in its wood." % int(a.bite)
+			diet += " Struck, it turns on whoever struck it and fights back (%d a bite), and a starving one goes for a person alone in its wood." % int(a.bite)
+		elif wild:                                 # B25-ANIMAL-HUNT-AI (Fauna.provoke, _flee_struck)
+			diet += (" It runs from you when you come within %s tiles." % str(a.flee) if float(a.get("flee", 0.0)) > 0.0 else " It lets you come close.") \
+				+ " Struck, it starts and turns to look at you, then runs, zigzagging away round trees, water and the edge of its wood, now and then stopping to look back while you are well behind, and keeps running while you are near. Cornered, it may dart past your side; boxed in, it stands facing you."
 		var kept := "Animals get hungry and die unfed like villagers; a well-fed male and female breed, and young are half size until grown."
 		if id == "horse":                          # B14-11
 			kept = "The plough horse is bought from the visiting caravan (%d coins) into your own horse pen, one at a time. It gets hungry and dies unfed like the other pen animals; it does not breed. With it and the hand plough in your pack, you till a cell in %.1f second for %.0f stamina." % [
@@ -911,7 +914,7 @@ func _systems() -> void:
 	sys.call("saving", "Saving and your heir", [
 		p("Saves are versioned and keep your world. Resting at home and the pause menu's Save write the save; Continue loads it. If you die, an heir takes over: see Inheritance."),
 		p("Your save lives inside the game, and uninstalling the game deletes it, as can installing a test build that cannot update the old one. To keep your world, open Settings, Saves: Copy my save to a file puts a copy wherever you choose (Documents, Downloads, a cloud folder), and Keep a copy up to date rewrites that copy every time the game saves. After reinstalling, choose Import a save file and pick your copy: the game checks it, keeps a backup of it and of any save it replaces, brings it up to this version and continues your world. A file it cannot use (damaged, from a newer version, or from before the village was rebuilt) is refused and nothing changes. On Android you pick the file again after each reinstall. Inside the game, each save keeps the one before it as a backup, and the first save of each day keeps the previous save under that day's date, the last three days; if a save and its backup cannot be read, Continue loads the newest of those."),
-		p("A save keeps every animal, its health and where it is, and every wound you or the villagers have taken, but not a fight in the middle of a blow: after loading, an angry wolf or bear has calmed, a villager who was fighting decides afresh what to do, and a tree you had begun to chop stands whole again. So a loaded game can go a little differently from one that was never saved, though loading the same save always goes on the same way."),
+		p("A save keeps every animal, its health and where it is, and every wound you or the villagers have taken, but not a fight in the middle of a blow: after loading, an angry wolf or bear has calmed, an animal that was running from you has settled, a villager who was fighting decides afresh what to do, and a tree you had begun to chop stands whole again. So a loaded game can go a little differently from one that was never saved, though loading the same save always goes on the same way."),
 		links(["sys:inheritance", "sys:death", "guide:save"])])
 	sys.call("sound", "Music and sound", [
 		p("The village has music. The morning and the title screen have one song, the working day another, and the evening, the night and the dark under the ground a third. A song fades into the next when the time or the place changes, and rests for a few seconds before it plays again. Out in the countryside beyond the village another song plays, and a fight has its own music that fades back a few seconds after the fight is over."),
