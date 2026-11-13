@@ -5616,10 +5616,11 @@
    "title": "Boars sometimes charge when struck; struck livestock flee within their pens",
    "description": "Boars sometimes charge when struck; struck livestock flee within their pens",
    "source": "docs/directives/2026-11-12_b25_complete_owner_direction_evening.md",
-   "owner_wording": "Boars may charge and defend themselves when attacked, but should not always charge. Preserve believable flight and defensive responses. Keep current reaction timing provisionally until hardware playtesting. Struck livestock should flee naturally within their enclosures without passing through fences. Add deterministic regression coverage.",
+   "owner_wording": "Boars may charge and defend themselves when attacked, but should not always charge. Preserve believable flight and defensive responses. Keep current reaction timing provisionally until hardware playtesting. Struck livestock should flee naturally within their enclosures without passing through fences. Add deterministic regression coverage. (2026-11-13:) Approve the current 30% healthy, 60% badly hurt, and 75% cornered probabilities for hardware playtesting. Do not rebalance yet. Retain 5 damage per gore, 1.3-second attack intervals, and the existing 8-second / 8-tile disengagement conditions pending hardware testing. Apply the existing wolf/bear self-defense rules to boars. Killing a boar that qualifies as an active threat under those rules should count as self-defense. Do not create a loophole where deliberately provoking an animal automatically grants legal immunity.",
    "approval": "owner, 2026-11-12",
    "acceptance": [
-    "deterministic tests: a struck boar sometimes charges and sometimes flees; livestock flee inside their pen and never cross a fence"
+    "deterministic tests: a struck boar sometimes charges and sometimes flees; livestock flee inside their pen and never cross a fence",
+    "deterministic self-defence tests (owner 2026-11-13): a boar that is an active threat under the wolf/bear rules may be killed in self-defence; a deliberately provoked boar grants no automatic immunity; save/load keeps the classification"
    ],
    "target_build": "unassigned",
    "parent": null,
@@ -5640,6 +5641,11 @@
      "date": "2026-11-13",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> boar/livestock worker (lead session); branch: None -> wip/b25-animal-boar-livestock; commits + 5132879",
      "why": "worker: 5132879 on wip/b25-animal-boar-livestock (base 3ba8d22): boar charges with 0.3/0.6/0.75 odds from the seeded stream, gives up at 8 s / 8 tiles; pen animals flee on inner pen cells only; animal_boar_livestock_test 61/0 (16 red before); animal_hunt_ai 68/0, wildlife 61/0, herd 19/0, horse 56/0, combat 41/0, world 339/0, refuge 59/0, ecology 14/0, save_continuity 5/0, net_fauna 14/0, wiki 144/0; 10-day seed 1 fingerprint identical to 3ba8d22; lead looked at the contact sheet (charge reads naturally; flee partly under canopy; pen pig stays inside)"
+    },
+    {
+     "date": "2026-11-13",
+     "change": "owner_wording; acceptance + self-defence tests",
+     "why": "owner decisions 2026-11-13 (docs/directives/2026-11-13_b25_boar_livestock_owner_decisions.md): charge odds 0.3/0.6/0.75, gore 5 every 1.3 s and the 8 s / 8 tile give-up approved for hardware playtesting, no rebalance; boars take the existing wolf/bear self-defence rules (a boar that is an active threat under them may be killed in self-defence; provoking one grants no immunity); add deterministic self-defence tests (qualifying, non-qualifying, save/load); stays on wip/b25-animal-boar-livestock, out of Build 40; no CI, packaging or release"
     }
    ],
    "lifecycle": "ACTIVE",
