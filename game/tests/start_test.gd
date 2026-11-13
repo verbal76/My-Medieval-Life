@@ -145,6 +145,7 @@ func _run() -> void:
 	ui.show_title(main.can_continue())
 	for i in 4:
 		await process_frame
+	check(ui.title_label.text == "FORGE MY LIFE", "NAME-01: the title screen names the game Forge My Life (%s)" % ui.title_label.text)
 	check(ui.body_scroll.scroll_vertical == 0, "the title opens at its top, its buttons in view (FR-05; was scrolled into the controls list)")
 	_press("New game")
 	check(ui.is_open("creation"), "character creation opens")
