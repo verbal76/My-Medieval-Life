@@ -42985,6 +42985,35 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "NAME-01",
+   "kind": "approved",
+   "title": "Rename the game to Forge My Life (FML)",
+   "description": "Rename the game to Forge My Life (FML)",
+   "source": "docs/directives/2026-11-13_game_name_forge_my_life.md",
+   "owner_wording": "i just registered forge my life",
+   "approval": "owner, 2026-11-13",
+   "acceptance": [
+    "every player-facing name (window title, title screen, credits, wiki, store text, export package names) reads Forge My Life; the scope list approved by the owner before any rename; Android package id unchanged unless the owner decides otherwise"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-13",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-13_game_name_forge_my_life.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "OD-01",
    "title": "Owner decision: deposit sustainability (P1) and the mine wage (B7-006)",
    "kind": "decision",
