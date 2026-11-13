@@ -85,7 +85,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
-| B25-ANIMAL-HUNT-AI | Animal reactions to melee attacks (hunting AI) | approved | OWNER APPROVED | NOT STARTED |
+| B25-ANIMAL-HUNT-AI | Animal reactions to melee attacks (hunting AI) | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B25-AUDIT-69-01 | Status audit of the original 69 open items | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-AUDIT-CONT-01 | Build 25 audit continuation: merge sequence KI-09, MP-03/TRD-05, batch 3 under evidence from GitHub Actions | approved | OWNER APPROVED | NOT STARTED |
 | B25-B17FJOBS-D1 | REQ-B17F-JOBS: measure adult unemployment and causes after Batch 3+4 (measurement only) | approved | OWNER APPROVED | NOT STARTED |
@@ -115,7 +115,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B25-ND15-TOL-01 | ND-15: documented numerical tolerances for save/load float differences, proven harmless | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-ND16-PREC-01 | ND-16: campaigns save at gameplay precision; regime labelled; history preserved | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-ND22-B34-NOTES | Correct Build 34's release notes (no full Linux package); point Linux users to a newer verified build | approved | OWNER APPROVED | NOT STARTED |
-| B25-ND29-BAND-CAMPFIRE | The outlaw band keeps a functional campfire; cold exposure when it goes out | approved | OWNER APPROVED | NOT STARTED |
+| B25-ND29-BAND-CAMPFIRE | The outlaw band keeps a functional campfire; cold exposure when it goes out | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B25-P99-PAYER-01 | p:99: planner reserve check vs payer funds mismatch causes repeated refused buy_from | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-REG02-DEBT-D1 | REG-02 migrating household loans: option (b), preserving legitimate continuing obligations | approved | OWNER APPROVED | NOT STARTED |
 | B25-SAV04-D1 | SAV-04: reload deterministic; exact equivalence with an uninterrupted wildlife/combat run not required | approved | OWNER APPROVED | NOT STARTED |

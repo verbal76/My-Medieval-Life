@@ -159,7 +159,7 @@ None.
 | B21-LAN-PLAYTEST | Build 21: host/join interface, Android networking, animal sync, recorder audit and a private playtest build | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | multiplayer |
 | B25-AMBITION-D4 | Activate the career ambition system? | decision | APPROVED | owner decision |
 | B25-AMBITION-IMPL | Activate and correct the skill-aware career ambition (job_choice) system | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
-| B25-ANIMAL-HUNT-AI | Animal reactions to melee attacks (hunting AI) | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
+| B25-ANIMAL-HUNT-AI | Animal reactions to melee attacks (hunting AI) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | B25-AUD-BIZ-03 | Payroll before owner withdrawals; hiring budgets the whole payroll (audit BIZ-03, Option B) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
 | B25-AUD-BIZ-04 | A migrating household keeps its business money (audit BIZ-04) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
 | B25-AUD-EMP-03 | Count everyone actively seeking work in hiring competition (audit EMP-03) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20+ |
@@ -232,7 +232,7 @@ None.
 | B25-ND15-TOL-01 | ND-15: documented numerical tolerances for save/load float differences, proven harmless | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | unassigned |
 | B25-ND16-PREC-01 | ND-16: campaigns save at gameplay precision; regime labelled; history preserved | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | unassigned |
 | B25-ND22-B34-NOTES | Correct Build 34's release notes (no full Linux package); point Linux users to a newer verified build | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
-| B25-ND29-BAND-CAMPFIRE | The outlaw band keeps a functional campfire; cold exposure when it goes out | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
+| B25-ND29-BAND-CAMPFIRE | The outlaw band keeps a functional campfire; cold exposure when it goes out | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | B25-NINE | Build 25: implement the nine consolidated owner decisions of 2026-11-01 | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | B25-NINE-D1 | Organic skills, apprenticeship and career development | decision | APPROVED | owner decision |
 | B25-NINE-D2 | Informal services and expanded service contracts | decision | APPROVED | owner decision |

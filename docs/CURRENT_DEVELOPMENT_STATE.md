@@ -25,6 +25,16 @@
   - History lives in `docs/DEVELOPMENT_CHANGELOG.md`.
 - **Recovery after lost context:** `docs/handoffs/CURRENT_SESSION_RECOVERY.md`.
 
+> **Checkpoint 2026-11-12 21:00 EST (owner directives of the evening: chain 12 direction, baseline/economic investigation, Build 25
+> stabilization, ND-29/kept worlds/ND-22, Q33/ND-29 gathering; all in docs/directives/2026-11-12_*):**
+> - Development line unchanged: `wip/b25r2-rev2` = `b3c9eb5` (chain 12). Baseline candidate inactive; release gate not bypassed.
+> - In development: B25-ANIMAL-HUNT-AI on `wip/b25-animal-hunt-ai` (`fe1c4e5`, worker; visual check pending); B25-ND29-BAND-CAMPFIRE
+>   on `wip/b25-nd29-band-campfire` (`fbfe146`, lead; deadwood gathering pending); preview branch `wip/b25-preview` (worker);
+>   INV-02 switch-on run 43332363247 and the Android export question (worker).
+> - Investigation: `docs/audits/2026-11-12_CHAIN12_BASELINE_INVESTIGATION.md`; the caravan-income fall isolated to merge `a9e9f6e`
+>   (Q32/Q33); diagnostic branches `wip/b25-attr-q33-reverted` (CI 43344505130) and `wip/b25-attr-q32-reverted` (local), never merged.
+> - 365-day campaigns on `b3c9eb5`: 43332151718 (seeds 1-2), 43332156022 (seeds 3-4), running.
+
 > **Checkpoint 2026-11-12 18:50 EST (Extra Life; supersedes the 13:30 checkpoint below where they differ):**
 > - Development line `wip/b25r2-rev2` = `b3c9eb5` (chain 12, fast-forward from `e21bfc6`): chain 11 `1d03eea` (chain 10 + guest
 >   trust ND-20, MP-07 privacy, player-journey tests, ND-23/ND-24, ND-25 harness fix) + ND-26 liveness watchdog `b1a2fa8` +

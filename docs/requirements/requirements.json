@@ -5612,13 +5612,19 @@
      "date": "2026-11-13",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; branch: None -> wip/b25-animal-hunt-ai; commits + fe1c4e5",
      "why": "worker: fix fe1c4e5 on wip/b25-animal-hunt-ai (animal_hunt_ai_test 54 checks/20 red before, 64/0 after; wildlife 61/0, wilds 72/0, net_fauna 14/0, countryside 38/0, mp06 42/0, recorder_neutrality 5/0, sav04 13/0); visual gameplay check and remaining suites in progress"
+    },
+    {
+     "date": "2026-11-13",
+     "change": "assigned_worker: None -> animal-AI worker (lead session)",
+     "why": "assigned worker recorded"
     }
    ],
    "lifecycle": "ACTIVE",
    "branch": "wip/b25-animal-hunt-ai",
    "commits": [
     "fe1c4e5"
-   ]
+   ],
+   "assigned_worker": "animal-AI worker (lead session)"
   },
   {
    "id": "B25-AUD-BIZ-03",
@@ -8678,6 +8684,11 @@
      "date": "2026-11-13",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; branch: None -> wip/b25-nd29-band-campfire; commits + fbfe146",
      "why": "lead: fbfe146 firewood before seed (nd29_band_firewood_test 7/1 red before, 7/0 after; homestead 49/0, homestead_food_held 14/0); deadwood gathering pending"
+    },
+    {
+     "date": "2026-11-13",
+     "change": "assigned_worker: None -> lead",
+     "why": "assigned worker recorded"
     }
    ],
    "lifecycle": "ACTIVE",
@@ -8685,7 +8696,8 @@
    "branch": "wip/b25-nd29-band-campfire",
    "commits": [
     "fbfe146"
-   ]
+   ],
+   "assigned_worker": "lead"
   },
   {
    "id": "B25-NINE",
