@@ -1330,6 +1330,12 @@ func _gather_tests() -> void:
 	for t in w.trees:
 		if t.state == "grown" and (tree.is_empty() or Vector2(t.x, t.y).distance_to(p.pos) < Vector2(tree.x, tree.y).distance_to(p.pos)):
 			tree = t
+	# ND-29 (owner 2026-11-12): without an axe a mature tree's fallen deadwood is gathered by hand, so the tap chooses it ...
+	tap_at(Vector2(int(tree.x), int(tree.y) - 1) + Vector2(0.5, 0.5))          # its canopy
+	check(not main.gather.is_empty() and main.gather.ref == tree, "a tree tapped on its canopy, without an axe, is chosen for its deadwood")
+	main.stop_gather("")
+	# ... and once its deadwood is gathered, it says so and how to fell it, and does nothing
+	w.homesteads.deadwood["%d,%d" % [int(tree.x), int(tree.y)]] = w.day() + 4
 	tap_at(Vector2(int(tree.x), int(tree.y) - 1) + Vector2(0.5, 0.5))          # its canopy
 	check(main.gather.is_empty() and ui.toast.text.to_lower().contains("axe"), "a tree tapped on its canopy, without an axe: \"%s\"" % ui.toast.text)
 	# with an axe it is felled once (a tree gives its logs in one cycle), and gathering stops
