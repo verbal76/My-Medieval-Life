@@ -177,6 +177,52 @@ defect; the two decisions' shares have not been separated (one more pair of runs
 **Owner question:** is the village's lower export income (and the treasury's fewer repairs that follow) the intended effect of the
 80-coin trader reserve, or should the traders' buying capital be looked at again?
 
+## 6b. Q32 and Q33 separated (owner directive 2026-11-12 "Q33 — Trader reserve and caravan economy")
+
+Diagnostic branches, never to be merged: `wip/b25-attr-q33-reverted` `e56c425` (a9e9f6e with the 85% trader reserve put back; CI
+43344505130) and `wip/b25-attr-q32-reverted` `50467c5` (a9e9f6e with neighbours collecting only from traderless places; run locally,
+same economy_sim arguments). Day 30 (trader cash: the settlements' traders' tills together at day 10):
+
+| Seed | Variant | Coins in from caravans | Wealth tax | Repairs | Mends | Trader cash d10 | Bars exported | Planks exported |
+|---|---|---|---|---|---|---|---|---|
+| 1 | before econ5 `fb64eab` | 2833 | 1641 | 213 | 53 | 791 | 163 | 149 |
+| 1 | Q32 + Q33 `a9e9f6e` | 1923 | 955 | 111 | 21 | 320 | 109 | 111 |
+| 1 | Q32 only (Q33 reverted) | 2832 | 1687 | 204 | 53 | 791 | 163 | 163 |
+| 1 | Q33 only (Q32 reverted) | 1918 | 955 | 111 | 21 | 320 | 110 | 109 |
+| 2 | before econ5 `fb64eab` | 2307 | 1440 | 235 | 63 | 750 | 144 | 99 |
+| 2 | Q32 + Q33 `a9e9f6e` | 1903 | 1310 | 202 | 47 | 270 | 121 | 106 |
+| 2 | Q32 only (Q33 reverted) | 2320 | 1434 | 227 | 61 | 750 | 146 | 104 |
+| 2 | Q33 only (Q32 reverted) | 1821 | 1176 | 174 | 40 | 270 | 113 | 109 |
+
+**Result: Q33 accounts for the whole fall; Q32 has no measurable effect on the village.**
+
+### Why the 80-coin reserve lowers the caravans' purchases (code, `a9e9f6e`)
+
+- A trader buys the village's goods from its till above a fixed floor (`OffMapSettlement.buy_from_village` through `trader_cash()`:
+  till less `rules.trader_reserve_floor`, 20). The reserve does not limit buying.
+- The reserve limits the daily payout: a settlement business pays its worker households the wages, or up to `payout_share` of its
+  till **above its reserve** (`OffMapSettlement` payroll, "the business keeps its working reserve").
+- Before Q33 a trader's reserve was 85% of its starting till, so little was paid out and the till (its buying capital) stayed near its
+  start: about 750-790 coins across the traders at day 10. With an 80-coin reserve, everything above 80 is paid out day by day, the
+  traders' tills fall to about 80 each (270-320 together at day 10), and each caravan visit has about 60 coins a trader to buy with.
+- The coins do not vanish (conservation holds): they move to the traders' households and their settlements' treasuries (seed 1 day
+  30: settlements' coins 12317 -> 13087), where they do not buy the village's goods.
+
+So Q33's reserve does two jobs at once: a floor below which a trader keeps its capital (its intent) and, as a side effect, the size of
+its buying capital, which shrinks by about two thirds.
+
+### Recommended correction (for the owner's decision; not implemented)
+
+Keep Q33's 80-coin floor and its intent (traders' profits reach their households), and size the working reserve to the trading the
+trader actually does: **reserve = max(80, the coins the trader spent buying (from the village and from neighbours) over its last
+trading cycle)**, e.g. the trailing 10 days (5 caravan visits; measured purchases before econ5 were about 2300-2800 coins over 30 days
+across about five active traders, roughly 150-190 coins a trader per 10 days). A busy trader keeps the capital its buying needs; an
+idle one pays out down to 80; nothing is invented and conservation is unchanged. To be validated, if approved, by the same paired
+runs (seeds 1-2, 30 days) and the four-seed 365-day campaign before any baseline is proposed.
+
+Alternatives considered: back to 85% of the starting till (restores the numbers but not the intent, and pays a profitable trader
+nothing); a fixed larger reserve (arbitrary, wrong for small and large traders alike).
+
 ## 6a. Still open
 
 - Sustainability over a year (item 5): the chain 12 campaigns (runs 43332151718 seeds 1-2 and 43332156022 seeds 3-4, 365 days,

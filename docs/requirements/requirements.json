@@ -9164,6 +9164,11 @@
      "date": "2026-11-13",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-12_b25_owner_decisions_q33_nd29_gathering.md"
+    },
+    {
+     "date": "2026-11-13",
+     "change": "note",
+     "why": "diagnostic: Q33 alone accounts for the caravan-income fall (Q32 none); mechanism: the reserve sets the payout, so traders' buying capital drains to 80; proposed correction: reserve = max(80, trailing 10-day purchases); awaiting the owner"
     }
    ],
    "lifecycle": "UNDER REVIEW"
