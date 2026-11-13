@@ -598,6 +598,15 @@ func _new_day() -> void:
 	chapel.dawn()                      # DVW-B3-CHAPEL: this morning's volunteers for the church plot, and its seed
 	if profiling:
 		_prof("daily: manor, rents, business, construction", t)
+	burn_firewood()
+	if economy != null:
+		economy.dawn(d)                # EXPANSION 20 LE-01: the model's expiries and refreshes (records only; null while disabled)
+
+
+## The night's firewood (the heating and fuel system): every household, the outlaw band's camp too (ND-29, owner 2026-11-12: no
+## exemption), burns one log from its pantry; a household with none had no fire and is counted cold (no other effect exists:
+## owner, "fuel only for now"). Returns how many were cold.
+func burn_firewood() -> int:
 	var cold := 0
 	var seller_logs := -1
 	for hi in households.size():
@@ -611,8 +620,7 @@ func _new_day() -> void:
 			stat("burned_log")
 	if cold > 0:
 		note("%d households had no firewood last night." % cold)
-	if economy != null:
-		economy.dawn(d)                # EXPANSION 20 LE-01: the model's expiries and refreshes (records only; null while disabled)
+	return cold
 
 
 func _update_npc(n: NPC, dt: float) -> void:

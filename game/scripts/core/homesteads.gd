@@ -1529,6 +1529,16 @@ func _errand(n: NPC, c: Dictionary, trip: Dictionary) -> bool:
 			n.doing = "buying food for the homestead"
 			n.plan = [b.go(b._workplace_cell(v)), b.doit("buy_food", {"vendor": v.id, "pantry": true})]
 			return true
+	# ND-29 (owner 2026-11-12, "fuel only for now"): firewood is a necessity (World.is_necessity: food, firewood, medicine), so it
+	# is bought after the food and before the field's seed; it came after the seed, and a poor claim (the outlaw band's camp, a
+	# struggling homestead) spent its last coins on seed and went without a fire every night while sellers held logs
+	if (w.households[n.household].pantry as Inventory).count("log") < 1 and not n.inv.has("log") and not tried.has("firewood"):
+		tried.firewood = true
+		var s := b._seller_of("log", n)
+		if s != null and b.buy_qty(n, s, "log", 2, true) > 0:
+			n.doing = "buying firewood"
+			n.plan = [b.go(b._workplace_cell(s)), b.doit("buy_from", {"vendor": s.id, "item": "log", "qty": b.buy_qty(n, s, "log", 2, true), "pantry": true})]
+			return true
 	var trade_s := str((c.trades as Dictionary).get(str(n.id), c.trade))
 	if str(c.status) != "intended" and (trade_s in ["farmer", "herder", "manor_hand"] or w.brain.household_food_held_days(n.household) < float(cf.food_low_days)) and _seed_in(w.households[n.household].pantry) == "" and not tried.has("seed"):
 		tried.seed = true
@@ -1541,13 +1551,6 @@ func _errand(n: NPC, c: Dictionary, trip: Dictionary) -> bool:
 						n.doing = "buying seed for the homestead's field"
 						n.plan = [b.go(b._workplace_cell(sv) if sv.job != "farmer" else sv.cell()), b.doit("buy_from", {"vendor": sv.id, "item": sd, "qty": sq, "pantry": true})]
 						return true
-	if (w.households[n.household].pantry as Inventory).count("log") < 1 and not n.inv.has("log") and not tried.has("firewood"):
-		tried.firewood = true
-		var s := b._seller_of("log", n)
-		if s != null and b.buy_qty(n, s, "log", 2, true) > 0:
-			n.doing = "buying firewood"
-			n.plan = [b.go(b._workplace_cell(s)), b.doit("buy_from", {"vendor": s.id, "item": "log", "qty": b.buy_qty(n, s, "log", 2, true), "pantry": true})]
-			return true
 	if str(c.status) != "intended" and w.wilds != null and w.wilds.errand(n, c, trip):
 		return true                                     # animals for the pen, what the claim's open work needs
 	for id in ["plank", "building_block", "log", "stone", "iron_bar"]:
