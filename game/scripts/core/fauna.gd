@@ -768,6 +768,17 @@ func _move(a: Animal, dt: float) -> void:
 		var foe := _foe_pos(a.anger)
 		_bite(a, foe)
 		a.goal = foe
+		if foe != Vector2.INF and a.pos.distance_to(foe) > 0.001:      # B25-ANIMAL-HUNT-AI: it closes to fight_standoff, in reach
+			a.goal = foe + (a.pos - foe).normalized() * minf(float(wl().struck.fight_standoff), a.pos.distance_to(foe))   # of a bite, not on top of them
+			var reach := _speed(a) * float(wl().chase_speed) * dt
+			if a.pos.distance_to(a.goal) <= reach:          # there this step: it steps up and stands facing them
+				var moved := a.pos.distance_to(a.goal) > 0.01 and _open(a, a.goal)
+				if moved:
+					a.pos = a.goal
+				a.goal = Vector2.INF
+				a.moving = moved
+				a.facing = foe - a.pos
+				return
 		a.wait = 0.0
 		if foe != Vector2.INF and foe.distance_to(a.pos) > 0.001:
 			a.facing = foe - a.pos                          # B25-ANIMAL-HUNT-AI: it faces whoever it fights, in reach too

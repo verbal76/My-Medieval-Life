@@ -315,6 +315,8 @@ func test_bear(w: World) -> void:
 	check(a.pos.distance_to(w.player.pos) < d0, "it comes for the player rather than running")
 	check(w.player.hp < hp0, "and bites (%.1f)" % (hp0 - w.player.hp))
 	check(faced == n, "it faces the player throughout (%d of %d frames)" % [faced, n])
+	check(a.pos.distance_to(w.player.pos) >= float(GameData.b("wildlife").struck.fight_standoff) - 0.01 and a.pos.distance_to(w.player.pos) <= 1.0,
+		"it stands in reach of a bite, not on top of the player (%.2f tiles)" % a.pos.distance_to(w.player.pos))
 	check(a.startle_left <= 0.0 and a.alarm == "", "a bear is never put to flight")
 	var wolf := _stage(w, "wolf", Vector2(-1.5, 0.0))
 	w.player_hit_animal(wolf, 0.5)

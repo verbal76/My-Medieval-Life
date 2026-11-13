@@ -2,7 +2,7 @@ extends SceneTree
 ## B25-ANIMAL-HUNT-AI visual check (owner directive 2026-11-12, section 2: "a visual gameplay test, because passing AI unit
 ## tests alone will not establish that the animations look natural"). In the real game scene: the player strikes a deer
 ## from behind, the deer turns, then runs; the player chases and strikes again; then a bear is struck and comes on. Frames
-## are captured at fixed steps (the world is driven at 30 steps a second, the game paused so nothing else moves it) and laid
+## are captured at fixed steps (World.update at 30 frames a second, as play runs it, the scene's own update paused so only this drives it) and laid
 ## out as two contact sheets, each frame cropped round the player and labelled with its time. Needs a display:
 ##   xvfb-run -a -s "-screen 0 1920x1080x24" godot --rendering-driver opengl3 --resolution 1920x1080 --path game \
 ##       --script res://tests/hunt_shot.gd -- OUT_DIR
@@ -127,14 +127,13 @@ func _tick() -> void:
 	if t < 0.0 and t + DT >= 0.0:
 		_strike()
 		cd = float(Combat.cfg().swing_time)
+	w.update(DT)                             # the whole world, as play runs it (animals step on its half-second ticks)
 	if t >= 0.0:
-		w.fauna.update(DT)
-		if a.anger != "":
-			a.bite_cd = 99.0                 # the bear comes on but the picture is of its approach, not of the player falling
+		w.player.hp = float(GameData.b("player_max_hp"))      # the bear bites; the picture is of the fight, not of the player falling
 		if chase and t < chase_until:
 			var gap := a.pos - w.player.pos
-			if gap.length() > 0.9:
-				w.player.pos += gap.normalized() * minf(float(GameData.b("player_tiles_per_second")) * 0.9 * DT, gap.length() - 0.9)
+			if gap.length() > 1.3:
+				w.player.pos += gap.normalized() * minf(float(GameData.b("player_tiles_per_second")) * 0.9 * DT, gap.length() - 1.3)
 				main.player_sprite.face(gap)
 			cd -= DT
 			if cd <= 0.0 and gap.length() <= float(Combat.cfg().reach) :
