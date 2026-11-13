@@ -5628,7 +5628,7 @@
    "decisions": [],
    "approval_status": "OWNER APPROVED",
    "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -5651,14 +5651,23 @@
      "date": "2026-11-13",
      "change": "note",
      "why": "owner clarification 2026-11-13 (docs/directives/2026-11-13_b25_boar_self_defense_clarification.md): if wolf/bear kills carry no legal consequence, invent none; apply existing threat recognition to charging boars, keep attack vs provocation distinct, record defensive kills only through an existing system or document the gap; approved behaviour unchanged; mid-charge save/load test; investigate fingerprint differences; isolated from Build 40; no merge, Actions, packaging or release"
+    },
+    {
+     "date": "2026-11-13",
+     "change": "verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> boar_self_defence 32/0, animal_boar_livestock 61/0, animal_hunt_ai 68/0, world 339/0; test_commit: None -> 9c69728; commits + f0f7b01; commits + 9c69728",
+     "why": "worker: boar self-defence per owner decisions and clarification 2026-11-13. Verified: killing wild animals has no legal consequence anywhere; 'self-defence' is the existing social defence classification (Relations.defended, JudgmentLive.on_defence). Shared Fauna.active_threat (charging boar only, incl. startle; wolves/bears unchanged); Fauna.defence_kill: boar counts only while charging and not if the killer's own blow started the charge (Animal.charge_by, unsaved). No new crime, penalty or system. boar_self_defence_test 32/0 (floor 32) incl. mid-charge save/load (boar loads calm) and determinism; 13 suites 0 failures; 10-day seed 1 fingerprint identical to 5132879 (6dae7229...). Gaps recorded in DECISIONS: provoked/calm wolf or bear kill near villagers still counts as defence (pre-existing); multiplayer provoke-by-one kill-by-other; charge not saved. Kept out of Build 40"
     }
    ],
    "lifecycle": "ACTIVE",
    "assigned_worker": "boar/livestock worker (lead session)",
    "branch": "wip/b25-animal-boar-livestock",
    "commits": [
-    "5132879"
-   ]
+    "5132879",
+    "f0f7b01",
+    "9c69728"
+   ],
+   "tests": "boar_self_defence 32/0, animal_boar_livestock 61/0, animal_hunt_ai 68/0, world 339/0",
+   "test_commit": "9c69728"
   },
   {
    "id": "B25-ANIMAL-HUNT-AI",
