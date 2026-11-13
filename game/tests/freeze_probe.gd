@@ -88,6 +88,8 @@ func _begin() -> void:
 			str(r.ok), (r.get("cells", []) as Array).size()])
 	if not bool(r0.get("ok", false)):
 		w.player.pos = Vector2(gate) + Vector2(0.5, 0.5)
+	if OS.get_cmdline_user_args().has("premake_fields"):
+		_premake_fields(w)
 	w.profiling = true
 	# (set, not assigned: an older commit without these diagnostics just has none, so the same probe measures it)
 	main.set("frame_profiling", true)
@@ -100,7 +102,7 @@ func _begin() -> void:
 			"step", "vx", "vy", "level", "where", "chunks_built_ms", "tiles_made", "snap", "nodes", "render_ms"] \
 			+ keys_world.map(func(k): return "w:" + k.replace(",", ";")) + keys_main.map(func(k): return "m:" + k.replace(",", ";")) + keys_ow.map(func(k): return "m:" + k))))
 	t_last = Time.get_ticks_usec()
-	ticks0 = w.ticks
+	ticks0 = _ticks(w)
 	pos0 = w.player.pos
 	b0 = int(main.ow_view.build_usec)
 	tiles0 = _tiles()
@@ -129,7 +131,7 @@ func _frame() -> void:
 		place = "village"
 	elif w.map.overworld != null and not w.map.overworld.site_at(Vector2i(w.player.pos.floor())).is_empty():
 		place = "site"
-	row.append_array([frames, "%.3f" % t_game, "%.3f" % wall, "%.3f" % (delta_prev * 1000.0), w.ticks - ticks0,
+	row.append_array([frames, "%.3f" % t_game, "%.3f" % wall, "%.3f" % (delta_prev * 1000.0), _ticks(w) - ticks0,
 			int(w.minutes / 60.0) % 24, "%.1f" % w.minutes, "%.3f" % w.player.pos.x, "%.3f" % w.player.pos.y,
 			"%.4f" % w.player.pos.distance_to(pos0), "%.2f" % last_v.x, "%.2f" % last_v.y, w.player.map_level, place,
 			"%.3f" % ((int(main.ow_view.build_usec) - b0) / 1000.0), tiles - tiles0, snaps,
@@ -154,7 +156,7 @@ func _frame() -> void:
 			print("   tile_changed this frame: %s" % str(emits.slice(0, 12)))
 	emits.clear()
 	prof0 = w.prof.duplicate(true)
-	ticks0 = w.ticks
+	ticks0 = _ticks(w)
 	b0 = int(main.ow_view.build_usec)
 	tiles0 = tiles
 	delta_prev = main.get_process_delta_time()      # the delta of the frame starting now (written with its row next time)
@@ -210,6 +212,28 @@ func _press(a: String, s: float) -> void:
 		Input.action_press(a, s)
 	else:
 		Input.action_release(a)
+
+
+## PROBE, not a fix (the experiment that tests the cause): make the 4 x 4 edge variants of every field state's tile (tilled,
+## growing, ripe) before the walk, as MapView._make_tile would on first use. If the frames of 100+ ms in play are the TileSet
+## changing when a field's new variant is first drawn, they go with this.
+func _premake_fields(w: World) -> void:
+	var cols := int(w.map.data.atlases[0].columns)
+	var made := 0
+	for state in w.map.data.tiles.field:
+		var base := int(w.map.data.tiles.field[state])
+		for row in 4:
+			for col in 4:
+				var t := base + row * cols + col
+				var coords := Vector2i(t % cols, t / cols)
+				if not main.view.sources[0].has_tile(coords):
+					main.view._make_tile(0, coords, t)
+					made += 1
+	print("premake_fields: %d field tiles made before the walk" % made)
+
+
+func _ticks(w: World) -> int:
+	return int(w.get("ticks")) if w.get("ticks") != null else 0     # (no fixed tick before e66ca18)
 
 
 func _dict(o: Object, k: String) -> Dictionary:
