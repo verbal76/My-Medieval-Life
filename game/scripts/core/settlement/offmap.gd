@@ -97,6 +97,8 @@ var pos := Vector2i.ZERO
 var industries: Array = []
 var hh: Array = []                   # households: {id, trade, adults, children, mem[[born, sex, pair, unwilling]], parents[], kids[], coins, pantry{}, credit, hungry, acc{}, alive}
 var own: Dictionary = {}             # REGION-NAV-01 Q4 (option C): str(household id) -> the household's own trade, a business-shaped record {type, workers: [that household], till, stock, ...}: a self-employed crafter (see _setup_own)
+var q33_buys: Array = []            # Q33 PROBE: the trader's daily purchase coins, trailing window
+var q33_today := 0                   # Q33 PROBE: coins the trader spent buying today
 var biz: Dictionary = {}             # business type -> {type, workers[], till, stock{}, reserves{}, out{}, acc{}, reserve, horses, foal, fed_miss}
 var gov: Dictionary = {}             # {coins, granary{}, officials[], acc{}}
 var prices: Dictionary = {}          # item -> float, the market price (today's whole-coin price is its rounding)
@@ -878,6 +880,7 @@ func _update_prices() -> void:
 func step_day(d: int) -> void:
 	data()
 	day = d
+	_q33_roll()
 	_dem = {}
 	_sup = {}
 	_pcache = {}
@@ -911,6 +914,21 @@ func step_day(d: int) -> void:
 	_move_jobs()
 	if profile:
 		t0 = _lap("prices", t0)
+
+
+## Q33 PROBE: the trader keeps as working reserve what it spent buying over the trailing 10 days, never under 80.
+func _q33_roll() -> void:
+	q33_buys.append(q33_today)
+	q33_today = 0
+	while q33_buys.size() > 10:
+		q33_buys.pop_front()
+	var m := trader()
+	if m.is_empty():
+		return
+	var spent := 0
+	for c in q33_buys:
+		spent += int(c)
+	m.reserve = maxi(int(btype("merchant").get("reserve", 80)), spent)
 
 
 func _lap(what: String, t0: int) -> int:
@@ -1224,6 +1242,7 @@ func _trader_collects() -> void:
 			_add(m.stock, item, take)
 			o.b.till += take * p
 			m.till -= take * p
+			q33_today += take * p
 			room -= take
 
 
@@ -2110,6 +2129,7 @@ func buy_from_village(item: String, n: int, unit: int) -> bool:
 	if m.is_empty() or n <= 0 or trader_cash() < n * unit:
 		return false
 	m.till -= n * unit
+	q33_today += n * unit
 	_add(m.stock, item, n)
 	_add(flows.from_village, item, n)
 	flows.coins_to_village += n * unit
@@ -2323,6 +2343,7 @@ func stock_trader_food() -> void:
 				_add(m.stock, item, n)
 				b.till += n * p
 				m.till -= n * p
+				q33_today += n * p
 				cash -= n * p
 				if pass_no == 0:
 					free -= float(n) * _pts(item)

@@ -429,6 +429,8 @@ func deal(role: String, other, item: String, n: int, coins_: int, day := 0) -> b
 		_move_goods(item, goods_dir * n, ch)
 	if coin_dir != 0 and coins_ > 0:
 		_move_coins(coin_dir * coins_, ch)
+	if role == "buy" and coins_ > 0 and (kind == "trader" or (kind == "traveller" and str(record().get("owner", "")) == "trader")):
+		s.q33_today += coins_          # Q33 PROBE: a trader's purchase from a neighbour
 	regions.journal.append({"day": day, "party": id, "kind": role, "item": item, "n": n, "coins": coins_, "with": str(other.id)})
 	_have = false
 	if other is SettlementParty:
