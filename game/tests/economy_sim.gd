@@ -1041,7 +1041,8 @@ var dev_series := []                       # X20-ECON-LONGITUDINAL: the developm
 
 
 const DEV_STAT_PREFIXES := ["eaff_", "cold_", "burned_log", "stall", "storefront", "shop_", "luxury", "trade_", "spec_", "job_",
-	"apprentice", "hired", "newcomer", "relief", "gov_", "contract", "felled", "mined", "built", "chapel_", "wage_", "manor_"]
+	"apprentice", "hired", "newcomer", "relief", "gov_", "contract", "felled", "mined", "built", "chapel_", "wage_", "manor_",
+	"inv02_", "decay_", "spoiled_"]      # MML-INV-02 (owner 2026-11-12): per-store spoilage in the development snapshots
 
 
 ## X20-ECON-LONGITUDINAL (owner directive 2026-11-01, sections 3-5; instrumentation only). A development snapshot that only
