@@ -5617,14 +5617,22 @@
      "date": "2026-11-13",
      "change": "assigned_worker: None -> animal-AI worker (lead session)",
      "why": "assigned worker recorded"
+    },
+    {
+     "date": "2026-11-13",
+     "change": "tests: None -> animal_hunt_ai_test 68/0 and 10 suites 0 failures on 3ba8d22; test_commit: None -> 3ba8d22; commits + 3ba8d22",
+     "why": "lead verification on 3ba8d22: animal_hunt_ai_test 68/0 (20/54 red on b3c9eb5), wiki pass, wildlife 61/0, herd 19/0, horse 56/0, ecology 14/0, world pass, refuge 59/0, combat 41/0, save_continuity 5/0, 0 script errors; economy_sim 10 d seed 1 fingerprints identical to b3c9eb5 at days 5 and 10; deer visual sequence looked at by the lead (reacts, startles, flees facing travel, no backing in); bear/boar frames partly hidden under canopy; gameplay check pending in the preview session"
     }
    ],
    "lifecycle": "ACTIVE",
    "branch": "wip/b25-animal-hunt-ai",
    "commits": [
-    "fe1c4e5"
+    "fe1c4e5",
+    "3ba8d22"
    ],
-   "assigned_worker": "animal-AI worker (lead session)"
+   "assigned_worker": "animal-AI worker (lead session)",
+   "tests": "animal_hunt_ai_test 68/0 and 10 suites 0 failures on 3ba8d22",
+   "test_commit": "3ba8d22"
   },
   {
    "id": "B25-AUD-BIZ-03",
