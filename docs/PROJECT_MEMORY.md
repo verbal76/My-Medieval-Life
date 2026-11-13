@@ -4,7 +4,7 @@ This is the entry point for any new session (owner directives 2026-10-20, regist
 
 ## What the project is
 
-My Medieval Life (Hot Attic Games, repository `verbal76/My-Medieval-Life`) is a 2D pixel-art medieval life simulation, built in Godot 4.7 (`game/`). It ships to Android first, then Windows and Linux, from one commit with one build number.
+Forge My Life (Hot Attic Games LLC; called My Medieval Life until the owner's rename of 2026-11-13, NAME-01, the owner's master directive of that date, kept with the directives on the records branch `wip/requirements-control`; the repository keeps its name, `verbal76/My-Medieval-Life`, and the Android id stays `com.hotatticgames.mymedievallife.dev`) is a 2D pixel-art medieval life simulation, built in Godot 4.7 (`game/`). It ships to Android first, then Windows and Linux, from one commit with one build number.
 
 A village of about a hundred people works, trades, eats, courts, ages, builds and dies whether or not the player is present. The world must keep living on its own, and the player is the variable that changes its history, not what keeps it alive.
 

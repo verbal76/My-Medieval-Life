@@ -396,10 +396,10 @@ digests hour by hour (a section differing three or more consecutive hours is a p
   switching it off closes the session. Nothing in the game reads the recorder, so recording changes no decision and draws no
   random number.
 - **Storage:** the recorder's own bounds: a buffer of at most `buffer_rows` (50,000) rows, written to chunk files at every game
-  hour (incremental), under `user://recorder/<session>/` (Linux `~/.local/share/godot/app_userdata/My Medieval Life/recorder`,
-  Windows `%APPDATA%\Godot\app_userdata\My Medieval Life\recorder`); at `storage_cap_bytes` (1 GiB) it stops, keeps everything
+  hour (incremental), under `user://recorder/<session>/` (Linux `~/.local/share/godot/app_userdata/Forge My Life/recorder`,
+  Windows `%APPDATA%\Godot\app_userdata\Forge My Life\recorder`); at `storage_cap_bytes` (1 GiB) it stops, keeps everything
   and marks the session incomplete. Measured: about 0.5 to 0.6 MB a game day for a village of about 110 people.
-- **Export:** "Export the recording..." writes into `Documents/My Medieval Life/recordings/` (`user://recordings` when the system
+- **Export:** "Export the recording..." writes into `Documents/Forge My Life/recordings/` (`user://recordings` when the system
   has no Documents folder): `<session>_day<N>.xlsx` (the workbook: every sheet and chart of `game/data/sim_workbook.json`, with
   up to 20,000 event records), `<session>_day<N>_analysis.json` (the analysis as data) and `<session>_day<N>_archive.zip` (the
   session's chunk files and `session.json`), then opens the folder. With no recording running it exports the newest session.

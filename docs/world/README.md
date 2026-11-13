@@ -1,6 +1,6 @@
 # World knowledge base: *The Well at the World's End*
 
-The research foundation for *My Medieval Life*'s world, built from a complete, chapter-by-chapter
+The research foundation for *Forge My Life*'s world (the game was called *My Medieval Life* when this was built), built from a complete, chapter-by-chapter
 reading of William Morris's novel (1896). Every canonical claim is traceable to a paragraph of the
 novel and a verbatim quote.
 

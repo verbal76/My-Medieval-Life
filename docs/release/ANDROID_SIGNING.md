@@ -34,7 +34,7 @@ Agents cannot create or read these secrets; they only reference them by name.
    it with `apksigner`, passing the keystore password and the key password separately (they are never assumed equal).
    A wrong password, alias or keystore stops the build; the signer's log stays on the runner and is not printed.
 3. Verifies the APK (`apksigner verify --print-certs`) and records the certificate's SHA-256 fingerprint in the job log,
-   in the release notes and in `MyMedievalLife-build<n>-android-signature.txt` (with the package id and version code
+   in the release notes and in `ForgeMyLife-B<n>-Android-signature.txt` (with the package id and version code
    from `aapt dump badging`). Compare it with the signing manager's fingerprint.
 4. Deletes the decoded keystore and the Godot settings file before the release step.
 

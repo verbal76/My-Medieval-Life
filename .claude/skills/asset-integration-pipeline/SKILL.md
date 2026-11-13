@@ -1,6 +1,6 @@
 ---
 name: asset-integration-pipeline
-description: My Medieval Life's asset pipeline. Use whenever asset packs, sprites, sheets, tilesets, animations, textures or other art arrive or are needed (a new zip, .7z or .rar, a folder, a file in private-assets/, or "use the X pack", "add horses", "find a cart sprite"), and whenever work touches game/assets, tools/import_game_assets.py, AnimalSprite or other sprite drawing. Discovers what a pack holds, records licences and decisions in the asset registry, scales art to the 16 px world, imports it with provenance, wires it into gameplay systems, validates and tests it. Owner directive 2026-10-19 (CLAUDE.md "Asset integration policy").
+description: Forge My Life's asset pipeline (the game formerly My Medieval Life). Use whenever asset packs, sprites, sheets, tilesets, animations, textures or other art arrive or are needed (a new zip, .7z or .rar, a folder, a file in private-assets/, or "use the X pack", "add horses", "find a cart sprite"), and whenever work touches game/assets, tools/import_game_assets.py, AnimalSprite or other sprite drawing. Discovers what a pack holds, records licences and decisions in the asset registry, scales art to the 16 px world, imports it with provenance, wires it into gameplay systems, validates and tests it. Owner directive 2026-10-19 (CLAUDE.md "Asset integration policy").
 ---
 
 # Asset integration pipeline

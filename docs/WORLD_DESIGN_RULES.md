@@ -1,6 +1,6 @@
 # World Design Rules
 
-The owner's permanent World Design Rules for My Medieval Life. Each rule is an entry in the requirements register
+The owner's permanent World Design Rules for Forge My Life (named My Medieval Life when the rules were written; NAME-01, 2026-11-13). Each rule is an entry in the requirements register
 (`docs/requirements/requirements.json`, ids `WDR-001` onward). Each rule's compliance work is a separate approved
 requirement (`WDR-001-C` onward), so that no rule is marked satisfied only because code compiles. Numbers are
 permanent: a rule is never renumbered or reused, and new rules continue from 017.
