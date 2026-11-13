@@ -30,6 +30,7 @@ var phase := ""
 var stuck_saved := false
 var spike_phases := {}             # the phase each frame over 50 ms fell in
 var reload_loop := 0              # --reload-loop N: after the rounds, N saves and Continues in a row (memory per reload)
+var hunt_watch := false           # --hunt-watch: after the rounds, hunt a deer, a boar and a bear as a player does (taps), logged frame by frame
 var shots := ""                    # --shots DIR: save the screen at key moments of round 1 (needs a display: xvfb-run, no --headless)
 
 
@@ -108,6 +109,8 @@ func _args() -> void:
 			wall_minutes = float(a[i + 1])
 		elif a[i] == "--reload-loop" and i + 1 < a.size():
 			reload_loop = int(a[i + 1])
+		elif a[i] == "--hunt-watch":
+			hunt_watch = true
 		elif a[i] == "--shots" and i + 1 < a.size():
 			shots = a[i + 1]
 
@@ -477,6 +480,78 @@ func _save_reload(r: int) -> void:
 	_conserved("round %d after the reload" % r)
 
 
+## B25-ANIMAL-HUNT-AI in play: walk to the nearest grown `species` and hunt it the way a player does: tap it (Main.strike: the
+## player walks over and strikes), tap again whenever the last strike is done, follow when it runs. The game runs on its own
+## frames (await process_frame: Main._process with the real frame time). Every ~0.25 s a line: time, distances, the animal's
+## health, what it is doing (startled, alarmed and running, at bay, angry, its act) and the player's health; with --shots, a
+## screenshot every 0.25 s for the first 4 s (consecutive frames, cropped and laid out after).
+func _watch_hunt(species: String) -> void:
+	var w: World = main.world
+	var p := w.player
+	main.ui.hide_all()
+	var cands: Array = w.fauna.animals.filter(func(a): return a.alive and a.species == species and a.adult(w.minutes))
+	cands.sort_custom(func(a, b): return a.pos.distance_to(p.pos) < b.pos.distance_to(p.pos))
+	if cands.is_empty():
+		note("HUNT %s: none alive in the world" % species)
+		return
+	var a: Animal = cands[0]
+	var staged := ""
+	if not _walk_to(a.pos, 5.0, 3000):
+		var near := a.pos + Vector2(4, 0)
+		for off in [Vector2(4, 0), Vector2(-4, 0), Vector2(0, 4), Vector2(0, -4), Vector2(3, 3), Vector2(-3, -3)]:
+			if not w.solid_for_player(Vector2i((a.pos + off).floor())):
+				near = a.pos + off
+				break
+		staged = " (could not walk there: the player was set down 4 tiles from it)"
+		p.pos = near
+	p.hp = maxf(p.hp, 100.0)
+	p.hunger = maxf(p.hunger, 80.0)
+	note("HUNT %s: %s hp %.0f at %.1f tiles%s, player weapon %s, health %.0f" % [species, a.label(), a.hp, a.pos.distance_to(p.pos), staged, p.weapon, p.hp])
+	var t0 := Time.get_ticks_msec()
+	var last_log := -1.0
+	var last_shot := -1.0
+	var strikes := 0
+	var lines := []
+	var hp0 := a.hp
+	var shot_i := 0
+	while true:
+		var t := (Time.get_ticks_msec() - t0) / 1000.0
+		if not a.alive or not p.alive or t > 45.0 or (t > 3.0 and a.pos.distance_to(p.pos) > 14.0):
+			break
+		if main.ui.modal():
+			main.ui.hide_all()
+		if not main.strike_pending and main.action.is_empty():
+			main.strike(a)                      # a tap on it: walk over and strike
+			strikes += 1
+		await process_frame
+		if t - last_log >= 0.25:
+			last_log = t
+			lines.append("t%.2f d%.1f hp%.0f%s%s%s%s%s pl%.0f" % [t, a.pos.distance_to(p.pos), a.hp,
+				" startled" if a.startle_left > 0.0 else "", (" running(" + a.alarm + ")") if a.alarm != "" else "",
+				" at-bay" if a.at_bay else "", (" angry(" + a.anger + ")") if a.anger != "" else "", (" " + a.act) if a.act != "" else "", p.hp])
+		if shots != "" and t <= 4.0 and t - last_shot >= 0.25 and DisplayServer.get_name() != "headless":
+			last_shot = t
+			await RenderingServer.frame_post_draw
+			DirAccess.make_dir_recursive_absolute(shots)
+			root.get_viewport().get_texture().get_image().save_png(shots.path_join("hunt_%s_%02d.png" % [species, shot_i]))
+			var sp: Vector2 = main.get_viewport().get_canvas_transform() * (p.pos.lerp(a.pos, 0.5) * 16.0)
+			var f := FileAccess.open(shots.path_join("hunt_%s_%02d.txt" % [species, shot_i]), FileAccess.WRITE)
+			if f != null:
+				f.store_string("%d %d %.2f %s" % [int(sp.x), int(sp.y), t, lines[-1] if not lines.is_empty() else ""])
+				f.close()
+			shot_i += 1
+	main.chase = null
+	main.strike_pending = false
+	main.move_to = Vector2.INF
+	var outcome := "killed" if not a.alive else ("the player fell" if not p.alive else ("got away (%.1f tiles)" % a.pos.distance_to(p.pos) if a.pos.distance_to(p.pos) > 14.0 else "still fighting at 45 s"))
+	note("HUNT %s: %s after %.1f s, %d taps, its health %.0f -> %.0f, the player's %.0f" % [species, outcome, (Time.get_ticks_msec() - t0) / 1000.0, strikes, hp0, a.hp, p.hp])
+	note("HUNT %s frames: %s" % [species, " | ".join(lines)])
+	check(strikes > 0 and (not a.alive or a.hp < hp0 or not p.alive), "hunting a %s in play: struck it (%s)" % [species, outcome])
+	if not p.alive:
+		return
+	_take_loot_near(4.0)
+
+
 func _run() -> void:
 	_args()
 	main.save_path = SESSION_SAVE
@@ -572,6 +647,10 @@ func _run() -> void:
 			w.minutes - rm0, p.coins, mem / 1048576.0, wall, frame_ms_max])
 		if wall_minutes > 0.0 and wall >= wall_minutes:
 			break
+	if hunt_watch:
+		for sp in ["deer", "boar", "bear"]:
+			if main.world.player.alive:
+				await _watch_hunt(sp)
 	check(main.world.player.alive, "the player is alive at the end of the session (health %.0f, hunger %.0f)" % [main.world.player.hp, main.world.player.hunger])
 	if reload_loop > 0:
 		# saves alone, then Continues alone, so a growth can be put down to the one or the other
