@@ -111,7 +111,7 @@ jobs:
           "cdb: $cdb" | Tee-Object results\cdb_path.txt
           foreach ($d in Get-ChildItem dumps -Filter *.dmp -ErrorAction SilentlyContinue) {
             if ($cdb) {
-              & $cdb -z $d.FullName -c ".ecxr; r; kn 40; ub @rip L10; u @rip L4; lmv m MyMedievalLife*; !analyze -v; q" 2>&1 | Out-File -Width 400 "results\cdb_$($d.BaseName).txt"
+              & $cdb -z $d.FullName -c ".ecxr; r; kn 40; ub @rip L10; u @rip L4; lmv m ForgeMyLife*; lmv m MyMedievalLife*; !analyze -v; q" 2>&1 | Out-File -Width 400 "results\cdb_$($d.BaseName).txt"
               Get-Content "results\cdb_$($d.BaseName).txt" | Select-Object -Last 120
             }
           }

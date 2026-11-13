@@ -1,11 +1,11 @@
 {
   "format": "mml-steam/1",
-  "_note": "DEMO-01 (owner 2026-11-03): the one place that says where the game's Steam button goes (SteamPromo). Until the owner supplies the My Medieval Life store page (app_id or store_url), the button goes to the Steam store's front page and says 'Coming Soon on Steam' (never that the game can be wishlisted). With app_id or store_url set, it goes there and says 'Wishlist on Steam'. Do not invent an app id.",
-  "app_id": "",
+  "_note": "DEMO-01 (owner 2026-11-03), NAME-01 (owner 2026-11-13): the one place that says where the game's Steam button goes (SteamPromo). Forge My Life's Steam App ID is 5615690 (owner, NAME-01; 1442556 is a store item id, not the App ID). With app_id or store_url set, the button goes to that store page and says 'Wishlist on Steam'; with both empty it goes to the Steam store's front page and says 'Coming Soon on Steam' (never that the game can be wishlisted). Do not invent an app id.",
+  "app_id": "5615690",
   "store_url": "",
   "generic_url": "https://store.steampowered.com/",
   "label_coming": "Coming Soon on Steam",
-  "note_coming": "The My Medieval Life store page is being prepared.",
+  "note_coming": "The Forge My Life store page is being prepared.",
   "label_wishlist": "Wishlist on Steam",
-  "note_wishlist": "Add My Medieval Life to your Steam wishlist."
+  "note_wishlist": "Add Forge My Life to your Steam wishlist."
 }
