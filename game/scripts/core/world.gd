@@ -3264,8 +3264,9 @@ func player_fireball_hit(pos: Vector2, actor: PlayerState = null) -> Dictionary:
 ## DVW-A12 R10: a blow of the player's of `dmg` lands on animal `a`. Still alive, it is provoked (a wolf or a bear
 ## fights back, B14). Killed: Combat xp by Skills.kill_xp (per kill, as a villager's, FSE-B12), the wildlife ledger
 ## (hunted_ or slaughtered_, FSE-B10), its meat and hide left where it fell, a wolf or bear put down near people a
-## defence (CRT-10); livestock is theft from its keeper, known the way a theft is (witness, PAR-05): the keeper
-## remembers it, and one who saw it comes after the player. Returns {killed, guard: a guard's words, "" for none}.
+## defence (CRT-10), a boar only while it charges and not by the one who provoked it (Fauna.defence_kill, owner 2026-11-13); livestock is theft from its keeper, known the way a theft is (witness, PAR-05): the keeper
+## remembers it, and one who saw it comes after the player. Returns {killed, guard: a guard's words, "" for none,
+## defence: the kill counted as a defence (killed only)}.
 func player_hit_animal(a: Animal, dmg: float, actor: PlayerState = null) -> Dictionary:
 	# MP C (World.mirror): a guest's verb goes to the host
 	if mirrors():
@@ -3282,7 +3283,7 @@ func player_hit_animal(a: Animal, dmg: float, actor: PlayerState = null) -> Dict
 	if not a.wild():
 		keeper = pen_keeper(fauna.pens[a.area])
 	var what := a.label().to_lower()
-	var beast := a.wild() and bool(a.spec().get("people", false))
+	var beast := Fauna.defence_kill(a, acting_ref())      # a wolf or bear; a boar only charging someone else's provoker (owner 2026-11-13)
 	stat(("hunted_" if a.wild() else "slaughtered_") + a.species)
 	var bag: Inventory = fauna.kill(a)
 	if beast:
@@ -3299,7 +3300,7 @@ func player_hit_animal(a: Animal, dmg: float, actor: PlayerState = null) -> Dict
 			keeper.target_ref = acting_ref()    # A8
 		guard = last_guard
 		note("%s %s killed one of %s %s's animals." % [player.name, player.family, keeper.name, keeper.family])
-	return {"killed": true, "guard": guard}
+	return {"killed": true, "guard": guard, "defence": beast}
 
 
 ## DVW-A12 R9: attacking a villager is a crime: the victim remembers it and thinks worse of the player, an adult fights

@@ -39,6 +39,7 @@ var slide := 0               # the side it last turned to get round something in
 var pause_left := 0.0        # real seconds of a look back (a hesitation) while running
 var breaking := false        # this leg breaks out of a corner past the attacker's side (kept to for the leg)
 var at_bay := false          # boxed in while running (no open way but toward the attacker): it stands facing them
+var charge_by := ""          # B25-ANIMAL-BOAR-LIVESTOCK: whose blow started its current charge (a boar's), "" for none (not saved, as the fight is not)
 
 
 func cell() -> Vector2i:

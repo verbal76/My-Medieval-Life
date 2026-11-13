@@ -208,7 +208,8 @@ static func prefers_work(w, n: NPC) -> bool:
 
 
 # ---------------------------------------------------------------- danger ("shield and fetch help") ------
-## Threats this tick: every bandit, every wolf or bear that is fighting someone, and (A7, GP-CRIME-PURSUIT) every player
+## Threats this tick: every bandit, every wild animal that is an active threat (Fauna.active_threat: a wolf or bear
+## fighting someone, a boar charging the one who struck it), and (A7, GP-CRIME-PURSUIT) every player
 ## with a killing in their case (Justice) who is out; a head treats a killer as a threat only if they know who it is
 ## (danger: knows_killer: they saw it, heard the hue and cry, or believe a killing of that player). Kept for the tick on the store (keyed by
 ## the world clock, which moves every tick, so a save and load between ticks finds the same answer as a run that did not stop).
@@ -223,7 +224,7 @@ static func _threats(w) -> Array:
 			out.append({"kind": "bandit", "id": o.id, "pos": o.pos, "depth": o.depth, "npc": o})
 	if w.fauna != null:
 		for a in w.fauna.animals:
-			if a.alive and a.anger != "" and bool(a.spec().get("people", false)):
+			if Fauna.active_threat(a):                       # a wolf or bear fighting someone, a boar charging (owner 2026-11-13)
 				out.append({"kind": "beast", "id": -1, "pos": a.pos, "depth": 0, "animal": a})
 	var refs: Array = w.justice.cases.keys() if w.justice != null else []
 	refs.sort()

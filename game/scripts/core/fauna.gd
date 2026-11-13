@@ -387,6 +387,7 @@ func provoke(a: Animal, who: String) -> void:
 	if not ch.is_empty() and foe != Vector2.INF and (fresh or a.at_bay) and _charges(a, foe, ch):
 		_calm_down(a, false)                             # whatever flight it was in ends
 		a.anger = who
+		a.charge_by = who                                # owner 2026-11-13 decision 3: the one who provoked it (Fauna.defence_kill)
 		a.anger_left = float(ch.fight_seconds)
 		a.startle_left = float(st.startle_seconds) if fresh else 0.0     # the same startle as any struck animal, then the charge
 		a.facing = foe - a.pos if foe.distance_to(a.pos) > 0.001 else a.facing
@@ -401,6 +402,26 @@ func provoke(a: Animal, who: String) -> void:
 		a.moving = false
 	a.alarm = who
 	a.alarm_left = float(st.flee_seconds)
+
+
+## Owner 2026-11-13 (B25 boar decision 3): whether `a` is an active threat to people: a wild animal fighting someone, a
+## wolf or a bear (people: true) fighting back or going for a person, or a kind that charges when struck (a boar) while
+## it charges. A boar fleeing, grazing, startled or standing at bay without charging is not. The one predicate the
+## family danger (JudgmentFamily._threats) and a kill's defence (defence_kill) read.
+static func active_threat(a: Animal) -> bool:
+	return a.alive and a.anger != "" and a.wild() and (bool(a.spec().get("people", false)) or not charge_cfg(a).is_empty())
+
+
+## Owner 2026-11-13 (B25 boar decision 3): whether `who` putting `a` down counts as a defence (CRT-10: Relations.defended,
+## the judgment's rescue; no legal effect: killing a wild animal is no crime for anyone). A wolf or a bear: always, as
+## before (B14, CRT-10). A kind that only fights when struck (a boar): only while it is an active threat and its charge
+## was not started by `who`'s own blow, so provoking it gains nothing; read before the kill (Fauna.kill).
+static func defence_kill(a: Animal, who: String) -> bool:
+	if not a.wild():
+		return false
+	if bool(a.spec().get("people", false)):
+		return true
+	return active_threat(a) and a.charge_by != who
 
 
 ## B25-ANIMAL-BOAR-LIVESTOCK: a kind's charge numbers (balance wildlife struck "charge"), {} for a kind that never charges.
