@@ -363,12 +363,15 @@ func _raid(a: Animal, gm: float) -> bool:
 ## Someone struck it: a wolf or a bear fights back for anger_seconds (`who`: "player" or "npc:<id>").
 ## B25-ANIMAL-HUNT-AI: whatever it was doing stops and it turns to the one who struck it; any other animal, startled
 ## for a moment (the first blow only), then runs from them (_flee_struck; balance wildlife "struck").
+## B25-ANIMAL-BOAR-LIVESTOCK: a boar (wildlife struck "charge") startled by a fresh blow, or struck standing at bay, draws
+## from move_rng whether it charges and fights instead (_charges); a blow while it fights renews the fight.
 func provoke(a: Animal, who: String) -> void:
 	a.act = "hit"
 	a.act_left = 0.4
 	var foe := _foe_pos(who)
 	var fresh := a.alarm == "" or a.alarm_left <= 0.0     # not already running from a blow (one keeps running, facing its way)
-	if foe != Vector2.INF and foe.distance_to(a.pos) > 0.001 and (fresh or bool(a.spec().get("people", false))):
+	var ch := charge_cfg(a)
+	if foe != Vector2.INF and foe.distance_to(a.pos) > 0.001 and (fresh or bool(a.spec().get("people", false)) or not ch.is_empty()):
 		a.facing = foe - a.pos
 	if bool(a.spec().get("people", false)):
 		a.anger = who
@@ -377,6 +380,18 @@ func provoke(a: Animal, who: String) -> void:
 		a.wait = 0.0
 		return
 	var st: Dictionary = wl().struck
+	if not ch.is_empty() and a.anger != "":              # struck while it fights: the fight goes on, against this one
+		a.anger = who
+		a.anger_left = float(ch.fight_seconds)
+		return
+	if not ch.is_empty() and foe != Vector2.INF and (fresh or a.at_bay) and _charges(a, foe, ch):
+		_calm_down(a, false)                             # whatever flight it was in ends
+		a.anger = who
+		a.anger_left = float(ch.fight_seconds)
+		a.startle_left = float(st.startle_seconds) if fresh else 0.0     # the same startle as any struck animal, then the charge
+		a.facing = foe - a.pos if foe.distance_to(a.pos) > 0.001 else a.facing
+		a.wait = 0.0
+		return
 	if fresh:
 		a.startle_left = float(st.startle_seconds)      # a fresh fright: it stops and looks
 		a.run_dir = Vector2.ZERO
@@ -386,6 +401,38 @@ func provoke(a: Animal, who: String) -> void:
 		a.moving = false
 	a.alarm = who
 	a.alarm_left = float(st.flee_seconds)
+
+
+## B25-ANIMAL-BOAR-LIVESTOCK: a kind's charge numbers (balance wildlife struck "charge"), {} for a kind that never charges.
+static func charge_cfg(a: Animal) -> Dictionary:
+	return (wl().struck.get("charge", {}) as Dictionary).get(a.species, {}) if a.wild() else {}
+
+
+## Whether a struck boar charges: at its chance, hurt_chance once below hurt_below of its health, cornered_chance when
+## cornered or at bay; one draw from move_rng every time it is asked (deterministic).
+func _charges(a: Animal, foe: Vector2, ch: Dictionary) -> bool:
+	var p := float(ch.chance)
+	if a.hp < float(a.spec().hp) * float(ch.hurt_below):
+		p = maxf(p, float(ch.hurt_chance))
+	if a.at_bay or cornered(a, foe):
+		p = maxf(p, float(ch.cornered_chance))
+	var r := move_rng.randf()
+	w.stat("animal_charged_" + a.species if r < p else "animal_fled_" + a.species)
+	return r < p
+
+
+## Whether `a` has no way away from `foe`: no heading within about a right angle of straight away is open ground of its
+## own ground look_ahead tiles on (Fauna._clear_way, as a flight would look).
+func cornered(a: Animal, foe: Vector2) -> bool:
+	var st: Dictionary = wl().struck
+	var away := a.pos - foe
+	away = away.normalized() if away.length() > 0.001 else Vector2.RIGHT
+	var turn := deg_to_rad(float(st.turn_step_degrees))
+	for k in range(0, int(90.0 / float(st.turn_step_degrees)) + 1):
+		for sgn in [1, -1]:
+			if _clear_way(a, away.rotated(turn * float(k) * float(sgn)), float(st.look_ahead)):
+				return false
+	return true
 
 
 ## The position of whoever `who` names, or INF if they are gone.
@@ -432,7 +479,10 @@ func _bite(a: Animal, foe: Vector2) -> void:
 	a.bite_cd = float(a.spec().get("bite_seconds", 1.0))
 	a.act = "attack"
 	a.act_left = 0.5
-	var dmg := float(a.spec().get("bite", 0))
+	var ch := charge_cfg(a)
+	if not ch.is_empty():
+		a.bite_cd = float(ch.gore_seconds)          # B25-ANIMAL-BOAR-LIVESTOCK: a boar's gore
+	var dmg := float(ch.gore) if not ch.is_empty() else float(a.spec().get("bite", 0))
 	if World.is_player_ref(a.anger):
 		w.damage_player(dmg, "a " + a.label(), w.player_of_ref(a.anger))      # MP C6: the player it is fighting
 	else:
@@ -746,8 +796,12 @@ func update(dt: float) -> void:
 			a.act = ""
 		if a.anger != "":
 			a.anger_left -= dt
-			if a.anger_left <= 0.0 or _foe_pos(a.anger) == Vector2.INF:
+			var foe := _foe_pos(a.anger)
+			var ch := charge_cfg(a)
+			if a.anger_left <= 0.0 or foe == Vector2.INF or (not ch.is_empty() and foe.distance_to(a.pos) > float(ch.give_up_distance)):
 				a.anger = ""
+				if not ch.is_empty():
+					_calm_down(a)                       # B25-ANIMAL-BOAR-LIVESTOCK: a boar gives up the fight, stands and rests
 		if w.wilds != null and w.wilds.leading(a, dt):
 			continue                                    # B25R1-014: bought, being led home to a claim's pen (on the tick: Wilds.lead_step)
 		var left := dt                                   # B25R1-019: every animal, seen or not, on the world's tick (observation-neutral; strolls
@@ -764,13 +818,25 @@ func _move(a: Animal, dt: float) -> void:
 	if a.anger == "" and (a.startle_left > 0.0 or a.alarm != ""):     # B25-ANIMAL-HUNT-AI: struck, startled, then running
 		_flee_struck(a, dt)
 		return
+	if a.anger != "" and a.startle_left > 0.0:              # B25-ANIMAL-BOAR-LIVESTOCK: a boar startled before its charge
+		var foe0 := _foe_pos(a.anger)
+		a.startle_left -= dt
+		a.moving = false
+		if foe0 != Vector2.INF and foe0.distance_to(a.pos) > 0.001:
+			a.facing = foe0 - a.pos
+		if a.startle_left > 0.0:
+			return
+		dt = -a.startle_left                                # the rest of the step is the first of the charge
+		a.startle_left = 0.0
 	if a.anger != "":                                       # fighting someone: after them, biting in reach
 		var foe := _foe_pos(a.anger)
+		var ch := charge_cfg(a)
 		_bite(a, foe)
 		a.goal = foe
 		if foe != Vector2.INF and a.pos.distance_to(foe) > 0.001:      # B25-ANIMAL-HUNT-AI: it closes to fight_standoff, in reach
-			a.goal = foe + (a.pos - foe).normalized() * minf(float(wl().struck.fight_standoff), a.pos.distance_to(foe))   # of a bite, not on top of them
-			var reach := _speed(a) * float(wl().chase_speed) * dt
+			var standoff := float(ch.standoff) if not ch.is_empty() else float(wl().struck.fight_standoff)    # (a boar: its own)
+			a.goal = foe + (a.pos - foe).normalized() * minf(standoff, a.pos.distance_to(foe))   # of a bite, not on top of them
+			var reach := _speed(a) * _fight_speed(a) * dt
 			if a.pos.distance_to(a.goal) <= reach:          # there this step: it steps up and stands facing them
 				var moved := a.pos.distance_to(a.goal) > 0.01 and _open(a, a.goal)
 				if moved:
@@ -838,7 +904,7 @@ func _move(a: Animal, dt: float) -> void:
 		a.goal = Vector2(c) + Vector2(0.5, 0.5)
 	var d: Vector2 = a.goal - a.pos
 	var speed := float(s.speed) * (float(GameData.b("animal_elder_speed")) if a.elderly(w.minutes) else 1.0) * (2.2 if fleeing else 1.0) \
-			* (float(wl().chase_speed) if a.anger != "" or a.hunt != -1 else 1.0)
+			* (_fight_speed(a) if a.anger != "" else float(wl().chase_speed) if a.hunt != -1 else 1.0)
 	var step := speed * dt
 	if d.length() <= step:
 		a.goal = Vector2.INF
@@ -878,8 +944,14 @@ func _flee_struck(a: Animal, dt: float) -> void:
 	_flee_step(a, foe, dt)
 
 
-## The end of a flight: it stands, rests calm_rest_seconds, then strolls as before.
-func _calm_down(a: Animal) -> void:
+## How much faster than its walk it goes at a foe: chase_speed, a boar's charge its charge_speed.
+func _fight_speed(a: Animal) -> float:
+	var ch := charge_cfg(a)
+	return float(ch.charge_speed) if not ch.is_empty() else float(wl().chase_speed)
+
+
+## The end of a flight: it stands, rests calm_rest_seconds (with `rest`), then strolls as before.
+func _calm_down(a: Animal, rest := true) -> void:
 	var st: Dictionary = wl().struck
 	a.alarm = ""
 	a.alarm_left = 0.0
@@ -891,7 +963,8 @@ func _calm_down(a: Animal) -> void:
 	a.breaking = false
 	a.goal = Vector2.INF
 	a.moving = false
-	a.wait = move_rng.randf_range(float(st.calm_rest_seconds[0]), float(st.calm_rest_seconds[1]))
+	if rest:
+		a.wait = move_rng.randf_range(float(st.calm_rest_seconds[0]), float(st.calm_rest_seconds[1]))
 
 
 ## One step of a flight from `foe`: legs of leg_seconds bent leg_degrees to alternate sides of straight away (a zigzag), an
@@ -899,6 +972,13 @@ func _calm_down(a: Animal) -> void:
 ## way (_open_heading) and never toward the foe, facing the way it goes; with no way open it stands at bay facing them.
 func _flee_step(a: Animal, foe: Vector2, dt: float) -> void:
 	var st: Dictionary = wl().struck
+	if pens.has(a.area) and not in_area(a.area, a.cell()) and not cells(a.area).is_empty():
+		var back := _inside(a)                          # B25-ANIMAL-BOAR-LIVESTOCK: off its pen's cells, it goes back in first
+		var to := back - a.pos
+		a.pos += to.limit_length(_speed(a) * float(st.flee_speed) * dt)
+		a.facing = to if to.length() > 0.001 else a.facing
+		a.moving = true
+		return
 	var away := a.pos - foe
 	away = away.normalized() if away.length() > 0.001 else Vector2.RIGHT
 	if a.pause_left > 0.0:                              # looking back
@@ -938,6 +1018,16 @@ func _flee_step(a: Animal, foe: Vector2, dt: float) -> void:
 	a.pos += dir * step
 	a.facing = dir
 	a.moving = true
+
+
+## The middle of its pen's cell nearest `a` (the first in the pen's own order on a tie).
+func _inside(a: Animal) -> Vector2:
+	var best := Vector2.INF
+	for c: Vector2i in cells(a.area):
+		var m := Vector2(c) + Vector2(0.5, 0.5)
+		if best == Vector2.INF or m.distance_to(a.pos) < best.distance_to(a.pos) - 0.0001:
+			best = m
+	return best
 
 
 ## The heading nearest `want` (turned by turn_step_degrees to either side, the side it last slid first, at most
@@ -993,11 +1083,15 @@ func _clear_way(a: Animal, h: Vector2, dist: float) -> bool:
 	return _open(a, a.pos + h * dist)
 
 
-## Whether an animal may stand at `p`: _move's rule (open ground; on its own area once it is on it).
+## Whether an animal may stand at `p`: _move's rule (open ground; on its own area once it is on it). B25-ANIMAL-BOAR-LIVESTOCK:
+## a pen animal only ever on its pen's cells (inside the fence); one off them (a newborn dropped on the fence line) first
+## goes back in (_flee_step).
 func _open(a: Animal, p: Vector2) -> bool:
 	var c := Vector2i(floori(p.x), floori(p.y))
 	if a.area == COUNTRY:
 		return not w.map.is_solid_world(c)
+	if pens.has(a.area):
+		return not w.map.is_solid(c) and in_area(a.area, c)
 	return not w.map.is_solid(c) and (in_area(a.area, c) or not in_area(a.area, a.cell()))
 
 
