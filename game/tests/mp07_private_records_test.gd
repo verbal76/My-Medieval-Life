@@ -251,6 +251,8 @@ func household_members(w: World, bran: PlayerState, bref: String, bid: int, ub: 
 	var hh_cb := Life.couple_household(w, cara, bran)
 	var hh_dh := Life.couple_household(w, dora, host)
 	check(hh_cb >= 0 and hh_dh >= 0, "setup: each couple has its household (%d, %d)" % [hh_cb, hh_dh])
+	w.households[hh_cb].pantry.add("bread", 3)                     # something in each couple's pantry, so its privacy is tested
+	w.households[hh_dh].pantry.add("bread", 3)
 	for case in [[cara, bran, bref, bid], [dora, host, World.PLAYER, hid]]:
 		var me: PlayerState = case[0]
 		var sp: PlayerState = case[1]
@@ -264,7 +266,14 @@ func household_members(w: World, bran: PlayerState, bref: String, bid: int, ub: 
 		var me_rec: Dictionary = d.players.by_pid[str(me.pid)]
 		check(int(sp_rec.get("partner", -1)) == mid and int(me_rec.get("partner", -1)) == sid, "%s: the marriage is in the view, on both records (public family link)" % who)
 		var hh := Life.couple_household(w, me, sp)
-		check(JSON.stringify(d.households) == JSON.stringify(w.to_dict().households) and (d.households as Array).any(func(h): return int(h.id) == hh), "%s: the couple's household is in the view (public)" % who)
+		var other := hh_dh if hh == hh_cb else hh_cb
+		var host_hh: Array = w.to_dict().households
+		# B42-MP-PANTRY-PRIVACY / B42-Q-PANTRY-TIER (owner 2026-11-14): the couple's own household is sent whole, pantry and figures
+		# included (a household's own players keep full access); the other couple's (no sharing between them) without its pantry;
+		# every other household as the host holds it.
+		check((d.households as Array).size() == host_hh.size() and JSON.stringify(d.households[hh]) == JSON.stringify(host_hh[hh]) and Inventory.from_dict(d.households[hh].pantry).count("bread") == 3 and not d.households[hh].has("pantry_private"), "%s: the couple's household is in the view, its pantry whole (public; their own)" % who)
+		check(bool(d.households[other].get("pantry_private", false)) and Inventory.from_dict(d.households[other].pantry).total() == 0 and int(d.households[other].id) == int(host_hh[other].id), "%s: the other couple's household is in the view without its pantry (private, no sharing)" % who)
+		check(range(host_hh.size()).all(func(i): return i == hh or i == other or JSON.stringify(d.households[i]) == JSON.stringify(host_hh[i])), "%s: every other household as the host holds it" % who)
 		check(not (d.relations.ties as Dictionary).keys().any(func(k): return _ids(k).has(sid) and not _ids(k).has(mid)), "%s: none of the spouse's ties with anyone else (relationships are private)" % who)
 		check(not (d.relations.trades as Dictionary).keys().any(func(k): return _ids(k).has(sid) and not _ids(k).has(mid)), "%s: none of the spouse's trade contacts" % who)
 		check(not (d.credit.debts as Array).any(func(x): return sref in [str(x.creditor), str(x.debtor)] and not mref in [str(x.creditor), str(x.debtor)]), "%s: none of the spouse's debts" % who)
