@@ -798,7 +798,8 @@ func _path_to(n: NPC, to: Vector2i) -> void:
 ## where the box back does not; a box that fits can also cut off the only bridge). Such a walk goes the way the travellers and the
 ## homesteaders already go (Journeys, Homesteads._path_home): the bounded search to a gate of the village (the nearest first) or,
 ## failing that, to the nearest cell of a road out of the south gate (the road routes, Overworld.road_route, nearest first), along
-## that road to the gate, and the village's own grid inside. Both ends outside the village: not used (empty).
+## that road to the gate, and the village's own grid inside. Only for a walk into the village (`b` in it, `a` outside): a walk out,
+## or with both ends outside, is unchanged (empty here).
 ## Empty when none of these is found (the walk fails as before). Deterministic: fixed orders, ties by index.
 func path_far(a: Vector2i, b: Vector2i) -> PackedVector2Array:
 	if map.overworld == null:
@@ -809,12 +810,10 @@ func path_far(a: Vector2i, b: Vector2i) -> PackedVector2Array:
 		return PackedVector2Array()
 	if bv:
 		return _path_in(a, b)
-	if av:
-		var back := _path_in(b, a)
-		back.reverse()
-		return back
-	# both ends outside (a traveller between settlements, a resumed journey after a load): left to the bounded search as before;
-	# through the village would turn a traveller on the road back to the gate (reg01_journey_reload_route_test)
+	# a walk out of the village, or with both ends outside (a traveller between settlements, a journey resumed after a load), is
+	# left to the bounded search as before: routed this way, seed 2's villagers walked 170 cells out by night to buy seed from a
+	# farmer at his homestead (an errand chosen without regard to distance, which the bounded search had refused), and a resumed
+	# traveller was turned back to the gate (reg01_journey_reload_route_test). Only the way back in is what was missing.
 	return PackedVector2Array()
 
 

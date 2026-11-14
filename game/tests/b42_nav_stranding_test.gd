@@ -10,7 +10,9 @@ extends SceneTree
 ## camp every game minute, 200 to 554 times a day. Checked:
 ##  1. a villager set down where the campaign's victims starved (their seed and cell) and sent home to eat walks home and eats,
 ##     never standing lost (the cells' direct search fails: the fixture shows the defect's geometry);
-##  2. a chapel parcel carried to the outlaws' camp: the carrier delivers it and is back in the village within the day;
+##  2. a chapel parcel carried to the outlaws' camp from the south of the village (a walk out the bounded search allows): the
+##     carrier delivers it and is back in the village within the day (B42-NAV routes only walks into the village; a walk out
+##     beyond the search is refused as before);
 ##  3. a chapel delivery to a household out of every reach (its member far beyond any road): the carrier's plans are bounded by
 ##     the back-off (World._walk_failed), not made every game minute;
 ##  4. a walk that is found and arrives still clears the count (a normal plan is untouched).
@@ -149,9 +151,13 @@ func test_camp_round_trip() -> void:
 		return
 	c.parcels.clear()
 	c.store.add("wheat", 6)
-	var p := c._parcel(band, c.door_cell(), true, "relief")
+	# the parcel lies in the south of the village, set down there by an earlier carrier (chapel.release_stale), so the walk out
+	# to the camp fits the bounded search, as the campaign's did (seed 2 p:1000017: from (84,39) to (1,148), a box of 104x131);
+	# the walk home to a house in the north of the village then does not (B42-NAV routes it in by a gate or a road)
+	var lie := open_near(w, Vector2i(40, 86))
+	var p := c._parcel(band, lie, true, "relief")
 	w.transfer(c.store, p.inv, "wheat", 6)
-	carrier.pos = Vector2(c.door_cell()) + Vector2(0.5, 0.5)
+	carrier.pos = Vector2(lie) + Vector2(0.5, 0.5)
 	carrier.hunger = 100.0
 	check(c.plan_deliver(carrier), "seed 2: the clergy member takes up the parcel for the outlaws")
 	var dest: Vector2i = carrier.plan[2].to
@@ -168,9 +174,12 @@ func test_camp_round_trip() -> void:
 		return false)
 	var drop := carrier.cell()
 	delivered[0] = delivered[0] and absi(drop.x - dest.x) + absi(drop.y - dest.y) <= 3
-	print("  seed 2: carrier %d to the camp %s (box from the door %dx%d): delivered %s at %s, lost %d minutes" % [carrier.id, dest,
-		absi(dest.x - c.door_cell().x) + 21, absi(dest.y - c.door_cell().y) + 21, delivered[0], drop, lost[0]])
+	print("  seed 2: carrier %d from %s to the camp %s (box %dx%d): delivered %s at %s, lost %d minutes" % [carrier.id, lie, dest,
+		absi(dest.x - lie.x) + 21, absi(dest.y - lie.y) + 21, delivered[0], drop, lost[0]])
 	check(delivered[0], "seed 2: the carrier walks to the outlaws' camp and puts the parcel in their pantry there")
+	var home := w.home_cell(carrier, "door")
+	print("  seed 2: from %s the carrier's home door %s is %dx%d by the search's box: direct search %s" % [drop, home, absi(home.x - drop.x) + 21,
+		absi(home.y - drop.y) + 21, "none or short" if World.short_of(w.map.find_path_world(drop, home), home) else "found"])
 	var back := [false]
 	var lost2 := [0]
 	run_hours(w, 14.0, func() -> bool:
