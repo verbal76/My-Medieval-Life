@@ -3,7 +3,8 @@ extends SceneTree
 ## to the level, or no path on it) clears the plan and marks the villager lost, and the next tick (one game minute) decides
 ## again: when the new plan is a walk that fails too, the path search runs every minute, without end. (A villager walled in
 ## inside the village does not show it: the village grid's search returns the nearest reachable part of the way, so the walk
-## "arrives" short.) Seed 1: an adult is set down on open ground 150 cells east of the village in the middle of the day, beyond
+## "arrives" short.) Seed 1: an adult is set down on open ground 900 cells east and south of the village in the middle of the day (B42-NAV:
+## 150 cells east, the fixture before Build 42, is now reached by the gates; this is beyond the gates and every road too), beyond
 ## a villager's path search, so every walk it plans fails. Checked:
 ##  1. over six game hours its decisions (each followed by a failed path search) stay bounded (a back-off: it waits, longer
 ##     each time, before deciding again), where without one they run once a game minute (360 times);
@@ -31,7 +32,7 @@ func run_hours(w: World, hours: float) -> void:
 		w.update(0.5)
 
 
-## A world at 9 in the morning of day 2 with one adult at home in the village set down on open ground 150 cells east of it:
+## A world at 9 in the morning of day 2 with one adult at home in the village set down on open ground 900 cells east and south of it:
 ## every errand it plans is in the village, farther than a villager's path search reaches (VillageMap.find_path_world,
 ## WORLD_PATH_CELLS), so each walk fails with no path. Returns [world, villager].
 func stranded() -> Array:
@@ -45,7 +46,7 @@ func stranded() -> Array:
 			pick = n
 			break
 	if pick != null:
-		pick.pos = Vector2(open_cell(w, Vector2i(w.map.w + 150, w.map.h / 2))) + Vector2(0.5, 0.5)
+		pick.pos = Vector2(open_cell(w, Vector2i(w.map.w + 900, w.map.h + 900))) + Vector2(0.5, 0.5)
 		pick.plan.clear()
 		pick.path = PackedVector2Array()
 	return [w, pick]
