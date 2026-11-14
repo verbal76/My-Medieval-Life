@@ -317,5 +317,6 @@
  "player_journey_test": 80,
  "extra_life_session_test": 25,
  "d2_talk_unreachable_test": 7,
- "demo_journey_test": 60
+ "demo_journey_test": 64,
+ "demo_save_slots_test": 44
 }
