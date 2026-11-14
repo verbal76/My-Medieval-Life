@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 23 |
+| OPEN | 24 |
 | APPROVED | 310 |
 | PROVISIONAL | 4 |
 | SUPERSEDED | 6 |
@@ -57,11 +57,12 @@ The decision register is the `decision` records of the register. A recommendatio
 | SAV-04 | SAV-04: exact requirement for uninterrupted wildlife/combat continuity versus deterministic continuation from a saved state | OPEN | no |  | docs/directives/2026-11-09_overnight_autonomous_development.md |
 | X19-SWITCHES-D1 | Enable in normal play the integrated-but-off Build 19 recovery features: R5 aspirations (judgment.json aspiration.enabled, decision.integration.job_choice; WDR-011-C) and the R2 judgment-weighted witness report hook (decision.integration.report; SJD-F)? | OPEN | no |  | game/data/judgment.json@origin/wip/expansion20 ad281dc (_aspiration_note: 'OFF (enabled false) until validation and owner review'); R5_ASPIRATIONS_DESIGN.md (expansion20 notes, on wip/expansion20)@X20; merge 9b90e05 |
 
-## Approved, no build assigned: open, reopened or provisional (7)
+## Approved, no build assigned: open, reopened or provisional (8)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
 | B25-Q33-TRADER-RESERVE | Q33 trader reserve (80 coins instead of 85% of the till) and the caravan economy: why it lowers caravan purchases and village income, and what correction keeps traders economically active | OPEN | no |  | docs/directives/2026-11-12_b25_owner_decisions_q33_nd29_gathering.md |
+| B42-Q-EARMARK-SPOIL | When a contract's earmarked input spoils (or is otherwise lost): (A) stay short [current LE-03 rule], (B) shrink to what is held, or (C) release and notify the contract (OD-LE-13 negotiated breach)? | OPEN | no |  | docs/audits/2026-11-14_B42_LEAD_LOG.md |
 | ID-D3 | Identity gate baseline: approve the candidate new baseline (docs/design/IDENTITY_GATE_CANDIDATE.json)? Its only divergences (day 13 on both seeds) come from arrivals keeping their permanent band id, which changes traits Build 18 hashes from the id (chapel piety, caravan taste, skill seed, willingness, sprite). Alternatively those traits could be seeded from a stored per-person seed so they no longer depend on the id value (a design change). | PROVISIONAL | no |  | docs/directives/2026-10-23_id_d2_succession_decisions.md |
 | JUICE-JD2 | Day and night: should the picture darken at night (how dark at midnight; interiors; underground already dark)? | OPEN | no |  | the juice assessment PRELIMINARY_ASSESSMENT.md (only on branch wip/juice-assessment) section 6 D2 (origin/wip/juice-assessment bebf1f3) |
 | JUICE-JD3 | Villager chatter: how often may villagers show what they are doing in bubbles (OWN-19 extension)? | OPEN | no |  | the juice assessment PRELIMINARY_ASSESSMENT.md (only on branch wip/juice-assessment) section 6 D3 |

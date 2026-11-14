@@ -988,7 +988,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (348)
+## Owner decisions (349)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -1056,6 +1056,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25R2-Q4 | How should the Claude usage budget be spent on the B25R2 repairs? | 25 | APPROVED |  |
 | B25R2-STUTTER | Walking south of the starter village to the next settlement froze the game for about a second every other step: fix? | 20+ | APPROVED |  |
 | B25R2-VER-01 | How should the next Play Test Build One package identify itself? | 25 | APPROVED |  |
+| B42-Q-EARMARK-SPOIL | When a contract's earmarked input spoils (or is otherwise lost): (A) stay short [current LE-03 rule], (B) shrink to what is held, or (C) release and notify the contract (OD-LE-13 negotiated breach)? | unassigned | OPEN |  |
 | B42-Q-EMIG-WORK | Should leaving for work be judged per person (no job and no earnings for about a week) instead of per household? | unassigned | APPROVED |  |
 | B42-Q-JOB02 | Approve the job-board offered-pay rules (J2-Q1..Q7 as built) and switch them on only after a four-seed with/without year-long comparison? | unassigned | APPROVED |  |
 | B42-Q-MP02-REACH | Must a multiplayer guest be within 24 tiles of its stall to manage it? | unassigned | APPROVED |  |

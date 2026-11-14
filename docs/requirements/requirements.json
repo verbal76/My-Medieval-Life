@@ -12077,11 +12077,19 @@
      "date": "2026-11-14",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Agent I (Build 42 flight recorder); branch: None -> wip/b42-recorder-reservation",
      "why": "assigned to Agent I (owner follow-up directive 2026-11-14)"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "commits + 518780e",
+     "why": "Agent I per-holder trace (seed 1, 0bbee94): npc:39's milk 5->2 by World.work_craft (contract 21, earmark #419 consumed), 2->1 by Decay.spoil_inv at day 9 06:00; no other removal. Correct under LE-03 (earmarks never cut). Recorder diagnostics 518780e (confirmed/suspected/unknown cause from per-holder spoilage; reservation_summary always shows short counts). Latent defect found: eating raw food from one's own pack (npc_brain.gd:1144/:2990) and stock_family_chest (:2508) ignore claims; being fixed on wip/b42-contract-earmark. Owner question (future): earmark on spoilage A stay short / B shrink / C release and notify"
     }
    ],
    "lifecycle": "ACTIVE",
    "assigned_worker": "Agent I (Build 42 flight recorder)",
-   "branch": "wip/b42-recorder-reservation"
+   "branch": "wip/b42-recorder-reservation",
+   "commits": [
+    "518780e"
+   ]
   },
   {
    "id": "B42-MP-PANTRY-PRIVACY",
@@ -12164,6 +12172,29 @@
    "lifecycle": "ACTIVE",
    "assigned_worker": "Agent G (Build 42 multiplayer)",
    "branch": "wip/b42-mp-stalls"
+  },
+  {
+   "id": "B42-Q-EARMARK-SPOIL",
+   "kind": "decision",
+   "title": "When a contract's earmarked input spoils (or is otherwise lost): (A) stay short [current LE-03 rule], (B) shrink to what is held, or (C) release and notify the contract (OD-LE-13 negotiated breach)?",
+   "description": "When a contract's earmarked input spoils (or is otherwise lost): (A) stay short [current LE-03 rule], (B) shrink to what is held, or (C) release and notify the contract (OD-LE-13 negotiated breach)?",
+   "source": "docs/audits/2026-11-14_B42_LEAD_LOG.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/audits/2026-11-14_B42_LEAD_LOG.md"
+    }
+   ],
+   "lifecycle": "UNDER REVIEW"
   },
   {
    "id": "B42-Q-EMIG-WORK",
