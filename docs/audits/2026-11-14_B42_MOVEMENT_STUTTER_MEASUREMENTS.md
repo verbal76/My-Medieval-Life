@@ -185,3 +185,9 @@ pre to post draw) p50 36.0 ms, p90 76.0, max 165.4, so every frame is over 16.7 
 them outside main._process (the rasteriser). Visual smoothness cannot be established on this machine: llvmpipe on a
 shared 4-core container at load 10 draws slower than the stalls being measured. The headless walks above are the
 evidence for the game's own work; a real GPU check needs the lead's playable build.
+
+Before (`e438f1e`) under the same renderer, same route and length, load 7.4-9.0: p50 52.0 / p90 106.7 / p99 174.0 ms
+against after 48.0 / 104.7 / 170.8; frames over 100 ms 1,458 against 1,463, over 200 ms 37 against 40 (the rasteriser
+dominates both); **frames with over 20 ms of chunk prefetch 126 against 3**; the autosave's main-thread cost per hour
+60-197 ms (6 saves) against 18-71 ms. Draw p50 36.9 against 36.0 ms. The game-side causes behave as headless; the
+rasteriser hides the rest.
