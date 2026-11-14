@@ -25,6 +25,8 @@ var saves := 0
 var orphan_id := -1       # MP-PLAYER-FAMILY: the child family_orphan made
 var gaps: Array = []      # B42-NET-MP4-STALE (diagnostic): the host's frames longer than 1 s: [msec at the end, length ms, connected guests]
 var last_tick := 0
+var mute_ms := 0          # B42-NET-MP4-STALE ("mute_beats"): the host's first ND-26 heartbeats to each guest that starts playing are held back
+var muted := {}           # this long (as ENet's resend backoff can hold them after a guest's long building frame): peer id -> until (msec)
 var releases: Array = []  # MP-INTERACT-01: input events to release on the next frame (a key or button pressed by a command)
 var spot := Vector2.INF   # MP-INTERACT-01: where "stage" stood the players
 var why_last := ""        # the host's last "offer": "" or why not
@@ -151,6 +153,16 @@ func _process(delta: float) -> bool:
 		gaps.append([now, now - last_tick, main.net.by_peer.size() if main != null and main.net != null else -1])
 		gaps = gaps.slice(-20)
 	last_tick = now
+	if mute_ms > 0 and main != null and main.net != null:
+		for id in main.net.heard.keys():
+			if not muted.has(id):
+				muted[id] = now + mute_ms
+		for id in muted.keys():
+			if int(muted[id]) > now:
+				main.net.heard.erase(id)              # no heartbeat goes to it (NetSession._process sends to `heard` only)
+			elif int(muted[id]) > 0:
+				muted[id] = 0
+				main.net.heard[id] = now              # then the usual heartbeats, and the host's own watch of it, from now
 	if not started:
 		return false
 	main.world.host_player().hunger = 100.0          # the idle host does not starve while the test runs
@@ -223,6 +235,9 @@ func _commands() -> void:
 			_write_records("records_saved.json", SaveStore.inspect(main.save_path, World.SAVE_VERSION).get("data", {}))
 			_status()
 			quit(0)
+		"mute_beats":                                # B42-NET-MP4-STALE: hold back the first heartbeats to the next guests that start playing
+			mute_ms = int(c.ms)
+			muted = {}
 		"crash":                                     # MP Batch B: the host is killed after an hourly save made while the guest played
 			main.save_game(false)
 			census = {"at": "saved", "coins": w.total_coins(), "goods": _goods(), "away": _aways(), "minutes": w.minutes,
