@@ -318,5 +318,6 @@
  "extra_life_session_test": 25,
  "d2_talk_unreachable_test": 7,
  "demo_journey_test": 64,
- "demo_save_slots_test": 44
+ "demo_save_slots_test": 44,
+ "creation_begin_click_test": 6
 }
