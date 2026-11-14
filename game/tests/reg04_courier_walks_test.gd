@@ -52,7 +52,14 @@ func rings(x: World) -> int:
 	for l in x.loot:
 		n += (l.inv as Inventory).count(ITEM)
 	# what crossed the village's boundary (a delivery handed over, a merchant's own trade with the caravan) is counted where it went
-	return n + int(x.stats.get("exported_" + ITEM, 0)) - int(x.stats.get("imported_" + ITEM, 0))
+	# and what was made or used up meanwhile (a smith may make rings), as reg08_stranded_route_job_test's items() counts
+	var made := 0
+	for k in ["made_", "mined_", "felled_", "dug_", "cut_", "farm_harvest_"]:
+		made += int(x.stats.get(k + ITEM, 0))
+	var used := 0
+	for k in ["eaten_", "used_", "used_building_", "used_works_", "used_repairs_", "burned_", "broke_", "spoiled_"]:
+		used += int(x.stats.get(k + ITEM, 0))
+	return n + int(x.stats.get("exported_" + ITEM, 0)) - int(x.stats.get("imported_" + ITEM, 0)) - made + used
 
 
 func step(x: World, minutes: float, each := Callable()) -> void:
