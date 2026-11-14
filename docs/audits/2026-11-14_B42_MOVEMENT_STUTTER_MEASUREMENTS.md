@@ -191,3 +191,42 @@ against after 48.0 / 104.7 / 170.8; frames over 100 ms 1,458 against 1,463, over
 dominates both); **frames with over 20 ms of chunk prefetch 126 against 3**; the autosave's main-thread cost per hour
 60-197 ms (6 saves) against 18-71 ms. Draw p50 36.9 against 36.0 ms. The game-side causes behave as headless; the
 rasteriser hides the rest.
+
+# Part 2: chunk drawing in parts (branch `wip/b42-stutter-2`, from `wip/b42-integration` `9dffa6e`)
+
+Lead's assignment (2026-11-14): time-slice `ow:build`, view-only and result-neutral; the 0.5 s tick, presence
+materialising and the dawn/17:00 frames stay out (owner decision B42-Q-STUTTER-PART2: Build 42 ships the result-neutral
+fixes; the owner checks the remaining hitches on real hardware).
+
+## Fix 4: a chunk drawn in parts
+
+`OverworldView._build` drew a chunk whole in one frame: median 7 ms, up to 55 ms on the southern walk at load 7-9, and
+up to 2,560 tiles placed in one frame (a settlement chunk). It is now `_build_begin` + `_build_part`:
+- its cells 2 rows at a time;
+- its grass tufts 2 rows at a time;
+- its trees;
+- its settlement buildings, a few slots a part until 300 tiles are placed (`_site_begin/_site_step/_site_end`; the whole
+  `_draw_site_buildings` loops the same steps);
+- then its works and a lifted roof.
+
+These run in the whole build's order and layers. `follow` spends at most `build_budget_usec` (3 ms) a frame (at least one
+part), and settlement buildings start a frame of their own. The chunk is in `chunks` from its first part, so a road,
+live water or a felled tree changed while it is drawn reaches it as it reaches a loaded chunk, and each part draws the
+world as it is then. A chunk freed mid-draw is dropped with its layers. `_build` still draws whole (first view,
+teleport, tests).
+
+Found while slicing: `road_tile` read a neighbour across the chunk edge with `Overworld.is_road`, which **generated
+that neighbour on the main thread** when it was not cached (one 21-24 ms part). It now reads the drawn chunk's own padded
+road mask when the neighbour is not generated. On seed 1 the two agree on all 203,400 pad cells of 300+ chunks
+(probe, rows -2..25 x columns -3..9).
+
+`game/tests/chunk_slice_test.gd`: walking pace (0.075 tiles a frame) south from the gate, 3,600 frames, 242 tiles,
+budget 0 (one part a frame). It checks drawing work by count (`MapView.tiles_put`), which does not depend on load, plus
+equality.
+- after (`3777e87`, load 7.0-7.4): 3/0. Most tiles placed in one frame 588 (a chunk drawn whole: up to 2,560). Every
+  one of 35 drawn chunks equals the chunk drawn whole now, cell for cell in every layer.
+- failing case, `-- whole` (old one-chunk-a-frame path, same code, load 6.8-7.8): most 2,560 tiles, so the tiles check
+  and the slicing check fail (2 failures); equality still holds.
+- frame times (printed, not asserted; load 7-8): after, frames drawing over 10 / 15 / 20 / 30 ms: 3 / 0 / 0 / 0, worst
+  12.5. Whole: 13 / 8 / 5 / 1, worst 38.2. On `9dffa6e` itself: 12 / 4 / 2 / 2, worst 53.1. The remaining 9-12 ms frames
+  are single 2-row parts of 70-90 tiles, i.e. preemption at load 7-8.
