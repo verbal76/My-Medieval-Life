@@ -328,6 +328,15 @@ func consistent(label: String, guests: Array) -> void:
 	await command({"cmd": "thaw"})
 
 
+## B42-NET-MP4-STALE (diagnostic): the host's log of the requests it applied (NetSession.applied_log), wherever net_host puts it.
+func _applied_log() -> Array:
+	var st := status()
+	for k in st:
+		if st[k] is Dictionary and (st[k] as Dictionary).get("log") is Array:
+			return st[k].log
+	return st.get("log", []) if st.get("log") is Array else []
+
+
 ## B42-NET-MP4-STALE (diagnostic): [Ann's reconnects, Ann's host-silent losses, {guest: [reconnects, host-silent losses]}, the host's watchdog drops].
 func _losses(guests: Array) -> Array:
 	var gl := {}
@@ -861,6 +870,9 @@ func _save_live_and_restart() -> void:
 		if not moved:
 			print("diag he accepts: Dan's replies %s, toasts %s, at %s, the host at %s, his window %s" % [(gs("g3").get("replies", []) as Array).slice(-3),
 				(gs("g3").get("toasts", []) as Array).slice(-3), rec(dan).get("pos"), rec(host_pid).get("pos"), gs("g3").get("ui", {}).get("buttons", [])])
+			await until(func(): return int(rec(dan).get("inv", {}).get("bread", 0)) == b0 + 1, 10.0)
+			print("diag he accepts: 10 s later the loaf moved %s; the host's applied requests (pid, rid, what), last 6: %s" % [
+				int(rec(dan).get("inv", {}).get("bread", 0)) == b0 + 1, _applied_log().slice(-6)])
 		check(moved, "he accepts after the restart: the loaf moves once")
 		await gcmd("g3", {"cmd": "close"})
 	await consistent("after the host's restart", ["g2", "g3"])
