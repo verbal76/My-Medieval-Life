@@ -610,6 +610,8 @@
   "_household_note": "Household economics and job mobility (docs/BUILD_DECISIONS.md): agent proposals using existing jobs and wages.",
   "household_savings_days": 10,
   "mobility_unsustainable_days": 3,
+  "_emigrate_work_note": "B42-Q-EMIG-WORK (owner 2026-11-14: 'Judge per person: an adult with no job and no earnings for about a week may leave for work, whatever the household's food. Keep the spouse rule. Measured in the Build 42 campaign.'): Migration._work_out takes an adult who has had no job and earned nothing (NPC.income_days, the last 7 days kept) for emigrate_work_idle_days game days. 7: the owner's 'about a week' read as seven game days, which is also the length of the earnings record (income_days keeps 7) and the job-change cooldown (job_switch_cooldown_days); it is shorter than one 8-day game year, so a jobless adult is weighed within the year they lost work. Agent proposal, provisional.",
+  "emigrate_work_idle_days": 7,
   "job_switch_cooldown_days": 7,
   "job_return_days": 14,
   "_succession_note": "Essential trades are handed on (B8-016, owner 2026-10-19: apprentice, then newcomer; the numbers are agent proposals, provisional): when a smith, carpenter, tanner, cook, tavernkeeper or merchant dies, and when the last farmer, woodcutter or miner does, the post is open for succession_days; then an adult without a trade (the dead worker's household first) takes it as an apprentice; with none, a newcomer arrives with the next caravan (at the latest newcomer_max_days after the death) with newcomer_coins of their own and takes the post, the workstation and a home.",

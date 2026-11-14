@@ -15,8 +15,8 @@ extends RefCounted
 ##             (OffMapSettlement.food_claim_pts, REG-BUY-P1). in: a settlement household that is hungry and cannot buy a day's
 ##             food (PAR-02A, `hungry` and `_day_food_cost`) goes to the village when the village is out of famine and holds food
 ##             above `reserve_days` of its need, and a home or a room can be had.
-##   work      out: an adult without a trade, in a household that cannot live on its income (the seek_work condition), while the
-##             village's labour market (NPCBrain.job_market) has no open place, goes to a settlement business that paid its workers
+##   work      out: an adult with no job and no earnings for `emigrate_work_idle_days` (B42-Q-EMIG-WORK, owner 2026-11-14: judged per
+##             person, whatever the household's food; long_idle), while the village's labour market (NPCBrain.job_market) has no open place, goes to a settlement business that paid its workers
 ##             at least `switch_to_at_least` a day last week (the settlement's own job-change measure). in: an adult of a settlement
 ##             household that earned under `switch_below` a day for a week (`low`; the settlement's own measure of short work) and
 ##             has others to stay with takes a village post nobody could fill: a succession vacancy past `succession_days` with no
@@ -711,13 +711,12 @@ static func _work_out(w: World, s: OffMapSettlement, market_: Dictionary = {}) -
 	var spouse: NPC = null
 	for h in range(3, w.households.size()):
 		var hh: Dictionary = w.households[h]
-		var econ: Dictionary = hh.get("econ", {})
-		if hh.get("ended", false) or econ.is_empty() or int(econ.streak) < int(GameData.b("mobility_unsustainable_days")):
-			continue
+		if hh.get("ended", false):
+			continue                     # B42-Q-EMIG-WORK (owner 2026-11-14): judged per person, whatever the household's food
 		var ms: Array = w.brain._members(h)
 		ms.sort_custom(func(a: NPC, b: NPC) -> bool: return a.id < b.id)
 		for o: NPC in ms:
-			if o.role == "adult" and o.job == "" and not _barred(w, o) and Life._may_move(w, o):
+			if o.role == "adult" and long_idle(w, o) and not _barred(w, o) and Life._may_move(w, o):
 				# B25-EMIG-MARRIAGE-D1 (owner 2026-11-12, option A): a married adult leaves for work only with their spouse, as the
 				# land move takes the partner along. A spouse who cannot relocate keeps them both here: a solo emigration would
 				# count the emigrant gone (alive false, away) and free the spouse left behind to remarry (Life.free_to_partner).
@@ -749,6 +748,22 @@ static func _work_out(w: World, s: OffMapSettlement, market_: Dictionary = {}) -
 	w.note("%s %s leaves for %s, where work is to be had." % [who.name, who.family, s.name])
 	s.note("%s arrives from the village for work, and joins the %s." % [who.name, OffMapSettlement.btype(bt).get("name", bt)])
 	return h >= 0
+
+
+## B42-Q-EMIG-WORK (owner 2026-11-14): an adult with no job and no earnings for about a week (`emigrate_work_idle_days`, 7): no job
+## since that many days (NPC.job_since, the day of the last change of job) and nothing earned on each of the last that many days
+## (NPC.income_days, kept for the last 7). A day not yet in the record counts as not known, so a newcomer is not judged early.
+static func long_idle(w: World, o: NPC) -> bool:
+	var days := int(GameData.b("emigrate_work_idle_days"))
+	if o.job != "" or w.day() - o.job_since < days:
+		return false
+	var need := mini(days, 7)
+	if o.income_days.size() < need:
+		return false
+	for v in o.income_days.slice(-need):
+		if int(v) > 0:
+			return false
+	return true
 
 
 ## B25-EMIG-MARRIAGE-D1: the living spouse who would go along with `o`, or null when `o` has none or the spouse cannot relocate (an
