@@ -21,6 +21,7 @@ func check(cond: bool, what: String) -> void:
 
 func _init() -> void:
 	GameData.ensure()
+	Migration.walk = false            # REG-05 (B42): these decision-rule checks are of the move made at once (a world with no roads); the walk is reg05_household_walks_test
 	test_no_reason_no_move()
 	test_hunger()
 	test_work()
@@ -228,9 +229,11 @@ func test_work() -> void:
 	who.coins = 33
 	who.inv.add("axe")
 	var hh: Dictionary = w.households[h]
-	hh.econ = {"streak": 0}
-	check(not Migration._work_out(w, s, _closed_market()), "out: a household that lives on its income sends nobody for work")
-	hh.econ = {"streak": 3}
+	hh.econ = {"streak": 0}                        # B42-Q-EMIG-WORK (owner 2026-11-14): judged per person, whatever the household's food
+	who.job_since = w.day() - 10
+	who.income_days = [0, 0, 0, 0, 0, 0, 3]
+	check(not Migration._work_out(w, s, _closed_market()), "out: an adult who earned in the last week stays")
+	who.income_days = [0, 0, 0, 0, 0, 0, 0]
 	var open := _closed_market()
 	open.farmer.open = 2
 	check(not Migration._work_out(w, s, open), "out: nobody leaves while the village's labour market has a place open")
@@ -478,6 +481,8 @@ func _make_moves(w: World) -> Dictionary:
 	w.treasury += who.coins - 21                         # (their purse is 21 coins; the difference to or from the treasury)
 	who.coins = 21
 	w.households[h2].econ = {"streak": 3}
+	who.job_since = w.day() - 10
+	who.income_days = [0, 0, 0, 0, 0, 0, 0]       # B42-Q-EMIG-WORK: no job and nothing earned for a week (Migration.long_idle)
 	Migration._work_out(w, s, _closed_market())
 	w.food_days = 30.0
 	return began

@@ -217,6 +217,7 @@ jobs:
           res://tests/water_test.gd
           res://tests/journey_s3_test.gd
           res://tests/journey_site_path_test.gd    # B25 probe: a traveller walks round a settlement's buildings, not through them
+          res://tests/b42_envoy_food_test.gd    # B42: a round trip is provisioned for the way home; one who cannot get home fed is not sent
           res://tests/loot_recover_test.gd
           res://tests/envoy_test.gd
           res://tests/intel_test.gd
@@ -300,6 +301,10 @@ jobs:
           res://tests/emp06_unemployed_day_labour_test.gd   # EMP-06 (owner 2026-11-12): the unemployed take the manor's day work on a short-food day
           res://tests/reg03_courier_sender_dies_test.gd   # REG-03 (owner 2026-11-12): a dead sender's courier proceeds go to the heir
           res://tests/reg08_stranded_route_job_test.gd   # REG-08 (owner 2026-11-12): a delivery nobody carries ends after 7 days, goods back, fee refunded
+          res://tests/b42_reg08_shortfall_test.gd   # B42-REG08-SHORTFALL (owner 2026-11-14): an unpaid refund is recorded, never covered
+          res://tests/reg04_courier_walks_test.gd   # REG-04 (B42): a villager courier walks every delivery; REG-03 migrated sender
+          res://tests/reg05_household_walks_test.gd   # REG-05 (B42): leavers walk to the settlement and join it on arrival
+          res://tests/b42_emig_work_test.gd   # B42-Q-EMIG-WORK (owner 2026-11-14): a long-idle adult may leave for work, judged per person
           res://tests/nd23_band_no_relief_test.gd   # ND-23 (owner 2026-11-12): the manor's relief is for the village's households, not the outlaw band
           res://tests/reg06_household_change_live_test.gd    # REG-06: a live resident is folded before their household changes
           res://tests/npc03_field_takeover_bookkeeping_test.gd    # NPC-03: a manor hand taking a field is counted and recorded

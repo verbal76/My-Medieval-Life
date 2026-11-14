@@ -104,6 +104,13 @@ static func plan(w: World, n: NPC, j: Dictionary) -> bool:
 			if bool(j.get("started", false)):          # the trip ended without reaching the site (no road): nothing to report
 				j.stage = "report"
 				return plan(w, n, j)
+			if not Journeys.fed_for(w, n, str(j.sid), {"kind": "envoy", "job": int(j.id)}):
+				# B42 (envoy starvation): no food for the road home and no coins to buy it at the site: they do not go. The job is
+				# given up (posted again for whoever can go); the settlement is not marked as visited.
+				w.stat("envoy_refused_no_food")
+				Journeys.record(w, n, "refused", {"to": str(j.sid), "purpose": {"kind": "envoy", "job": int(j.id)}, "why": "no food for the road home"})
+				w.manor_work.release(j)
+				return false
 			var why := Journeys.start(w, n, str(j.sid), {"kind": "envoy", "job": int(j.id)})
 			if why != "":
 				var bv: Dictionary = book(w)

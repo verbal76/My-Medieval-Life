@@ -27,6 +27,7 @@ func check(cond: bool, what: String) -> void:
 
 func _init() -> void:
 	GameData.ensure()
+	Migration.walk = false            # REG-05 (B42): these decision-rule checks are of the move made at once (a world with no roads); the walk is reg05_household_walks_test
 	var r1 := scenario(true)
 	var r2 := scenario(false)
 	check(r1 == r2 and str(r1) != "", "two identical runs make the same move (%s)" % str(r1))
@@ -109,6 +110,8 @@ func scenario(report: bool) -> String:
 		if o != who and o.role == "adult" and o.job == "":
 			o.job = "farmer"
 	w.households[h].econ = {"streak": 3}
+	who.job_since = w.day() - 10
+	who.income_days = [0, 0, 0, 0, 0, 0, 0]       # B42-Q-EMIG-WORK: no job and nothing earned for a week (Migration.long_idle)
 	var moved := Migration._work_out(w, s, _closed_market())
 	var who_away := not who.alive and str(who.away) == "higham"
 	var sp_away := not sp.alive and str(sp.away) == "higham"
@@ -142,6 +145,8 @@ func test_blocked_spouse() -> void:
 			o.job = "farmer"
 	for hh in range(3, w.households.size()):     # only this household is short of work
 		w.households[hh].econ = {"streak": 3 if hh == h else 0}
+	who.job_since = w.day() - 10
+	who.income_days = [0, 0, 0, 0, 0, 0, 0]       # B42-Q-EMIG-WORK: no job and nothing earned for a week (Migration.long_idle)
 	w.reeve_id = sp.id                            # the spouse holds an office and cannot relocate
 	var moved := Migration._work_out(w, s, _closed_market())
 	check(not moved and who.alive and str(who.away) == "", "a spouse who cannot relocate keeps the couple in the village: nobody leaves alone (moved %s)" % moved)

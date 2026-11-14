@@ -15,8 +15,8 @@ extends RefCounted
 ##             (OffMapSettlement.food_claim_pts, REG-BUY-P1). in: a settlement household that is hungry and cannot buy a day's
 ##             food (PAR-02A, `hungry` and `_day_food_cost`) goes to the village when the village is out of famine and holds food
 ##             above `reserve_days` of its need, and a home or a room can be had.
-##   work      out: an adult without a trade, in a household that cannot live on its income (the seek_work condition), while the
-##             village's labour market (NPCBrain.job_market) has no open place, goes to a settlement business that paid its workers
+##   work      out: an adult with no job and no earnings for `emigrate_work_idle_days` (B42-Q-EMIG-WORK, owner 2026-11-14: judged per
+##             person, whatever the household's food; long_idle), while the village's labour market (NPCBrain.job_market) has no open place, goes to a settlement business that paid its workers
 ##             at least `switch_to_at_least` a day last week (the settlement's own job-change measure). in: an adult of a settlement
 ##             household that earned under `switch_below` a day for a week (`low`; the settlement's own measure of short work) and
 ##             has others to stay with takes a village post nobody could fill: a succession vacancy past `succession_days` with no
@@ -37,6 +37,18 @@ extends RefCounted
 ## stays in World.npcs as no longer alive with `away` set (their experience goes with them, as at a death), and a person who
 ## arrives is a new villager with the carried name, age, sex and skills.
 ##
+## REG-05 (owner 2026-11-08, docs/directives/2026-11-08_recovered_owner_messages.md "REG-05 - Households physically migrate"; B42):
+## a villager or household that leaves for a settlement WALKS there (Journeys, purpose {kind: "migrate"}: the same road, pace,
+## nights, food and dangers as every traveller, one walk each, the party set out together). The departure transactions happen
+## when they set out (_set_out): PROP-06's property settlement, the quests, contracts, rentals and repairs (_pre_leave), the
+## stalls, tills, debts (REG-02) and the household's pantry (_take_own), which goes into the head's pack and is carried. On the
+## road they are still the village's people, alive, ageing, able to die (what they carry passes as at any death). The population
+## transfer happens on arrival (at_site): when every living member of the party has reached the site (or two days after the first),
+## they join the settlement (receive_household, receive_person, wed_in) with what they carry, and leave the village's books
+## (_gone), as a runaway already did (B25R1-014). A walk that turns back brings them home (their property already settled: the
+## owner's question R5-Q4). Not walked yet: arrivals in the village from a settlement (the "in" moves, owner question R5-IN), and
+## any move in a world with no roads (the abstract tests).
+##
 ## Deterministic: no random numbers (names of settlement-born members come from OffMapSettlement._roll). Saved: the log and counts
 ## in Regions ("moves", "move_counts"), the people in the settlements (members' fifth entry) and in World.npcs (NPC.away).
 
@@ -55,6 +67,8 @@ const WHY := {"hunger": "for want of food", "work": "for work", "land": "for lan
 
 
 static var enabled := true           # a test switch (never cleared in the game): with it off nobody moves
+static var walk := true              # a test switch (never cleared in the game): off, a move is made at once as before REG-05 (the
+                                     # decision-rule suites written for the instant move set it; reg05_household_walks_test tests the walk)
 
 ## One visit day: the settlements on the road take and send travellers. Returns how many moves were made.
 static func visit(w: World) -> int:
@@ -89,6 +103,8 @@ static func _try(w: World, s: OffMapSettlement, reason: String, dir: String) -> 
 static func _barred(w: World, n: NPC) -> bool:
 	if n.role == "bandit" or n.clan != "" or n.household < 3:
 		return true
+	if Journeys.active(n):
+		return true                        # REG-05: on the road already (a walk of their own, or a move under way)
 	if w.homesteads != null and w.homesteads.away(n):
 		return true                        # B25R1-010: a homesteader leaves their land by its own rules (Homesteads)
 	if n.id == w.reeve_id or n.id == w.sage_id or OFFICES.has(n.job):
@@ -644,6 +660,8 @@ static func spare_food_pts(s: OffMapSettlement) -> float:
 static func _household_out(w: World, s: OffMapSettlement, ms: Array, _whole: bool, reason: String, bt: String) -> bool:
 	if ms.is_empty() or bt == "" or not s.biz.has(bt):
 		return false
+	if walks(w, s, ms):
+		return _set_out(w, s, ms, reason, {"mode": "household", "bt": bt})          # REG-05: they walk; they join on arrival
 	if not _settle_departure_property(w, ms):
 		return false
 	_pre_leave(w, ms)
@@ -694,13 +712,12 @@ static func _work_out(w: World, s: OffMapSettlement, market_: Dictionary = {}) -
 	var spouse: NPC = null
 	for h in range(3, w.households.size()):
 		var hh: Dictionary = w.households[h]
-		var econ: Dictionary = hh.get("econ", {})
-		if hh.get("ended", false) or econ.is_empty() or int(econ.streak) < int(GameData.b("mobility_unsustainable_days")):
-			continue
+		if hh.get("ended", false):
+			continue                     # B42-Q-EMIG-WORK (owner 2026-11-14): judged per person, whatever the household's food
 		var ms: Array = w.brain._members(h)
 		ms.sort_custom(func(a: NPC, b: NPC) -> bool: return a.id < b.id)
 		for o: NPC in ms:
-			if o.role == "adult" and o.job == "" and not _barred(w, o) and Life._may_move(w, o):
+			if o.role == "adult" and long_idle(w, o) and not _barred(w, o) and Life._may_move(w, o):
 				# B25-EMIG-MARRIAGE-D1 (owner 2026-11-12, option A): a married adult leaves for work only with their spouse, as the
 				# land move takes the partner along. A spouse who cannot relocate keeps them both here: a solo emigration would
 				# count the emigrant gone (alive false, away) and free the spouse left behind to remarry (Life.free_to_partner).
@@ -720,6 +737,8 @@ static func _work_out(w: World, s: OffMapSettlement, market_: Dictionary = {}) -
 			return false
 	if spouse != null:
 		return _household_out(w, s, [who, spouse], false, "work", bt)
+	if walks(w, s, [who]):
+		return _set_out(w, s, [who], "work", {"mode": "person", "bt": bt})       # REG-05
 	if not _settle_departure_property(w, [who]):
 		return false
 	_pre_leave(w, [who])
@@ -730,6 +749,22 @@ static func _work_out(w: World, s: OffMapSettlement, market_: Dictionary = {}) -
 	w.note("%s %s leaves for %s, where work is to be had." % [who.name, who.family, s.name])
 	s.note("%s arrives from the village for work, and joins the %s." % [who.name, OffMapSettlement.btype(bt).get("name", bt)])
 	return h >= 0
+
+
+## B42-Q-EMIG-WORK (owner 2026-11-14): an adult with no job and no earnings for about a week (`emigrate_work_idle_days`, 7): no job
+## since that many days (NPC.job_since, the day of the last change of job) and nothing earned on each of the last that many days
+## (NPC.income_days, kept for the last 7). A day not yet in the record counts as not known, so a newcomer is not judged early.
+static func long_idle(w: World, o: NPC) -> bool:
+	var days := int(GameData.b("emigrate_work_idle_days"))
+	if o.job != "" or w.day() - o.job_since < days:
+		return false
+	var need := mini(days, 7)
+	if o.income_days.size() < need:
+		return false
+	for v in o.income_days.slice(-need):
+		if int(v) > 0:
+			return false
+	return true
 
 
 ## B25-EMIG-MARRIAGE-D1: the living spouse who would go along with `o`, or null when `o` has none or the spouse cannot relocate (an
@@ -773,6 +808,127 @@ static func _land_out(w: World, s: OffMapSettlement) -> bool:
 		return false
 	var head: NPC = ms[0]
 	return _household_out(w, s, ms, whole, "land", _bt_for(s, head.job))
+
+
+# ------------------------------------------------------------------ REG-05: the walk ----------------
+const MIGRATE := "migrate"
+const WAIT_DAYS := 2                 # how long the first of a party to arrive waits at the site for the rest (then they join without them)
+
+
+## Whether `ms` leave for `s` on foot: the settlement stands in the world with a road from the village to it.
+static func walks(w: World, s: OffMapSettlement, ms: Array) -> bool:
+	if not walk:
+		return false
+	var ow: Overworld = w.map.overworld if w.map != null else null
+	if ow == null or ow.site(s.id).is_empty() or ow.road_route(Journeys.gate_index(w), s.id).is_empty():
+		return false
+	return not ms.any(func(o): return Journeys.active(o))
+
+
+## REG-05: the party sets out. The departure transactions now (PROP-06 property, quests and contracts, stalls, tills, debts, the
+## pantry into the head's pack), then each member's walk. Nothing crosses to the settlement yet. False (nothing changed) when the
+## property cannot be settled or a walk cannot start.
+static func _set_out(w: World, s: OffMapSettlement, ms: Array, reason: String, how: Dictionary) -> bool:
+	if not _settle_departure_property(w, ms):
+		return false
+	_pre_leave(w, ms)
+	var pantry := _take_own(w, ms)
+	var head: NPC = ms[0]
+	for o: NPC in ms:
+		if o.role == "adult":
+			head = o
+			break
+	var ids_ := []
+	for o: NPC in ms:
+		ids_.append(o.id)
+	var purpose := {"kind": MIGRATE, "party": "%s:%d:%d" % [s.id, w.day(), int(ms[0].id)], "reason": reason, "members": ids_}
+	purpose.merge(how)
+	var started := []
+	for o: NPC in ms:                                    # each takes food for their own walk from the pantry (Journeys.provision)
+		if Journeys.start(w, o, s.id, purpose) != "":
+			for x: NPC in started:                         # (cannot happen after walks(): a walk that will not start leaves nobody on the road)
+				Journeys.end(w, x, "cancelled")
+			w.stat("migration_set_out_failed")
+			return false
+		started.append(o)
+	if pantry != null:                                   # the rest of the household's stores are carried by its head
+		var ids: Array = pantry.ids()
+		ids.sort()
+		for id in ids:
+			w.transfer(pantry, head.inv, str(id), pantry.count(str(id)))
+	w.stat("migration_set_out")
+	w.stat("migration_set_out_" + reason)
+	w.note("%s set%s out for %s %s." % [_names(ms), "s" if ms.size() == 1 else "", s.name, WHY[reason]])
+	return true
+
+
+## World.journey_hook: a migrant at the settlement. When every living member of the party still on this walk is there (or the first
+## has waited WAIT_DAYS), they join it together; until then they wait at the site. True while this has them (waiting or joining).
+static func at_site(w: World, n: NPC) -> bool:
+	var p: Dictionary = n.journey.get("purpose", {})
+	if str(p.get("kind", "")) != MIGRATE or w.regions == null:
+		return false
+	var s: OffMapSettlement = w.regions.by_id.get(str(n.journey.to))
+	if s == null:
+		return false
+	var ms := []
+	var waiting := false
+	for id in p.get("members", []):
+		var o := w.npc(int(id))
+		if o == null or not o.alive or str(o.journey.get("purpose", {}).get("party", "")) != str(p.party):
+			continue                                     # died on the road, turned back, or never left: not in the party now
+		if str(o.journey.get("leg", "")) != "there":
+			waiting = true
+		ms.append(o)
+	if waiting and w.day() - int(n.journey.get("arrived", w.day())) < WAIT_DAYS:
+		n.doing = "waiting at %s for the rest of the household" % s.name
+		n.plan = [{"k": "work", "min": 60.0, "anim": "idle"}]
+		n.work_left = 60.0
+		return true
+	ms = ms.filter(func(o): return str(o.journey.get("leg", "")) == "there")
+	_join(w, s, ms, p)
+	return true
+
+
+## The party joins `s`: its people, purses and packs cross the boundary now, by the instant move's own rules.
+static func _join(w: World, s: OffMapSettlement, ms: Array, p: Dictionary) -> void:
+	var reason := str(p.get("reason", "work"))
+	var load_ := _pack(w, ms, null)
+	var names := _names(ms)
+	match str(p.get("mode", "household")):
+		"wed":
+			var gi := int(p.get("gi", -1))
+			var gj := -1
+			if gi >= 0 and gi < s.hh.size() and bool(s.hh[gi].alive):
+				for j in (s.hh[gi].mem as Array).size():
+					if OffMapSettlement.member_id(s.hh[gi].mem[j]) == int(p.get("groom", -1)):
+						gj = j
+			if gj >= 0 and int(s.hh[gi].mem[gj][OffMapSettlement.M_PAIR]) == 0:
+				s.wed_in(gi, gj, load_.people[0], int(load_.coins), load_.goods)
+				w.stat("partnerships")
+				s.note("%s arrives from the village and marries." % ms[0].name)
+			else:                                          # the groom is gone or wed since she set out: she joins the place to work
+				s.receive_person(load_.people[0], int(load_.coins), load_.goods, hiring(s))
+				w.stat("migration_wed_groom_gone")
+				s.note("%s arrives from the village to marry, finds the match gone, and stays to work." % ms[0].name)
+		"person":
+			s.receive_person(load_.people[0], int(load_.coins), load_.goods, str(p.get("bt", "")))
+			s.note("%s arrives from the village for work." % names)
+		_:
+			s.receive_household(load_.people, int(load_.coins), load_.goods, str(p.get("bt", "")))
+			s.note("%s arrive from the village %s." % [names, WHY.get(reason, "")])
+	_gone(w, s, ms, load_, null, reason)              # (each walk ends here: Journeys.end "emigrated")
+	w.stat("migration_arrived")
+	w.note("%s reached %s and %s there." % [names, s.name, "stays" if ms.size() == 1 else "stay"])
+
+
+## Journeys.end of a migrant's walk that did not reach the settlement (`how`: turned_back, no road, lost, died). A death is any death's
+## (World.kill). One who comes home has left nothing in the settlement: their property was settled when they set out (R5-Q4).
+static func walk_ended(w: World, n: NPC, how: String) -> void:
+	if how in ["emigrated", "died", "cancelled"]:
+		return
+	w.stat("migration_walk_ended_" + how)
+	w.note("%s %s could not reach %s and is back in the village." % [n.name, n.family, str(n.journey.get("to", ""))])
 
 
 # ------------------------------------------------------------------ the settlements' people arriving ----------------
@@ -992,6 +1148,8 @@ static func _marry_out(w: World, s: OffMapSettlement) -> bool:
 			_pre_leave(w, [bride])
 			if not _courted(w, s, "out", "%d:%d:%d" % [bride.id, g[0], int(gh.mem[g[1]][OffMapSettlement.M_BORN])]):
 				return false
+			if walks(w, s, [bride]):                            # REG-05: she walks to him; they marry when she arrives
+				return _set_out(w, s, [bride], "marriage", {"mode": "wed", "gi": int(g[0]), "groom": OffMapSettlement.member_id(gh.mem[g[1]])})
 			if not _settle_departure_property(w, [bride]):
 				return false
 			var pantry := _take_own(w, [bride])
