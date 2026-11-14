@@ -3481,6 +3481,8 @@ func _find_target() -> void:
 		elif text != "" and cands.size() > 1:
 			text += "\n" + _next_hint(cands[(pick + 1) % cands.size()], pick)
 		_prompt(text, text != "" and cands.size() > 1)
+	if frame_profiling:
+		_fp("ft:order, prompt", tf)
 
 
 ## GP-ANDROID-USE-TALK-TARGETING: the order Use offers things in: every thing (a station, a chest, a counter, a seam...)
@@ -3503,8 +3505,6 @@ const CHARACTER_KINDS := ["npc", "animal", "player"]
 ## "Mining"...), and once the target's window has been opened (prompt_done) it stays down after the window closes, until
 ## that target is chosen again: another target taken (or none: walking away), Next / Q / Tab / the D-pad, or Use again.
 ## Standing beside a thing is not using it.
-	if frame_profiling:
-		_fp("ft:order, prompt", tf)
 
 
 func _prompt(text: String, more := false) -> void:
