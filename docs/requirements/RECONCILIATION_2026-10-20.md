@@ -308,7 +308,7 @@ None.
 | B25R2-Q4 | How should the Claude usage budget be spent on the B25R2 repairs? | decision | APPROVED | 25 |
 | B25R2-STUTTER | Walking south of the starter village to the next settlement froze the game for about a second every other step: fix? | decision | APPROVED | 20+ |
 | B25R2-VER-01 | How should the next Play Test Build One package identify itself? | decision | APPROVED | 25 |
-| B42-ANDROID-DEBUGGABLE | Android packages exported with debugging enabled; separate test and production configurations; release gate | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
+| B42-ANDROID-DEBUGGABLE | Android packages exported with debugging enabled; separate test and production configurations; release gate | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
 | B42-BEGIN-DOUBLE-CLICK | Character creation Begin button sometimes needs a second click | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | B42-DEMO-SAVE-OVERWRITE | Demo New game overwrites the full game's save without warning (player-data protection) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | B42-DEMO-WINDOW-TITLE | Demo window title does not identify the demo | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
@@ -318,7 +318,7 @@ None.
 | B42-Q-POP-LEVERS | Change population growth levers (birth rate, hunger arrivals, 2% young homesteading, deposit sizes) for Build 42? | decision | APPROVED | unassigned |
 | B42-Q-REG08-CAP | Accept the MML-REG-08 expired-delivery refund capped at what the payer's heir holds (never creating coins)? | decision | APPROVED | unassigned |
 | B42-REG08-SHORTFALL | Courier refund cap: record any unpaid shortfall visibly and auditably (REG-08) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
-| B42-RELEASE-EXACT-SHA | Release requires all mandatory tests to pass on the exact packaged commit | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
+| B42-RELEASE-EXACT-SHA | Release requires all mandatory tests to pass on the exact packaged commit | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
 | BAN-B | Expansion 23 BAN-B: faction identity, membership, hierarchy, safehouse ownership and persistent faction resources | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
 | BAN-C | Expansion 23 BAN-C: career actions, recruitment, theft and raids, resale, suspicion and response (within E23-SCOPE) | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
 | BAN-D | Expansion 23 BAN-D: rank, challenge, leadership, schism and autonomous succession | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |

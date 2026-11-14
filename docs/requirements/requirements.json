@@ -11906,8 +11906,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -11920,11 +11920,24 @@
      "date": "2026-11-14",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Agent N (Build 42 release engineering); branch: None -> wip/b42-release-gates",
      "why": "assigned 2026-11-14 (owner accountability directive)"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> test_release_gates 41 OK; test_android_export 5 OK; test_commit: None -> ecc1d3e; commits + 7fcc47e; integrated_in + wip/b42-integration ecc1d3e",
+     "why": "Agent N wip/b42-release-gates 7fcc47e (7f22fc0, 9887236): implemented and unit-tested (test_release_gates 41 OK, test_android_export 5 OK, full Python 237 OK); merged into wip/b42-integration ecc1d3e. Root cause of debuggable: --export-debug kept since c13c54b through 8f38920/ca27195; now --export-release + apksigner + check_android_apk.py gate. End-to-end proof needs the next authorized packaging run"
     }
    ],
    "lifecycle": "ACTIVE",
    "assigned_worker": "Agent N (Build 42 release engineering)",
-   "branch": "wip/b42-release-gates"
+   "branch": "wip/b42-release-gates",
+   "tests": "test_release_gates 41 OK; test_android_export 5 OK",
+   "test_commit": "ecc1d3e",
+   "commits": [
+    "7fcc47e"
+   ],
+   "integrated_in": [
+    "wip/b42-integration ecc1d3e"
+   ]
   },
   {
    "id": "B42-BEGIN-DOUBLE-CLICK",
@@ -12234,8 +12247,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -12248,11 +12261,24 @@
      "date": "2026-11-14",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Agent N (Build 42 release engineering); branch: None -> wip/b42-release-gates",
      "why": "assigned 2026-11-14 (owner accountability directive)"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> test_release_gates 41 OK; test_android_export 5 OK; test_commit: None -> ecc1d3e; commits + 7fcc47e; integrated_in + wip/b42-integration ecc1d3e",
+     "why": "Agent N wip/b42-release-gates 7fcc47e (7f22fc0, 9887236): implemented and unit-tested (test_release_gates 41 OK, test_android_export 5 OK, full Python 237 OK); merged into wip/b42-integration ecc1d3e. Root cause of debuggable: --export-debug kept since c13c54b through 8f38920/ca27195; now --export-release + apksigner + check_android_apk.py gate. End-to-end proof needs the next authorized packaging run"
     }
    ],
    "lifecycle": "ACTIVE",
    "assigned_worker": "Agent N (Build 42 release engineering)",
-   "branch": "wip/b42-release-gates"
+   "branch": "wip/b42-release-gates",
+   "tests": "test_release_gates 41 OK; test_android_export 5 OK",
+   "test_commit": "ecc1d3e",
+   "commits": [
+    "7fcc47e"
+   ],
+   "integrated_in": [
+    "wip/b42-integration ecc1d3e"
+   ]
   },
   {
    "id": "B7-001",

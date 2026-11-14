@@ -130,13 +130,13 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B25R1-025 | Aerial region and village maps of the generated world | approved | OWNER APPROVED | INTEGRATED |
 | B25R1-026 | Settlements never hidden by map discovery | approved | OWNER APPROVED | INTEGRATED |
 | B25R2-CONT-01 | Build 25 R2 continuation: conditional sequential merges, baseline questions, births investigation, WP-1 | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
-| B42-ANDROID-DEBUGGABLE | Android packages exported with debugging enabled; separate test and production configurations; release gate | approved | OWNER APPROVED | IN DEVELOPMENT |
+| B42-ANDROID-DEBUGGABLE | Android packages exported with debugging enabled; separate test and production configurations; release gate | approved | OWNER APPROVED | INTEGRATED |
 | B42-BEGIN-DOUBLE-CLICK | Character creation Begin button sometimes needs a second click | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B42-DEMO-SAVE-OVERWRITE | Demo New game overwrites the full game's save without warning (player-data protection) | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B42-DEMO-WINDOW-TITLE | Demo window title does not identify the demo | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B42-MP-PANTRY-PRIVACY | Multiplayer: household pantry information private by default; shared only by explicit permission | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B42-REG08-SHORTFALL | Courier refund cap: record any unpaid shortfall visibly and auditably (REG-08) | approved | OWNER APPROVED | IN DEVELOPMENT |
-| B42-RELEASE-EXACT-SHA | Release requires all mandatory tests to pass on the exact packaged commit | approved | OWNER APPROVED | IN DEVELOPMENT |
+| B42-RELEASE-EXACT-SHA | Release requires all mandatory tests to pass on the exact packaged commit | approved | OWNER APPROVED | INTEGRATED |
 | BRANCH-POL-01 | Branch and worktree policy: one code integration branch (wip/b25r2-rev2 since the owner's 2026-11-08/09 decisions; wip/expansion20 until 2026-11-03), short-lived task branches, prompt audited merges, no unrelated ancestry, records branch separate | approved | OWNER APPROVED | INTEGRATED |
 | CON-02-KINDS | CON-02 unfinished service kinds: further labour and service contracts beyond dig and survey (e.g. work on the buyer's materials with existing recipes), tracked as open dependencies of the Build 17 approval | approved | OWNER APPROVED | NOT STARTED |
 | DCR-01 | Decision continuity rule: before implementing a newly approved decision, compare it with earlier directives, settled decisions, requirements, code, verified behaviour, saves and release restrictions; classify it as compatible extension, intentional revision or conflict; return only genuine conflicts to the owner with full change control | rule | OWNER APPROVED | NOT STARTED |
