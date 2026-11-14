@@ -18,6 +18,7 @@ extends SceneTree
 ##   godot --headless --path game --script res://tests/net_mp4_test.gd
 
 const Snap := preload("res://tests/net_snapshot.gd")
+var watch = preload("res://tests/net_watch.gd").new()     # B42-NET-MP4-STALE (diagnostic): Ann's reconnections and long frames
 const SAME := ["buildings", "stalls", "plots", "fields", "households", "loot", "trees", "plants", "deposits", "boulders", "treasury",
 	"granary", "vacancies", "carts", "relations", "credit", "justice", "contracts", "quest_offers", "feast", "farm", "farm_plots", "chests"]
 const ID_A := "a0123456789abcdef0123456789abcde"
@@ -59,6 +60,7 @@ func _init() -> void:
 	root.add_child(main)
 	main.save_path = dir + "guest_never_saves.json"
 	process_frame.connect(_run, CONNECT_ONE_SHOT)
+	process_frame.connect(func(): watch.step(main))
 
 
 # ---------------------------------------------------------------- helpers -----------------------
@@ -313,6 +315,13 @@ func consistent(label: String, guests: Array) -> void:
 			c.get("waited_ms"), c.get("early_bad"), c.get("bad"), gs(t).get("syncs"), gs(t).get("last_mark"), gs(t).get("my_id"), status().get("enet", {})])
 		check(int(c.get("seq", -1)) == int(gseq[t]) and bool(c.get("mark_seen", false)) and (c.get("bad", ["no answer"]) as Array).is_empty(),
 			"%s: %s's copy is the host's world %s" % [label, {"g2": "Cara", "g3": "Dan"}[t], c.get("bad", ["no answer"]) if bool(c.get("mark_seen", false)) else ["the marked sync never came"]])
+	var nowa := Time.get_ticks_msec()
+	var wl := {"ann": [watch.log.map(func(x): return [nowa - int(x[0])] + x.slice(1)), watch.gaps.map(func(x): return [nowa - int(x[0]), x[1]])]}
+	for t in guests:
+		var g := gs(t)
+		wl[t] = [(g.get("watch", []) as Array).map(func(x): return [int(g.get("now", 0)) - int(x[0])] + (x as Array).slice(1)),
+			(g.get("watch_gaps", []) as Array).map(func(x): return [int(g.get("now", 0)) - int(x[0]), x[1]])]
+	print("diag %s: reconnections (ms ago, cause, frame ms, ms since the host was heard, connected, silent losses, frame) and long frames (ms ago, ms): %s" % [label, wl])
 	print("diag %s: connections lost during the comparison (Ann's reconnects and host-silent losses, each guest's, the host's watchdog drops): %s -> %s" % [label, lost0, _losses(guests)])
 	await command({"cmd": "thaw"})
 

@@ -22,6 +22,7 @@ var cmp := {}                  # the last "compare": {seq, bad, early_bad, mark_
 var last_mark := -1
 var mark_world: World = null   # the copy the mark was taken into: a rejoin builds a new one, and a restarted host numbers from 1 again
 var pending := {}
+var watch = preload("res://tests/net_watch.gd").new()     # B42-NET-MP4-STALE (diagnostic): its reconnections and long frames
 var toasts: Array = []         # every message this screen showed (sampled), for checks of what a player was told
 
 
@@ -55,6 +56,7 @@ func _has_mark(m: int) -> bool:
 
 
 func _process(delta: float) -> bool:
+	watch.step(main)
 	if not pending.is_empty() and (_has_mark(int(pending.mark)) or Time.get_ticks_msec() - int(pending.t0) > NetSession.JOIN_TIMEOUT_MS):
 		cmp = {"seq": int(pending.seq), "bad": _compare(pending.keys), "early_bad": pending.early, "mark_seen": _has_mark(int(pending.mark)),
 			"waited_ms": Time.get_ticks_msec() - int(pending.t0)}
@@ -188,7 +190,7 @@ func _status() -> void:
 		toasts.append(main.ui.toast.text)
 	var d := {"seq": last_seq, "toasts": toasts.slice(-20), "welcomed": main.guest_world, "pid": main.net.my_pid, "refusal": main.net.refusal,
 		"reconnecting": main.net.reconnecting, "reconnects": main.net.reconnects, "connected": main.net.connected(), "cmp": cmp,
-		"world": main.world != null, "running": main.running, "syncs": main.net.syncs, "last_mark": last_mark, "silent_losses": main.net.host_silent_losses, "my_id": main.net.my_id}
+		"world": main.world != null, "running": main.running, "syncs": main.net.syncs, "last_mark": last_mark, "silent_losses": main.net.host_silent_losses, "watch": watch.log, "watch_gaps": watch.gaps, "now": Time.get_ticks_msec(), "my_id": main.net.my_id}
 	if main.guest_world:
 		var w: World = main.world
 		var ui: GameUI = main.ui
