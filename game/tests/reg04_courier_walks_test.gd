@@ -37,7 +37,7 @@ func coin_gap(x: World) -> int:
 	return x.total_coins() + x.regions.coins() - (x.coin_sources + x.regions.net_paid_by_village())
 
 
-## Rings anywhere in the village's books or on the road: packs, booth stores, loads, loot (the settlement's side is counted apart).
+## Rings anywhere in the village's books or on the road (packs, booth stores, loads, loot), and those that crossed the boundary.
 func rings(x: World) -> int:
 	var n := 0
 	for o: NPC in x.npcs:
@@ -51,7 +51,8 @@ func rings(x: World) -> int:
 			n += int((j.cargo as Dictionary).get(ITEM, 0))
 	for l in x.loot:
 		n += (l.inv as Inventory).count(ITEM)
-	return n
+	# what crossed the village's boundary (a delivery handed over, a merchant's own trade with the caravan) is counted where it went
+	return n + int(x.stats.get("exported_" + ITEM, 0)) - int(x.stats.get("imported_" + ITEM, 0))
 
 
 func step(x: World, minutes: float, each := Callable()) -> void:
@@ -215,7 +216,7 @@ func test_turned_back() -> void:
 	step(w, 4 * 1440.0)
 	check(str(a.state) == "returned" and not Journeys.active(k), "the road closed: the keeper turned back and the delivery came home (%s, %s)" % [str(a.state), str(a.outcome)])
 	check(m.inv.count(ITEM) == m_rings, "the sender has their goods back (%d of %d)" % [m.inv.count(ITEM), m_rings])
-	check(rings(w) == rings0 and coin_gap(w) == gap0, "nothing lost or made")
+	check(rings(w) == rings0 and coin_gap(w) == gap0, "nothing lost or made (rings %d of %d, coin gap %d of %d)" % [rings(w), rings0, coin_gap(w), gap0])
 	for nd in (ow._site_end("wulstead").nodes as Dictionary).keys():
 		ow.close_node(nd, false)
 
