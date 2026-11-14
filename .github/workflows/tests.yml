@@ -226,6 +226,7 @@ jobs:
           res://tests/audio_test.gd
           res://tests/stone_test.gd
           res://tests/job_board_test.gd
+          res://tests/job02_offered_pay_test.gd
           res://tests/early_game_test.gd
           res://tests/parity_mining_test.gd
           res://tests/equip_test.gd

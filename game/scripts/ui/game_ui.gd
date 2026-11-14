@@ -3338,7 +3338,8 @@ func show_manor_jobs(reeve: NPC) -> void:
 		var j: Dictionary = line.job
 		var h := HBoxContainer.new()
 		var l := Label.new()
-		l.text = "%s  ·  %d coins%s" % [mw.describe(j), mw.wage_for(j, w.acting_ref()), ("  (%d such jobs)" % int(line.n)) if int(line.n) > 1 else ""]
+		l.text = "%s  ·  %d coins%s%s" % [mw.describe(j), mw.wage_for(j, w.acting_ref()), ("  (%d such jobs)" % int(line.n)) if int(line.n) > 1 else "",
+				("  (offer raised from %d)" % int(j.base_wage)) if int(j.get("raised", 0)) > 0 else ""]      # JOB-02: the manor raised a refused offer
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		l.add_theme_font_size_override("font_size", 18)
