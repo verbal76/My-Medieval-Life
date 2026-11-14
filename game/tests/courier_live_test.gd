@@ -113,6 +113,29 @@ func run_days(days: float, world: World = null) -> void:
 		x.update(dt)
 
 
+## REG-04 (B42): run until `cond` holds (a courier now walks, so a delivery takes the walk, not the quoted days), at most `max_days`.
+func run_until(cond: Callable, max_days: float, world: World = null) -> bool:
+	var x := world if world != null else w
+	var dt := 10.0 / float(GameData.b("game_minutes_per_second"))
+	for i in int(max_days * 144.0):
+		if cond.call():
+			return true
+		x.player.hp = x.player.max_hp
+		x.player.hunger = 100.0
+		x.update(dt)
+	return bool(cond.call())
+
+
+## REG-04: the village keeper is home from any walk (the villagers' own postings send them out too) and has food for the next.
+func keeper_home(world: World = null) -> void:
+	var x := world if world != null else w
+	var k = x.couriers._npc(str(x.couriers.booth_of("village").keeper))
+	if k == null:
+		return
+	x.households[k.household].pantry.add("bread", 20)
+	run_until(func() -> bool: return not Journeys.active(k), 4.0, x)
+
+
 func wulstead() -> SettlementParty:
 	return w.regions.party("wulstead/trader")
 
@@ -229,20 +252,21 @@ func test_special_and_fees() -> void:
 	check(str(n.answer) == "counter" and int(n.fee) > 1, "a special delivery is negotiated: an offer of 1 coin is countered with the least fee (%d)" % int(n.fee))
 	var q := cs.quote(order)
 	check(int(q.fee) == int(n.fee) and float(q.days) > 0.5, "worked out from the journey (%.2f days from the miles) and the carrier's wage" % float(q.days))
+	keeper_home()
 	var job := cs.book_special(order, int(n.fee))
-	check(not job.has("error") and w.player.coins == 200 - int(n.fee) and vb.escrow == int(n.fee), "the fee is held at the booth, not paid yet")
+	check(not job.has("error") and w.player.coins == 200 - int(n.fee) and vb.escrow == int(n.fee), "the fee is held at the booth, not paid yet (%s)" % str(job.get("error", "ok")))
 	check(coin_gap() == gap0, "and held fees count in the village's coins")
 	var held0 := wulstead().held(ITEM)
 	var paid0 := int(w.regions.by_id["wulstead"].flows.outside_coins_out)
 	var snap := _till_snap("wulstead")
 	var pc0: int = w.player.coins
 	var kn: NPC = w.npc(int(courier.trim_prefix("npc:")))
-	run_days(float(q.days) + 0.2)
-	check(wulstead().held(ITEM) == held0 + 3 and str(job.outcome) == "delivered", "the courier delivers to Wulstead's trader after the days on the road")
+	run_until(func() -> bool: return str(job.get("outcome", "")) != "", 4.0)
+	check(wulstead().held(ITEM) == held0 + 3 and str(job.outcome) == "delivered", "the courier delivers to Wulstead's trader on reaching it (REG-04: walked)")
 	var ke1: int = kn.earned                          # (the courier lives a day or two on the road: its purse moves with its own life)
 	var ks1: int = kn.spent
 	check(int(vb.escrow) == int(n.fee) and w.player.coins == pc0, "the fee is still held while the courier is away (the payment is not yet home)")
-	run_days(float(q.days) + 0.3)
+	run_until(func() -> bool: return str(job.state) in ["fulfilled", "returned", "interrupted"], 4.0)
 	check(str(job.state) == "fulfilled" and w.player.coins == pc0 + 5 and int(vb.escrow) == 0, "back home: the 5 coins collected go to the sender and the contract is fulfilled")
 	check(kn.earned - ke1 >= int(n.fee), "the courier is paid its fee only when the work is done (no free transport) (earned %d on the way home, fee %d; spent %d meanwhile)" % [kn.earned - ke1, int(n.fee), kn.spent - ks1])
 	var pb := _paid_by("wulstead", snap, int(job.id))
@@ -262,6 +286,7 @@ func test_dead_courier() -> void:
 	var item0 := item_gap()
 	var order := {"sender": "player", "recipient": "region:wulstead/trader", "recipient_kind": "business", "settlement": "wulstead", "items": {ITEM: 2}, "courier": courier}
 	var fee := int(cs.negotiate(order, 0).fee)
+	keeper_home()
 	var job := cs.book_special(order, fee)
 	check(not job.has("error"), "a second special delivery is booked (%s)" % str(job.get("error", "")))
 	var pc0: int = w.player.coins
@@ -290,7 +315,10 @@ func test_save_and_old_save() -> void:
 	var job := cs.book_route({"sender": "player", "recipient": "region:wulstead/trader", "recipient_kind": "business", "settlement": "wulstead", "items": {ITEM: 4},
 		"route": route.id, "collect": {"kind": "coins", "amount": 3}, "proceeds": "deliver"})
 	check(not job.has("error"), "a route delivery is booked (%s)" % str(job.get("error", "")))
-	run_days(float(route.next_day) + 0.15 - float(w.minutes) / World.DAY)        # just after the next departure
+	keeper_home()
+	route.next_day = w.day()                          # REG-04: due now, the keeper at home
+	run_until(func() -> bool: return str(job.state) != "at_booth", 2.0)
+	run_days(0.05)
 	check(str(job.state) == "in_transit", "mid-delivery: the courier is on the road")
 	var gap0 := coin_gap()
 	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict(), "", true, true))
@@ -307,9 +335,9 @@ func test_save_and_old_save() -> void:
 	var base2 := item_gap(w2)                         # (the run's counters are not saved: the loaded world counts from its own start)
 	check(coin_gap(w2) == gap0 and int(Census.goods(w2).get(ITEM, 0)) == int(Census.goods(w).get(ITEM, 0)), "the loaded world's coins and goods are the same as the saved world's")
 	var held0 := w2.regions.party("wulstead/trader").held(ITEM)
-	run_days(float(job.days) + 0.3, w2)
+	run_until(func() -> bool: return str(j2.state) != "in_transit", 4.0, w2)
 	check(str(j2.state) in ["returning", "fulfilled"] and w2.regions.party("wulstead/trader").held(ITEM) == held0 + 4, "the loaded world's courier arrives and hands over")
-	run_days(float(job.days) + 0.3, w2)
+	run_until(func() -> bool: return str(j2.state) == "fulfilled", 4.0, w2)
 	check(str(j2.state) == "fulfilled" and w2.player.coins == w.player.coins + 3, "and comes home: fulfilled")
 	check(coin_gap(w2) == gap0 and item_gap(w2) == base2 and w2.regions.audit() == "", "all balanced after the loaded world finishes it")
 	# an older save: no "couriers" key
@@ -489,11 +517,12 @@ func test_notary_live() -> void:
 	check(str(ag.class) == "formal" and ag.signatures.has("player") and not ag.signatures.has("region:wulstead/trader") and not cs.formal().binding(ag), "the sender signed before the notary as it left; the recipient has not; not binding")
 	check(int(cn.skills.law) == law0 + int(CourierService.cfg().law.witness_xp), "the notary learned from witnessing the signature")
 	check(cs.formal().sign(ag, "region:wulstead/trader") != "" and cs.formal().sign_before_notary(ag, "region:wulstead/trader", "npc:99999", 0.0) != "", "the recipient cannot sign from afar, nor before a notary who does not hold it")
-	run_days(float(job.days) * 0.5, x)
+	var kx = cs._npc(courier)
+	run_until(func() -> bool: return not x.map.in_village(kx.cell()), 1.0, x)
 	check(not ag.signatures.has("region:wulstead/trader") and str(job.state) == "in_transit", "nothing is signed while the document is on the road")
-	run_days(float(job.days) * 0.5 + 0.2, x)
+	run_until(func() -> bool: return str(job.state) != "in_transit", 4.0, x)
 	check(ag.signatures.has("region:wulstead/trader") and not cs.formal().binding(ag) and str(job.state) == "returning", "the recipient signed before the notary on arrival; not binding until the document is back")
-	run_days(float(job.days) + 0.3, x)
+	run_until(func() -> bool: return str(job.state) in ["fulfilled", "returned", "interrupted"], 4.0, x)
 	check(str(job.state) == "fulfilled" and cs.formal().binding(ag) and str(ag.holder) == "player" and str(ag.state) == "signed", "back with both signatures: the contract is binding and the sender holds it")
 	check(int(cn.skills.law) >= law0 + 2 * int(CourierService.cfg().law.witness_xp) + int(CourierService.cfg().law.carry_xp), "the notary learned from the second signature and from carrying the document home")
 	check(x.player.coins == pc0 - int(n.fee) + small + 30, "the sender paid the fee and received the %d coins" % (small + 30))
@@ -502,14 +531,17 @@ func test_notary_live() -> void:
 	x.player.inv.add(ITEM, 2)
 	var o2 := order.duplicate(true)
 	o2.items = {ITEM: 2}
+	keeper_home(x)
 	var j2 := cs.book_special(o2, int(n.fee))
 	j2.refuse = true
 	var ag2 := cs.agreement(int(j2.agreement))
-	run_days(float(j2.days) * 2.0 + 0.6, x)
+	run_until(func() -> bool: return str(j2.get("state", "")) in ["fulfilled", "returned", "interrupted"], 4.0, x)
 	check(str(j2.state) == "returned" and str(ag2.state) == "rejected" and not ag2.signatures.has("region:wulstead/trader") and x.player.inv.count(ITEM) >= 2, "a recipient who will not sign: rejected, not binding, the goods come home")
 	# interrupted: the notary is waylaid
 	x.player.inv.add(ITEM, 2)
 	var pc1: int = x.player.coins
+	keeper_home(x)
+	pc1 = x.player.coins
 	var gap1 := coin_gap(x)
 	var j3 := cs.book_special(o2, int(n.fee))
 	var ag3 := cs.agreement(int(j3.agreement))
@@ -537,6 +569,7 @@ func test_notary_live() -> void:
 	ycn.skills["law"] = Skills.xp_for_level(int(CourierService.cfg().notary.min_level))
 	var yo := order.duplicate(true)
 	yo.courier = str(ycs.booth_of("village").keeper)
+	keeper_home(y)
 	var yj := ycs.book_special(yo, 200)
 	check(not yj.has("error"), "(a second world) the notarised delivery is booked (%s)" % str(yj.get("error", "")))
 	run_days(float(yj.days) * 0.5, y)
@@ -545,7 +578,7 @@ func test_notary_live() -> void:
 	y2.load_dict(VillageMap.load_default(), d)
 	var yag := y2.couriers.agreement(int(yj.agreement))
 	check(not yag.is_empty() and str(yag.state) == "with_notary" and yag.signatures.has("player") and int(yag.value) == int(small + 30), "the saved document is there with the sender's signature")
-	run_days(float(yj.days) * 2.0 + 0.5, y2)
+	run_until(func() -> bool: return str(yag.state) in ["signed", "rejected", "interrupted"], 4.0, y2)
 	check(str(yag.state) == "signed" and y2.couriers.formal().binding(yag) and y2.regions.audit() == "", "and the loaded world completes it: both signatures, binding")
 	var old: Dictionary = JSON.parse_string(JSON.stringify(y.to_dict(), "", true, true))
 	(old.couriers as Dictionary).erase("agreements")

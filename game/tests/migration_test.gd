@@ -21,6 +21,7 @@ func check(cond: bool, what: String) -> void:
 
 func _init() -> void:
 	GameData.ensure()
+	Migration.walk = false            # REG-05 (B42): these decision-rule checks are of the move made at once (a world with no roads); the walk is reg05_household_walks_test
 	test_no_reason_no_move()
 	test_hunger()
 	test_work()
