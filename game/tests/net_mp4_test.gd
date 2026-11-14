@@ -255,27 +255,74 @@ func stage() -> void:
 
 ## Every participant's copy of the shared world against the host's at one frozen moment (tests/net_snapshot.gd).
 func consistent(label: String, guests: Array) -> void:
-	# every copy live first: the clock and the players in play have reached it (a guest that has just rejoined, a slow frame)
-	var n_in: int = status().get("connected", []).size()
-	await until(func(): return main.world.minutes >= float(status().get("minutes", 0)) - 2.0 and main.other_players().size() == n_in, 8.0)
-	for t in guests:
-		await until(func(): return float(gs(t).get("minutes", 0)) >= float(status().get("minutes", 0)) - 2.0 and (gs(t).get("others", []) as Array).size() == n_in, 8.0)
+	# B42-NET-MP4-STALE: every copy live first, waited for and checked, not assumed after a fixed time: each connected guest in play on
+	# the host (a rejoining guest is away until it has built its world, MP-D1), every copy's clock and players in play reached
+	var live := await until(func():
+		var st := status()
+		var conn: Array = st.get("connected", [])
+		var tmin := float(st.get("minutes", 0)) - 2.0
+		if conn.any(func(pid): return bool(st.get("players", {}).get(str(int(pid)), {}).get("away", true))):
+			return false
+		if main.world.minutes < tmin or main.other_players().size() != conn.size():
+			return false
+		for t in guests:
+			var g := gs(t)
+			if not bool(g.get("welcomed", false)) or float(g.get("minutes", 0)) < tmin or (g.get("others", []) as Array).size() != conn.size():
+				return false
+		return true, NetSession.JOIN_TIMEOUT_MS / 1000.0)
+	var lost0 := _losses(guests)
+	var st_g := status()
+	print("diag %s: before the comparison, the host's frames over 1 s (ms ago, length, guests): %s" % [label,
+		(st_g.get("gaps", []) as Array).map(func(x): return [int(st_g.get("now", 0)) - int(x[0]), int(x[1]), int(x[2])])])
+	if not live:
+		var stl := status()
+		print("diag %s: not live; the host's connection log (frame, ms ago, {peer: [pid, joining, away]}, live peers): %s" % [label,
+			(stl.get("peer_log", []) as Array).map(func(x): return [x[0], int(stl.get("now", 0)) - int(x[1]), x[2], x[3]])])
+	check(live, "%s: every copy is live before the comparison (each guest in play on the host, its clock and the players in play reached)" % label)
 	await command({"cmd": "freeze"})
 	await wait(0.4)                                     # what was already on its way arrives
-	var s0: int = main.net.syncs
+	# Each copy is compared once it has taken the sync the host marked with this dump (NetSession.world_synced), not after a fixed
+	# wait: under load the command reaches a guest before the host's sync, and a rejoined guest's reliable sends can lag for seconds
+	var mark := seq + 1                                 # the dump command's number, sent with its sync (NetSession.send_syncs)
+	var got := {"m": -1, "at": 0}
+	var take := func(m: int) -> void:
+		if m == mark:
+			got.m = m
+			got.at = Time.get_ticks_msec()
+	main.net.world_synced.connect(take)
+	var s_before: int = main.net.syncs
+	var t0 := Time.get_ticks_msec()
 	await command({"cmd": "dump", "keys": SAME, "full": true})
-	await until(func(): return main.net.syncs > s0, 2.0)
-	await wait(0.8)
+	await until(func(): return int(got.m) == mark, NetSession.JOIN_TIMEOUT_MS / 1000.0)
+	main.net.world_synced.disconnect(take)
 	var dump := _read("dump.json")
 	var bad: Array = Snap.compare(main.world, main.net.my_pid, dump, SAME)
-	check(bad.is_empty(), "%s: Ann's copy is the host's world (sections, offers, clock, %d villagers, %d players, her pack) %s" % [label,
-		(dump.get("npcs", {}) as Dictionary).size(), (dump.get("players", {}) as Dictionary).size(), bad])
+	var sp: ENetPacketPeer = main.net.peer.get_peer(1) if main.net.peer != null else null
+	print("diag %s: Ann's marked sync %s after %d ms; her syncs %d -> %d, reconnects %d; her ENet to the host %s; host's ENet %s" % [label, int(got.m) == mark,
+		int(got.at) - t0 if int(got.m) == mark else -1, s_before, main.net.syncs, main.net.reconnects,
+		{"rtt": sp.get_statistic(ENetPacketPeer.PEER_ROUND_TRIP_TIME), "rtt_var": sp.get_statistic(ENetPacketPeer.PEER_ROUND_TRIP_TIME_VARIANCE),
+		"last_rtt": sp.get_statistic(ENetPacketPeer.PEER_LAST_ROUND_TRIP_TIME), "loss": sp.get_statistic(ENetPacketPeer.PEER_PACKET_LOSS),
+		"throttle": sp.get_statistic(ENetPacketPeer.PEER_PACKET_THROTTLE)} if sp != null else {}, status().get("enet", {})])
+	check(int(dump.get("mark", -1)) == mark and int(got.m) == mark and bad.is_empty(), "%s: Ann's copy is the host's world (sections, offers, clock, %d villagers, %d players, her pack) %s" % [label,
+		(dump.get("npcs", {}) as Dictionary).size(), (dump.get("players", {}) as Dictionary).size(), bad if int(got.m) == mark else ["the marked sync never came"] + bad])
 	for t in guests:
-		await gcmd(t, {"cmd": "compare", "keys": SAME})
+		await gcmd(t, {"cmd": "compare", "keys": SAME, "mark": mark})
+		await until(func(): return int(gs(t).get("cmp", {}).get("seq", -1)) == int(gseq[t]), NetSession.JOIN_TIMEOUT_MS / 1000.0 + 2.0)
 		var c: Dictionary = gs(t).get("cmp", {})
-		check(int(c.get("seq", -1)) == int(gseq[t]) and (c.get("bad", ["no answer"]) as Array).is_empty(),
-			"%s: %s's copy is the host's world %s" % [label, {"g2": "Cara", "g3": "Dan"}[t], c.get("bad", ["no answer"])])
+		print("diag %s: %s's marked sync %s after %s ms; before it %s; after %s; its syncs %s, last mark %s, peer %s; host's ENet %s" % [label, t, c.get("mark_seen"),
+			c.get("waited_ms"), c.get("early_bad"), c.get("bad"), gs(t).get("syncs"), gs(t).get("last_mark"), gs(t).get("my_id"), status().get("enet", {})])
+		check(int(c.get("seq", -1)) == int(gseq[t]) and bool(c.get("mark_seen", false)) and (c.get("bad", ["no answer"]) as Array).is_empty(),
+			"%s: %s's copy is the host's world %s" % [label, {"g2": "Cara", "g3": "Dan"}[t], c.get("bad", ["no answer"]) if bool(c.get("mark_seen", false)) else ["the marked sync never came"]])
+	print("diag %s: connections lost during the comparison (Ann's reconnects and host-silent losses, each guest's, the host's watchdog drops): %s -> %s" % [label, lost0, _losses(guests)])
 	await command({"cmd": "thaw"})
+
+
+## B42-NET-MP4-STALE (diagnostic): [Ann's reconnects, Ann's host-silent losses, {guest: [reconnects, host-silent losses]}, the host's watchdog drops].
+func _losses(guests: Array) -> Array:
+	var gl := {}
+	for t in guests:
+		gl[t] = [int(gs(t).get("reconnects", -1)), int(gs(t).get("silent_losses", -1))]
+	return [main.net.reconnects, main.net.host_silent_losses, gl, int(status().get("watchdog_drops", -1))]
 
 
 ## Each guest's own pack and purse on its machine as the host has them; coins conserved on the host.
@@ -799,7 +846,11 @@ func _save_live_and_restart() -> void:
 		var b0 := int(rec(dan).get("inv", {}).get("bread", 0))
 		await gcmd("g3", {"cmd": "show_player", "pid": host_pid})
 		await gcmd("g3", {"cmd": "press", "name": "OfferAccept%d" % int(o[0].id)})
-		check(await until(func(): return int(rec(dan).get("inv", {}).get("bread", 0)) == b0 + 1, 5.0), "he accepts after the restart: the loaf moves once")
+		var moved := await until(func(): return int(rec(dan).get("inv", {}).get("bread", 0)) == b0 + 1, 5.0)
+		if not moved:
+			print("diag he accepts: Dan's replies %s, toasts %s, at %s, the host at %s, his window %s" % [(gs("g3").get("replies", []) as Array).slice(-3),
+				(gs("g3").get("toasts", []) as Array).slice(-3), rec(dan).get("pos"), rec(host_pid).get("pos"), gs("g3").get("ui", {}).get("buttons", [])])
+		check(moved, "he accepts after the restart: the loaf moves once")
 		await gcmd("g3", {"cmd": "close"})
 	await consistent("after the host's restart", ["g2", "g3"])
 	await packs_agree("after the host's restart")

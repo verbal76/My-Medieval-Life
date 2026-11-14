@@ -23,6 +23,8 @@ var census := {}          # MP Batch B: {coins, goods} taken on demand, at load 
 var storm := 0.0          # MP Batch B: seconds left of saving every frame (a guest joining mid-save)
 var saves := 0
 var orphan_id := -1       # MP-PLAYER-FAMILY: the child family_orphan made
+var gaps: Array = []      # B42-NET-MP4-STALE (diagnostic): the host's frames longer than 1 s: [msec at the end, length ms, connected guests]
+var last_tick := 0
 var releases: Array = []  # MP-INTERACT-01: input events to release on the next frame (a key or button pressed by a command)
 var spot := Vector2.INF   # MP-INTERACT-01: where "stage" stood the players
 var why_last := ""        # the host's last "offer": "" or why not
@@ -144,6 +146,11 @@ func _press(node: Node, text: String) -> bool:
 
 
 func _process(delta: float) -> bool:
+	var now := Time.get_ticks_msec()
+	if last_tick > 0 and now - last_tick > 1000:
+		gaps.append([now, now - last_tick, main.net.by_peer.size() if main != null and main.net != null else -1])
+		gaps = gaps.slice(-20)
+	last_tick = now
 	if not started:
 		return false
 	main.world.host_player().hunger = 100.0          # the idle host does not starve while the test runs
@@ -368,9 +375,13 @@ func _commands() -> void:
 		"release":                                   # and are applied together, in one frame
 			holding = false
 			releasing = true
-		"freeze":                                    # the host's frame stops (Main and its children: no simulation, no snapshots) so
+		"freeze":                                    # the host's frame stops (Main: no simulation, no requests applied) so
 			main.process_mode = Node.PROCESS_MODE_DISABLED     # every copy can be compared with one moment of the host's world
+			# B42-NET-MP4-STALE: its network session goes on (heartbeats, snapshots of the frozen world): a comparison that outlasts
+			# TIMEOUT_MAX_MS under load must not make the guests take the host for gone and reconnect in the middle of it (ND-26)
+			main.net.process_mode = Node.PROCESS_MODE_ALWAYS
 		"thaw":
+			main.net.process_mode = Node.PROCESS_MODE_INHERIT
 			main.process_mode = Node.PROCESS_MODE_INHERIT
 		"put":                                       # one player (by pid) stands at x, y
 			var pp: PlayerState = w.player_by_pid(int(c.pid))
@@ -611,8 +622,15 @@ func _status() -> void:
 			"killings": w.relations.killings_of(ref), "jtag": _tagged(w, ref), "resting": p.rest_until >= 0.0, "quests": p.quests.size(),
 			"carts": w.carts.of(ref).size(), "id": w.person_id(p), "partner": p.partner, "children": p.children.duplicate(), "level": p.map_level}
 	var connected := []
+	var enet := {}                                   # B42-NET-MP4-STALE: each guest connection's ENet state (round trip, reliable data waiting)
 	for id in main.net.by_peer:
 		connected.append(int(main.net.by_peer[id]))
+		var pp: ENetPacketPeer = main.net.peer.get_peer(int(id)) if main.net.peer != null else null
+		if pp != null:
+			enet[str(int(main.net.by_peer[id]))] = {"peer": int(id), "rtt": pp.get_statistic(ENetPacketPeer.PEER_ROUND_TRIP_TIME),
+				"rtt_var": pp.get_statistic(ENetPacketPeer.PEER_ROUND_TRIP_TIME_VARIANCE), "last_rtt": pp.get_statistic(ENetPacketPeer.PEER_LAST_ROUND_TRIP_TIME),
+				"loss": pp.get_statistic(ENetPacketPeer.PEER_PACKET_LOSS), "throttle": pp.get_statistic(ENetPacketPeer.PEER_PACKET_THROTTLE),
+				"joining": main.net.joining.has(id)}
 	var plants := {}
 	for pl in w.plants:
 		plants["%d,%d" % [int(pl.x), int(pl.y)]] = str(pl.state)
@@ -625,7 +643,7 @@ func _status() -> void:
 	for pid2 in w.fauna.pens:
 		troughs[str(pid2)] = int(w.fauna.pens[pid2].trough)
 	var who: Label = main.ui.panel_body.find_child("HostPlayers", true, false)
-	var d := {"hosting": main.net.is_host(), "animals": animals, "ui_kind": main.ui.panel_kind, "ui_players": who.text if who != null and main.ui.panel_kind == "host" else "",
+	var d := {"enet": enet, "watchdog_drops": main.net.watchdog_drops, "gaps": gaps, "now": Time.get_ticks_msec(), "hosting": main.net.is_host(), "animals": animals, "ui_kind": main.ui.panel_kind, "ui_players": who.text if who != null and main.ui.panel_kind == "host" else "",
 		"running": main.running, "troughs": troughs, "seq": last_seq, "players": players, "connected": connected, "rejected": main.net.rejected,
 		"applied": main.net.applied, "host_pid": w.host_player().pid, "host_pos": [w.host_player().pos.x, w.host_player().pos.y],
 		"minutes": w.minutes, "seed": w.seed, "plants": plants, "coin_leak": w.total_coins() - coins0 - c_in,
