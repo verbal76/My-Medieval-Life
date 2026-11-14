@@ -147,3 +147,21 @@ Village, east gate (120, 57), along the road to Ashcombe (330, 40), 219 route ce
 
 The cause is not southbound-specific: east shows the same chunk-crossing stalls before and none after. South shows more
 of them because the walk is longer and crosses more chunks (1,390 route cells against 219).
+
+## Before and after: the route south, pair 2 (repeat)
+
+| | before (`e438f1e`, load 6.9 -> 7.2) | after (`aa155b3`, load 6.0 -> 6.8) |
+|---|---|---|
+| p50 / p90 / p99 ms | 15.3 / 25.2 / 57.4 | 6.8 / 15.0 / 33.8 |
+| frames over 33 / 50 / 100 / 200 ms | 854 / 279 / 29 / 9 | 205 / 45 / 5 / 2 |
+| max | 391.3 (autosave) | 375.0 (an hourly/daily frame at a site) |
+| over 50 ms from chunk prefetch | 153 (worst 152.0) | 0 |
+| over 50 ms from the autosave | 10 (worst 391.3) | 3 + 3 following (worst 116.3) |
+| tick frames p50 / others p50 | 29.7 / 15.2 | 17.2 / 6.3 |
+
+Both pairs, same direction: frames over 50 ms 222 -> 114 and 279 -> 45; over 200 ms 7 -> 1 and 9 -> 2; chunk-prefetch
+stalls 113 -> 0 and 153 -> 0. The after runs had the same or higher load as the before runs in pair 1, slightly lower
+in pair 2; the prefetch and autosave reductions are per-operation and do not depend on load. The autosave's main-thread
+cost per hour (pair 1): before 71-165 ms (10 saves), after 18-74 ms.
+No frame in any run took more than one world tick, and no frame-time clamp was added: the stalls were removed or moved
+off the main thread, not hidden.
