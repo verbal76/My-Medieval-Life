@@ -290,6 +290,45 @@ func after_craft(n: NPC, recipe: String) -> void:
 	f.contract_links.sweep()
 
 
+## B42 (reservation defect: eating and storing ignored claims; lead decision 2026-11-14 under LE-03 design s.6 "cannot silently
+## divert committed stock"): the units of `item` `ref` may eat or put away without touching what an open contract holds
+## (Contracts.held_for) or any reservation other than its own offers (an ask yields to any outflow, as to a sale; a stale one is cut
+## at the next reconcile). Pure.
+func spare_for_use(ref: String, item: String) -> int:
+	var hard := f.reservations.contract_held(ref, item)
+	for r in f.reservations.held_of(ref):
+		if str(r.item) == item and not str(r.purpose).begins_with("offer:"):
+			hard += int(r.qty)
+	return maxi(0, f.actors.holding(ref, item) - hard)
+
+
+## B42: `qty` claimed units of `item` used by `ref` in need (a villager with no other food eating them). Its contract-input
+## earmarks of the item shrink by them, newest first: each is consumed and the rest earmarked again within what is held, as
+## after_craft does; a contract's finished-goods hold is the contract's own (it follows its breach rules). Counted
+## "earmark_<why>" (units). The contract is not changed here.
+func used_in_need(ref: String, item: String, qty: int, why := "eaten_in_need") -> void:
+	var ids := []
+	for r in f.reservations.held_of(ref):
+		if str(r.item) == item and str(r.purpose).begins_with(EconContractLinks.PURPOSE):
+			ids.append(int(r.id))
+	ids.sort()
+	ids.reverse()
+	var left := qty
+	for rid in ids:
+		if left <= 0:
+			break
+		var r := f.reservations.get_record(rid)
+		var take := mini(left, int(r.qty))
+		left -= take
+		var cid := int(str(r.purpose).substr(EconContractLinks.PURPOSE.length()))
+		f.reservations.consume(rid)
+		var rest := mini(int(r.qty) - take, f.reservations.available(ref, item))
+		if rest > 0:
+			f.contract_links.earmark(cid, item, rest)
+	_stat("earmark_" + why, qty)
+	f.contract_links.sweep()
+
+
 ## LE-03 audit (tests, economy_sim): every integrity breach found now, sorted. Empty when consistent. Checks: no negative
 ## coins or goods for any villager, household pantry or the player; every open priced offer holds a reservation covering
 ## exactly what remains (asks: units; bids: units x price); no reservation is unbacked except by an outflow not yet
