@@ -105,14 +105,37 @@ func follow(center: Vector2, feet: Vector2, delta: float, budget := BUILD_PER_FR
 		if profiling:
 			tq = _pf("ow:recentre+free", tq)
 	var n := 0
-	while not _pending.is_empty() and (budget < 0 or n < budget):
-		var c: Vector2i = _pending.pop_front()
-		if not chunks.has(c):
-			_build(c)
-			n += 1
+	if budget < 0:
+		while not _job.is_empty():
+			_build_part()                          # a chunk begun in parts is finished first
+		while not _pending.is_empty():
+			var c: Vector2i = _pending.pop_front()
+			if not chunks.has(c):
+				_build(c)
+				n += 1
+	else:
+		# B42: the chunk being drawn goes on in parts until this frame's build budget is spent (at least one part a frame);
+		# at most `budget` new chunks are begun a frame, as before
+		var tb := Time.get_ticks_usec()
+		var done := 0
+		while true:
+			if slice_builds and done > 0 and Time.get_ticks_usec() - tb >= build_budget_usec:
+				break                                  # (checked before a new chunk is begun too)
+			if slice_builds and done > 0 and int(_job.get("stage", 0)) == 3:
+				break                                  # a chunk's settlement buildings (up to 8 ms) start a frame of their own
+			if _job.is_empty():
+				if _pending.is_empty() or n >= budget:
+					break
+				var c: Vector2i = _pending.pop_front()
+				if chunks.has(c):
+					continue
+				_build_begin(c)
+				n += 1
+			_build_part()
+			done += 1
 	if profiling:
 		tq = _pf("ow:build", tq)
-	if n == 0 and budget >= 0:
+	if n == 0 and _job.is_empty() and budget >= 0:
 		_prefetch(cc, center)
 		if profiling:
 			tq = _pf("ow:prefetch", tq)
@@ -292,6 +315,8 @@ func _draw_works(cc: Vector2i) -> void:
 	if c.is_empty():
 		return
 	var layer: Node2D = c.works
+	if layer == null:
+		return                                     # B42: a chunk still being drawn: its works come with its last part
 	for k in layer.get_children():
 		k.queue_free()
 	var cells: Array = (overworld.works.keys() + overworld.fixed_works.keys()).filter(func(w: Vector2i) -> bool: return Overworld.chunk_of(w) == cc)
@@ -337,12 +362,27 @@ func _steps_low_side(cell: Vector2i, ew: bool) -> int:
 	return -1 if ends[0] and not ends[1] else 1   # ends[0] is the + end: a top there puts the ground at the - end
 
 
+## Overworld.is_road(n), read from `own`'s padded road mask when n's chunk is not generated yet (road_tile).
+func _is_road(n: Vector2i, own: Overworld.Chunk) -> bool:
+	var nc := Overworld.chunk_of(n)
+	if own == null or overworld.cache.has(nc) or overworld.village.has_point(n) or nc == Vector2i(own.cx, own.cy):
+		return overworld.is_road(n)
+	var i := n.x - own.cx * Overworld.CHUNK + Overworld.PAD
+	var j := n.y - own.cy * Overworld.CHUNK + Overworld.PAD
+	if i < 0 or j < 0 or i >= Overworld.AREA or j >= Overworld.AREA:
+		return overworld.is_road(n)
+	return own.road[j * Overworld.AREA + i] == 1
+
+
 ## B25R1-Q1 and B25R1-011: the tile a cell's way is drawn with, by its look now (RoadWear.visual: the generated type, worn in
 ## by footfall, faded, grown over, paved, damaged): -1 for grass. A generated dirt road keeps its generated dirt path tile
 ## `dirt` (-1 where the generator drew none); the rest come from the road tile sheet (MapView atlas 4) or the dirt path set,
 ## for the connected sides: the generated ones (from `dirt`), worn ways beside it, and a settlement's street beside stone.
 ## Drawing only: the cell, its walkability and the chunk data are unchanged.
-func road_tile(cell: Vector2i, dirt: int) -> int:
+## B42: `own` (the chunk being drawn, holding `cell`): a neighbour across the chunk's edge in a chunk not generated yet is read
+## from `own`'s road mask, which covers PAD cells round it with the same roads (the neighbour's own mask agrees on every such
+## cell: 203,400 checked on seed 1), so drawing an edge cell does not generate the next chunk on the main thread (21-24 ms).
+func road_tile(cell: Vector2i, dirt: int, own: Overworld.Chunk = null) -> int:
 	if dirt >= 200000:
 		return dirt                                     # B25R1-018: a hill figure's chalk line or an earthwork's bank (no road)
 	var look := RoadWear.visual(overworld, cell)
@@ -362,9 +402,9 @@ func road_tile(cell: Vector2i, dirt: int) -> int:
 		var n: Vector2i = cell + [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)][k]
 		if overworld.road_state.has(n) and RoadWear.is_way(overworld, n):
 			bits |= 1 << k                              # a way worn in beside it
-		elif look.begins_with("stone") and (lanes.has(n) or (lanes.has(cell) and overworld.is_road(n))):
+		elif look.begins_with("stone") and (lanes.has(n) or (lanes.has(cell) and _is_road(n, own))):
 			bits |= 1 << k
-		elif dirt < 0 and not lanes.has(cell) and overworld.is_road(n):
+		elif dirt < 0 and not lanes.has(cell) and _is_road(n, own):
 			bits |= 1 << k                              # a worn cell joins the generated road beside it
 	if bits == 0:
 		bits = 10                                       # alone: the east-west piece, as the dirt path's default
@@ -485,8 +525,35 @@ func _layer(root: Node2D, z: int) -> TileMapLayer:
 var build_usec := 0                   # time spent building chunks (_build), for the perf harness (grass_shot)
 
 
+## B42 (B25-MOVE-STUTTER-INV): a chunk is drawn in parts, so no frame of the walk draws a whole one (median 7 ms, over
+## 50 ms on a loaded machine): its cells ROWS_PER_PART rows at a time, then its grass tufts the same way, then its trees, then
+## its settlement buildings and works (the order and the layers of the whole build, so the drawn result is the same). follow
+## spends at most build_budget_usec a frame on it (at least one part). The chunk is in `chunks` from its first part, so every
+## later change (a road, live water, a felled tree) reaches it as it reaches a loaded chunk, and each part draws the world
+## as it is then: the result is the chunk drawn whole at the end (chunk_slice_test compares every layer). _build draws a
+## chunk whole at once (a first view, a teleport, tests).
+const ROWS_PER_PART := 4
+var slice_builds := true
+var build_budget_usec := 3000
+var built_ungenerated := 0                     # chunks drawn whose data was not ready (probes, tests)
+var _job := {}                                 # the chunk being drawn: {cc, ch, lanes, stage (0 cells, 1 grass, 2 trees, 3 the rest), row}
+
+
 func _build(cc: Vector2i) -> void:
+	if _job.get("cc", null) == cc:
+		pass                                   # (begun in parts: finished below)
+	else:
+		while not _job.is_empty():
+			_build_part()
+		_build_begin(cc)
+	while not _job.is_empty():
+		_build_part()
+
+
+func _build_begin(cc: Vector2i) -> void:
 	var t0 := Time.get_ticks_usec()
+	if not overworld.cache.has(cc):
+		built_ungenerated += 1                 # (not prepared ahead: generated here, on the main thread)
 	var ch := overworld.get_chunk(cc)
 	var root := Node2D.new()
 	root.name = "chunk_%d_%d" % [cc.x, cc.y]
@@ -499,48 +566,87 @@ func _build(cc: Vector2i) -> void:
 	var path := _layer(root, 0)
 	var objects := _layer(root, 0)
 	var tops := _layer(root, 10)
-	var x0 := cc.x * Overworld.CHUNK
-	var y0 := cc.y * Overworld.CHUNK
-	var lanes := RegionRoads.lane_cells(overworld)
-	var live_now := chunk_live(cc)
-	_live[cc] = live_now
-	for y in Overworld.CHUNK:
-		for x in Overworld.CHUNK:
-			var i := y * Overworld.CHUNK + x
-			var cell := Vector2i(x0 + x, y0 + y)
-			if ch.ground[i] >= 0:
-				set_tile(ground, cell, water_value(ch.ground[i], live_now) if ch.water[i] != 0 else ch.ground[i])
-			if ch.path[i] >= 0 or lanes.has(cell) or overworld.road_state.has(cell):
-				set_tile(path, cell, road_tile(cell, ch.path[i]))
-			if ch.deco[i] >= 0 and not overworld.rock_gone(cell) and not overworld.flower_gone(cell):    # a broken boulder or a picked flower stays gone
-				var v: int = ch.deco[i]
-				if v == int(overworld.tiles.rock) and ResourceNodes.boulder_small(cell) and sources.size() > 3:
-					v = MapView.SMALL_BOULDER_TILE
-				set_tile(objects, cell, v)
-	_lay_grass(cc, ch, grass, lanes)
-	if tree_sink != null:
-		tree_sink.load_chunk(cc, overworld.chunk_trees(cc))
-	var site_above := _draw_site_buildings(root, cc)
-	var works := Node2D.new()             # B14-07: steps, stairs and walkways, over the ground and the cliff's rim
-	works.name = "works"
-	root.add_child(works)
-	chunks[cc] = {"root": root, "ground": ground, "grass": grass, "path": path, "objects": objects, "tops": tops, "works": works, "site_above": site_above}
+	_live[cc] = chunk_live(cc)
+	chunks[cc] = {"root": root, "ground": ground, "grass": grass, "path": path, "objects": objects, "tops": tops, "works": null, "site_above": []}
 	above_layers.append(tops)
-	_draw_works(cc)
-	if _lift_rect.has_area():              # B25R1-022: a lifted roof reaching into this new chunk lifts there too
-		var r := _lift_rect
-		var a := _lift_alpha
-		_site_roof_restore()
-		_site_roof_lift(r)
-		_lift_alpha = a
-		_site_roof_apply()
+	_job = {"cc": cc, "ch": ch, "lanes": RegionRoads.lane_cells(overworld), "stage": 0, "row": 0}
+	build_usec += Time.get_ticks_usec() - t0
+	if profiling:
+		_pf("ow:build(begin)", t0)
+
+
+func _build_part() -> void:
+	var t0 := Time.get_ticks_usec()
+	var cc: Vector2i = _job.cc
+	var ch: Overworld.Chunk = _job.ch
+	var c: Dictionary = chunks[cc]
+	var lanes: Dictionary = _job.lanes
+	var r0: int = _job.row
+	var r1 := mini(r0 + ROWS_PER_PART, Overworld.CHUNK)
+	if int(_job.stage) == 0:
+		var x0 := cc.x * Overworld.CHUNK
+		var y0 := cc.y * Overworld.CHUNK
+		var live_now := bool(_live.get(cc, true))    # (as _live_step leaves it: water drawn before a change is redrawn there)
+		var ground: TileMapLayer = c.ground
+		var path: TileMapLayer = c.path
+		var objects: TileMapLayer = c.objects
+		for y in range(r0, r1):
+			for x in Overworld.CHUNK:
+				var i := y * Overworld.CHUNK + x
+				var cell := Vector2i(x0 + x, y0 + y)
+				if ch.ground[i] >= 0:
+					set_tile(ground, cell, water_value(ch.ground[i], live_now) if ch.water[i] != 0 else ch.ground[i])
+				if ch.path[i] >= 0 or lanes.has(cell) or overworld.road_state.has(cell):
+					set_tile(path, cell, road_tile(cell, ch.path[i], ch))
+				if ch.deco[i] >= 0 and not overworld.rock_gone(cell) and not overworld.flower_gone(cell):    # a broken boulder or a picked flower stays gone
+					var v: int = ch.deco[i]
+					if v == int(overworld.tiles.rock) and ResourceNodes.boulder_small(cell) and sources.size() > 3:
+						v = MapView.SMALL_BOULDER_TILE
+					set_tile(objects, cell, v)
+	elif int(_job.stage) == 1:
+		_lay_grass(cc, ch, c.grass, lanes, r0, r1)
+	elif int(_job.stage) == 2:
+		if tree_sink != null:
+			tree_sink.load_chunk(cc, overworld.chunk_trees(cc))
+		_job.stage = 3
+		build_usec += Time.get_ticks_usec() - t0
+		if profiling:
+			_pf("ow:build(trees)", t0)
+		return
+	else:
+		var root: Node2D = c.root
+		c.site_above = _draw_site_buildings(root, cc)
+		var works := Node2D.new()             # B14-07: steps, stairs and walkways, over the ground and the cliff's rim
+		works.name = "works"
+		root.add_child(works)
+		c.works = works
+		_draw_works(cc)
+		if _lift_rect.has_area():              # B25R1-022: a lifted roof reaching into this new chunk lifts there too
+			var r := _lift_rect
+			var a := _lift_alpha
+			_site_roof_restore()
+			_site_roof_lift(r)
+			_lift_alpha = a
+			_site_roof_apply()
+		_job = {}
+		build_usec += Time.get_ticks_usec() - t0
+		if profiling:
+			_pf("ow:build(sites, works)", t0)
+		return
+	if profiling:
+		_pf("ow:build(cells)" if int(_job.stage) == 0 else "ow:build(grass)", t0)
+	if r1 >= Overworld.CHUNK:
+		_job.stage = int(_job.stage) + 1
+		_job.row = 0
+	else:
+		_job.row = r1
 	build_usec += Time.get_ticks_usec() - t0
 
 
 ## B25R1-Q8: the low grass tufts of a chunk (MapView.grass_tuft), on open flat grass only: no road, worn way or street, no
 ## water, no rock, flower or bush, nothing solid (trees, cliffs, a raised rim), no settlement building or yard (a styled house's
 ## plot included), no homestead, no steps or way through a rim. Drawing only.
-func _lay_grass(cc: Vector2i, ch: Overworld.Chunk, layer: TileMapLayer, lanes: Dictionary) -> void:
+func _lay_grass(cc: Vector2i, ch: Overworld.Chunk, layer: TileMapLayer, lanes: Dictionary, row_from := 0, row_to := Overworld.CHUNK) -> void:
 	if not has_grass_art():
 		return
 	var t0 := Time.get_ticks_usec()
@@ -567,7 +673,7 @@ func _lay_grass(cc: Vector2i, ch: Overworld.Chunk, layer: TileMapLayer, lanes: D
 	var changed: Dictionary = overworld.changes
 	var ways: Dictionary = overworld.works
 	var fixed_ways: Dictionary = overworld.fixed_works
-	for y in Overworld.CHUNK:
+	for y in range(row_from, row_to):            # (B42: a chunk drawn in parts lays its tufts a few rows at a time)
 		for x in Overworld.CHUNK:
 			var cell := box.position + Vector2i(x, y)
 			var h := Overworld.hash32(seed, cell.x, cell.y, GRASS_SALT)      # MapView.grass_tuft, inlined (a chunk is 1024 cells)
@@ -835,6 +941,8 @@ func _site_roof_restore() -> void:
 
 
 func _free(cc: Vector2i) -> void:
+	if _job.get("cc", null) == cc:
+		_job = {}                             # B42: a chunk freed while being drawn is not finished
 	canopy.restore_all()                  # faded tiles go back to their layers before the layer goes
 	_site_roof_restore()                  # (B25R1-022: and a lifted site roof; lifted again next frame if still inside)
 	if tree_sink != null:
