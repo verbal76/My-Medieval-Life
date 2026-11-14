@@ -10,7 +10,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 915 (514 of them still open) |
+| Entries added since | | 919 (514 of them still open) |
 | **Open entries now** (rules excluded) | | **672** |
 | Open entries moved to another build | | 15 |
 
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (915)
+## Added since the baseline (919)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -317,9 +317,13 @@ None.
 | B42-NET-MP4-STALE | net_mp4_test fails on 0bbee94 and later: after the host is killed or restarted a guest's copy differs (stale values) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | B42-Q-EMIG-WORK | Should leaving for work be judged per person (no job and no earnings for about a week) instead of per household? | decision | APPROVED | unassigned |
 | B42-Q-JOB02 | Approve the job-board offered-pay rules (J2-Q1..Q7 as built) and switch them on only after a four-seed with/without year-long comparison? | decision | APPROVED | unassigned |
+| B42-Q-MP02-REACH | Must a multiplayer guest be within 24 tiles of its stall to manage it? | decision | APPROVED | unassigned |
+| B42-Q-MP02-TIER3 | May a tier-3 sharing partner run another player's stall or shop? | decision | APPROVED | unassigned |
+| B42-Q-PANTRY-TIER | Which sharing tier lets another player see a player household's pantry? | decision | APPROVED | unassigned |
 | B42-Q-POP-LEVERS | Change population growth levers (birth rate, hunger arrivals, 2% young homesteading, deposit sizes) for Build 42? | decision | APPROVED | unassigned |
 | B42-Q-REG08-CAP | Accept the MML-REG-08 expired-delivery refund capped at what the payer's heir holds (never creating coins)? | decision | APPROVED | unassigned |
 | B42-Q-RELEASE-TESTS | Release gate: start a missing full test run, cancellation on concurrent runs, evidence retention | decision | APPROVED | unassigned |
+| B42-Q-VILLAGER-PANTRY | Keep villager households' pantries visible to multiplayer guests? | decision | APPROVED | unassigned |
 | B42-REG08-SHORTFALL | Courier refund cap: record any unpaid shortfall visibly and auditably (REG-08) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | B42-RELEASE-EXACT-SHA | Release requires all mandatory tests to pass on the exact packaged commit | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
 | BAN-B | Expansion 23 BAN-B: faction identity, membership, hierarchy, safehouse ownership and persistent faction resources | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |

@@ -17,7 +17,7 @@ Before any significant change, find its record here and follow `Governing record
 
 | Lifecycle | Records |
 |---|---|
-| ACTIVE | 919 |
+| ACTIVE | 923 |
 | SUPERSEDED | 43 |
 | COMPLETED | 246 |
 | REJECTED | 3 |
@@ -142,9 +142,13 @@ Before any significant change, find its record here and follow `Governing record
 | B25R2-VER-01 | decision | How should the next Play Test Build One package identify itself? |  |
 | B42-Q-EMIG-WORK | decision | Should leaving for work be judged per person (no job and no earnings for about a week) instead of per househol |  |
 | B42-Q-JOB02 | decision | Approve the job-board offered-pay rules (J2-Q1..Q7 as built) and switch them on only after a four-seed with/wi |  |
+| B42-Q-MP02-REACH | decision | Must a multiplayer guest be within 24 tiles of its stall to manage it? |  |
+| B42-Q-MP02-TIER3 | decision | May a tier-3 sharing partner run another player's stall or shop? |  |
+| B42-Q-PANTRY-TIER | decision | Which sharing tier lets another player see a player household's pantry? |  |
 | B42-Q-POP-LEVERS | decision | Change population growth levers (birth rate, hunger arrivals, 2% young homesteading, deposit sizes) for Build  |  |
 | B42-Q-REG08-CAP | decision | Accept the MML-REG-08 expired-delivery refund capped at what the payer's heir holds (never creating coins)? |  |
 | B42-Q-RELEASE-TESTS | decision | Release gate: start a missing full test run, cancellation on concurrent runs, evidence retention |  |
+| B42-Q-VILLAGER-PANTRY | decision | Keep villager households' pantries visible to multiplayer guests? |  |
 | BANDIT-Q | decision | Should outlaws ever return once the band is wiped out? |  |
 | BARBER-Q | decision | Barber: staffing, place, price and what counts as a haircut |  |
 | BRANCH-POL-Q1 | decision | Records line and code line: keep wip/requirements-control (records, lead-written) separate from wip/expansion2 |  |

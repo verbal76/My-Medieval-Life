@@ -12222,6 +12222,90 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "B42-Q-MP02-REACH",
+   "kind": "decision",
+   "title": "Must a multiplayer guest be within 24 tiles of its stall to manage it?",
+   "description": "Must a multiplayer guest be within 24 tiles of its stall to manage it?",
+   "source": "docs/audits/2026-11-14_B42_LEAD_LOG.md",
+   "owner_wording": null,
+   "owner_answer": "Within reach (Recommended): keep the 24-tile rule for guests.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/audits/2026-11-14_B42_LEAD_LOG.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner AskUserQuestion answer, 2026-11-14"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B42-Q-MP02-TIER3",
+   "kind": "decision",
+   "title": "May a tier-3 sharing partner run another player's stall or shop?",
+   "description": "May a tier-3 sharing partner run another player's stall or shop?",
+   "source": "docs/audits/2026-11-14_B42_LEAD_LOG.md",
+   "owner_wording": null,
+   "owner_answer": "Tier 3 partners too: a tier-3 partner can also manage the stall.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/audits/2026-11-14_B42_LEAD_LOG.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner AskUserQuestion answer, 2026-11-14"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B42-Q-PANTRY-TIER",
+   "kind": "decision",
+   "title": "Which sharing tier lets another player see a player household's pantry?",
+   "description": "Which sharing tier lets another player see a player household's pantry?",
+   "source": "docs/audits/2026-11-14_B42_LEAD_LOG.md",
+   "owner_wording": null,
+   "owner_answer": "Tier 2 and 3: moderate sharing also shows the pantry.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/audits/2026-11-14_B42_LEAD_LOG.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner AskUserQuestion answer, 2026-11-14"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B42-Q-POP-LEVERS",
    "kind": "decision",
    "title": "Change population growth levers (birth rate, hunger arrivals, 2% young homesteading, deposit sizes) for Build 42?",
@@ -12301,6 +12385,34 @@
      "date": "2026-11-14",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner answer 2026-11-14 (Build 42 lead session)"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B42-Q-VILLAGER-PANTRY",
+   "kind": "decision",
+   "title": "Keep villager households' pantries visible to multiplayer guests?",
+   "description": "Keep villager households' pantries visible to multiplayer guests?",
+   "source": "docs/audits/2026-11-14_B42_LEAD_LOG.md",
+   "owner_wording": null,
+   "owner_answer": "Keep visible (Recommended): villagers' pantries are part of the shared world; only player households are private.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/audits/2026-11-14_B42_LEAD_LOG.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner AskUserQuestion answer, 2026-11-14"
     }
    ],
    "lifecycle": "ACTIVE"
