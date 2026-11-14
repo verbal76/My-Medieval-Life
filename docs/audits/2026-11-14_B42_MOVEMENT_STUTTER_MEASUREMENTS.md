@@ -230,3 +230,28 @@ equality.
 - frame times (printed, not asserted; load 7-8): after, frames drawing over 10 / 15 / 20 / 30 ms: 3 / 0 / 0 / 0, worst
   12.5. Whole: 13 / 8 / 5 / 1, worst 38.2. On `9dffa6e` itself: 12 / 4 / 2 / 2, worst 53.1. The remaining 9-12 ms frames
   are single 2-row parts of 70-90 tiles, i.e. preemption at load 7-8.
+
+## Before and after on the probe walks (part 2)
+
+Before = `9dffa6e` (integration: fixes 1-3); after = `3777e87`/`b4fc55d` (+ chunks drawn in parts; the later commit is
+docs only). Headless, fixed 60 fps, the first 130 frames (the first view) skipped. `ow:build` = main-thread time drawing
+chunks in a frame.
+
+| run (load at start) | ow:build frames | p50 / p90 / max ms | ow:build over 10 / 20 / 50 ms | all frames over 33 / 50 / 100 ms |
+|---|---|---|---|---|
+| south 1 before (8.7) | 224 | 6.1 / 14.2 / 47.4 | 49 / 8 / 0 | 276 / 78 / 7 |
+| south 1 after (7.5) | 565 | 3.1 / 6.3 / 23.4 | 14 / 1 / 0 | 298 / 81 / 11 |
+| south 2 before (7.4) | 221 | 4.5 / 9.5 / 31.8 | 21 / 4 / 0 | 115 / 24 / 5 |
+| south 2 after (6.1) | 687 | 4.1 / 6.9 / 24.6 | 25 / 1 / 0 | 460 / 104 / 13 |
+| east before (6.8) | 47 | 7.8 / 12.8 / 15.3 | 8 / 0 / 0 | 67 / 17 / 2 |
+| east after (5.0) | 149 | 4.5 / 6.5 / 14.3 | 2 / 0 / 0 | 97 / 17 / 3 |
+
+The chunk drawing is spread out: the same work over about 2.5-3 times as many frames. Its p90 is about halved; its worst
+is 47.4 -> 23.4 and 31.8 -> 24.6; frames over 20 ms are 8 -> 1 and 4 -> 1. The remaining 10-25 ms drawing frames are a
+3 ms budget plus one small part, inflated by preemption at load 5-9: by count, no frame places more than 588 tiles.
+
+**Whole-frame counts did not improve measurably.** They are now set by the causes left out of Build 42 (the 0.5 s tick,
+presence, villagers' plans, dawn/17:00) and by the machine's load, which varied between back-to-back runs: south 2
+"before" ran in a quiet spell, with fewer frames over 33 ms than either after run. This fix removes the drawing's share
+of the long frames, about 8 frames over 20 ms per walk. It is not a step change like fix 1 (prefetch: 113-153 frames
+over 50 ms -> 0).
