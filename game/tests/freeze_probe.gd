@@ -38,7 +38,8 @@ var keys_world := ["hourly (incl. daily)", "villagers (all)", "villagers: decide
 var keys_main := ["pre (audio, view report)", "world.update", "player_step", "projectiles, look, aerial", "autosave", "fx",
 		"sync_sprites (incl. ow_view.follow)", "levels, marks, outlines", "hud",
 		"ss:doors, pose, signs, canopy", "ss:tree_view", "ss:ow_view.follow",
-		"ps:pre", "ps:gather..reach", "ps:travel, paving, route", "ps:speed", "ps:try_move, slide", "ps:portal, sprite", "ps:find_target"]
+		"ps:pre", "ps:gather..reach", "ps:travel, paving, route", "ps:speed", "ps:try_move, slide", "ps:portal, sprite", "ps:find_target",
+		"ft:npcs present", "ft:settlement folk", "ft:travellers", "ft:homesteads", "ft:players", "ft:containers", "ft:shop posts", "ft:desks", "ft:loot", "ft:fauna", "ft:cells (farm, deposit, tree, plant, fields)", "ft:fit, prospect, pit, cart, works", "ft:stations, plots, pens", "ft:grindstone, courier, caravan", "ft:buildings", "ft:chests, furniture, stall, manor", "ft:order, prompt"]
 var keys_ow := ["ow:recentre+free", "ow:build", "ow:prefetch", "ow:road_step", "ow:live_step", "ow:works+homes", "ow:roofs", "ow:canopy"]
 var made_seen := 0
 var made_seen_v := 0
@@ -101,7 +102,6 @@ func _begin() -> void:
 		print("SITE %s %s at %s (from the village %s)" % [st.name, st.kind, str(st.center), str(Vector2(st.center) - home)])
 	# inside the village first: from where a new game puts the player to the south gate, by the game's own route finder
 	var r0 := RegionTravel.plan(w, Vector2i(w.player.pos.floor()), gate)
-	var r := RegionTravel.plan(w, gate, Vector2i(site.center))
 	route = PackedVector2Array()
 	if bool(r0.get("ok", false)):
 		route.append_array(r0.cells)

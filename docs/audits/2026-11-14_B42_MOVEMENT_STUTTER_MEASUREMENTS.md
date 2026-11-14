@@ -42,3 +42,10 @@ First finding: `_player_step` is the largest every-frame cost on the trail and i
 village (2.9 ms a frame in the village bin to 8.1-8.3 ms 650-730 tiles south), while memory stays flat (490-498 MB:
 no correlation with Agent M's KI-08 leak on this walk). At fixed 60 fps the substepping of `8c78e24` makes one step a
 frame, so it is not the substeps. Being broken down next (`ps:*` columns).
+
+### Run base_south2 (same route and commit, load 6.8 rising to 7.1)
+
+19,552 frames. `_player_step` broken down (mean ms a frame, 30 s bins): everything but `_find_target` is under 0.25 ms;
+`_find_target` is 4.9 (first bin, start-up), 2.8, 4.5, 4.2, 5.2, 5.5, 6.3, 6.0, 6.0, 6.7, 7.6 ms. It runs every frame
+(the "what can I use here" prompt) and grows with the walk. Per-bin p50/p90 and spikes repeat run 1's pattern
+(p50 8.5-17.9 ms, frames over 50 ms 8-42 a bin, over 100 ms 1-8 a bin). Memory flat 492-500 MB.

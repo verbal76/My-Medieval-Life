@@ -3141,6 +3141,7 @@ func _find_target() -> void:
 	var p := world.player
 	var probe := p.pos + facing_vec() * World.TARGET_PROBE      # the reach is core's (DVW-A12 R15)
 	var near: Array = []        # [distance to the probe, order, target]
+	var tf := Time.get_ticks_usec() if frame_profiling else 0      # B42 (diagnostics only)
 	for n: NPC in world.present(p.pos, 2.5):
 		var d := n.pos.distance_to(probe)
 		if d < 1.5 and world.reaches(p.pos, n.pos):
@@ -3156,6 +3157,8 @@ func _find_target() -> void:
 					near.append([d, near.size(), {"kind": "info", "label": "%s eyes you warily" % n.name, "text": no}])
 			else:
 				near.append([d, near.size(), {"kind": "npc", "npc": n, "label": "Talk to %s" % _who(n)}])
+	if frame_profiling:
+		tf = _fp("ft:npcs present", tf)
 	var settle: Dictionary = world.map.overworld.site_at(Vector2i(p.pos.floor())) if world.map.overworld != null else {}
 	if not settle.is_empty():                        # REGION-NAV-01: a settlement's keepers at their doors (SettlementFolk)
 		for person in SettlementFolk.people(world, str(settle.id)):
@@ -3166,15 +3169,23 @@ func _find_target() -> void:
 			if d < 1.5:
 				near.append([d, near.size(), {"kind": "keeper", "person": person, "label": "Talk to %s (%s)" % [person.name,
 					"official" if str(person.role) == "official" else str(person.trade)]}])
+	if frame_profiling:
+		tf = _fp("ft:settlement folk", tf)
 	if countryside != null and world.player_level == 0:     # B25R1-002: a traveller on the road
 		for e: Dictionary in countryside.travellers_near(probe, 1.5, world.minutes):
 			if str(e.kind) != "wagon":
 				near.append([(e.pos as Vector2).distance_to(probe), near.size(), {"kind": "traveller", "t": e, "label": "Talk to the %s" % str(e.kind)}])
+	if frame_profiling:
+		tf = _fp("ft:travellers", tf)
 	if world.homesteads != null:                     # B25R1-010: a homestead's frame, chest and bed, and the claiming of open country
 		for ht: Dictionary in world.homesteads.player_targets(p, probe, facing_vec().y < -0.5):
 			near.append([float(ht.d), near.size(), ht])
+	if frame_profiling:
+		tf = _fp("ft:homesteads", tf)
 	for pt in _player_targets(probe):                # MP-INTERACT-01: another player in reach, among the people
 		near.append([pt[0], near.size(), pt[1]])
+	if frame_profiling:
+		tf = _fp("ft:players", tf)
 	for c in world.containers:
 		var at := Vector2(int(c.x) + 0.5, int(c.y) + 0.5)
 		if at.distance_to(p.pos) > World.CONTAINER_REACH:
@@ -3182,6 +3193,8 @@ func _find_target() -> void:
 		var d := at.distance_to(probe)
 		if d < 1.5 and world.reaches(p.pos, at):
 			near.append([d, near.size(), _container_target(c)])
+	if frame_profiling:
+		tf = _fp("ft:containers", tf)
 	for post in _shop_posts():
 		if not post.stall:
 			continue                       # GP-BUSINESS-DESK: a counter is a desk, offered only beside it and facing it (below)
@@ -3193,12 +3206,16 @@ func _find_target() -> void:
 				var sd := BusinessDesks.by_id(world, str(post.id))
 				near.append([d, near.size(), _desk_target(sd, _shop_target(post)) if not sd.is_empty() else _shop_target(post)])
 				break
+	if frame_profiling:
+		tf = _fp("ft:shop posts", tf)
 	for dk in BusinessDesks.faced_all(world, p.pos, facing_vec()):
 		if str(dk.kind) == "counter":
 			var cp := {"id": str(dk.post), "stall": false}
 			near.append([(Vector2(dk.at) + Vector2(0.5, 0.5)).distance_to(probe), near.size(), _desk_target(dk, _shop_target(cp))])
 		elif str(dk.kind) == "front" and not world.holds(world.acting_ref(), world.buildings[dk.building]):
 			near.append([(Vector2(dk.at) + Vector2(0.5, 0.5)).distance_to(probe), near.size(), _desk_target(dk, _front_target(dk))])
+	if frame_profiling:
+		tf = _fp("ft:desks", tf)
 	for i in world.loot.size():
 		if World.level_of(world.loot[i]) != 0:
 			continue                       # left below the surface (MIN-A)
@@ -3207,12 +3224,16 @@ func _find_target() -> void:
 			var from: String = world.loot[i].from
 			var what := _loot_text(world.loot[i])
 			near.append([minf(d, 1.4), near.size(), {"kind": "loot", "i": i, "label": ("Take %s from %s" % [what, from]) if from.begins_with("the ") and what != "" else ("Take what is left of %s" % from) if from.begins_with("the ") else ("Search %s's belongings" % from)}])
+	if frame_profiling:
+		tf = _fp("ft:loot", tf)
 	for a: Animal in world.fauna.near(probe, 1.2):
 		var d := a.pos.distance_to(probe)
 		if d < 1.5 and world.reaches(p.pos, a.pos):
 			var what := "%s (%s%s)" % [a.label().to_lower(), "young, " if not a.adult(world.minutes) else "", "male" if a.sex == "m" else "female"]
 			var mine: bool = not a.wild() and world.fauna.pens.has(a.area) and world.fauna.pens[a.area].get("player", false)
 			near.append([d, near.size(), {"kind": "animal", "animal": a, "label": ("A " if a.wild() else ("Your " if mine else "The keeper's ")) + what + (": attack to hunt it" if a.wild() else "")}])
+	if frame_profiling:
+		tf = _fp("ft:fauna", tf)
 	near.sort_custom(func(x, y): return x[0] < y[0] or (x[0] == y[0] and x[1] < y[1]))
 	var cands: Array = near.map(func(x): return x[2])
 	var c := Vector2i(floori(probe.x), floori(probe.y))
@@ -3264,6 +3285,8 @@ func _find_target() -> void:
 				break
 		if not front.is_empty():
 			break
+	if frame_profiling:
+		tf = _fp("ft:cells (farm, deposit, tree, plant, fields)", tf)
 	if not front.is_empty():
 		cands.append(front)
 		cands.append_array(farm_more)
@@ -3274,6 +3297,8 @@ func _find_target() -> void:
 	here.append_array(_pit_targets(cands))                # MIN-E: the player's own open pit and spoil heaps, or ground to stake one
 	here.append_array(_cart_targets(0))
 	here.append_array(_works_targets())                   # MIN-F: track in the mine's yard
+	if frame_profiling:
+		tf = _fp("ft:fit, prospect, pit, cart, works", tf)
 	for id in world.stations:
 		var st: Dictionary = world.stations[id]
 		if st.type in World.PLAYER_STATIONS and World.station_in_reach(st, p.pos, facing_vec()):     # GP-ANVIL: on its use cell, or beside it facing it
@@ -3305,6 +3330,8 @@ func _find_target() -> void:
 					if spare != null:
 						lab = "Buy a %s%s %s from the keeper (%d coins)" % ["young " if not spare.adult(world.minutes) else "", "female" if sx == "f" else "male", spare.label().to_lower(), world.farm.animal_price(spare)]
 					here.append({"kind": "pen_buy", "pen": pen, "sex": sx, "id": "buy_" + sx, "label": lab})
+	if frame_profiling:
+		tf = _fp("ft:stations, plots, pens", tf)
 	var gu = map.data.get("spawns", {}).get("grindstone_use")
 	if gu != null and world.player_level == 0 and (Vector2(int(gu[0]), int(gu[1])) + Vector2(0.5, 0.5)).distance_to(p.pos) < 1.3:
 		# GP-SHARPEN: the smithy's grinding wheel: each worn weapon carried, sharpened by the smith for a coin
@@ -3331,6 +3358,8 @@ func _find_target() -> void:
 		for o in CaravanFood.offers(world):
 			var no_food := CaravanFood.refusal(world, p, str(o.id))
 			here.append({"kind": "caravan_food", "item": str(o.id), "id": "food_" + str(o.id), "label": ("Buy %s from the caravan (%d coins, %d left)" if no_food == "" else "The caravan's %s (%d coins, %d left): " + no_food) % [GameData.item_name(str(o.id)).to_lower(), int(o.price), int(o.left)]})
+	if frame_profiling:
+		tf = _fp("ft:grindstone, courier, caravan", tf)
 	# a house the family holds but does not live in, or one the manor offers: its door
 	for id in world.buildings:
 		var b: Dictionary = world.buildings[id]
@@ -3379,6 +3408,8 @@ func _find_target() -> void:
 				elif at.distance_to(probe) < 0.9 and sp.kind == "chest":
 					here.append({"kind": "home", "label": "Your chest: store things, rest", "cell": Vector2i(int(sp.at[0]), int(sp.at[1]))})
 	# PL2-002: other chests in the building the player stands in (the family chest is handled above)
+	if frame_profiling:
+		tf = _fp("ft:buildings", tf)
 	var inside := world.place_of(p.pos)
 	if inside != "" and inside != p.home:
 		for cu in world.chests.units_in(inside):
@@ -3414,6 +3445,8 @@ func _find_target() -> void:
 	# beside it comes after it (Q / Tab, the D-pad or the prompt's Next reach them); Talk (T, Y, or tapping them) is for the
 	# nearest villager. With only people or animals in reach, Use talks to the nearest as before. Reach, ownership and the
 	# refusals are unchanged: this only orders what was already on offer.
+	if frame_profiling:
+		tf = _fp("ft:chests, furniture, stall, manor", tf)
 	talk_alt = {}
 	cands = use_order(cands)
 	if not cands.is_empty() and not str(cands[0].kind) in ["npc", "shop", "player"]:
@@ -3470,6 +3503,10 @@ const CHARACTER_KINDS := ["npc", "animal", "player"]
 ## "Mining"...), and once the target's window has been opened (prompt_done) it stays down after the window closes, until
 ## that target is chosen again: another target taken (or none: walking away), Next / Q / Tab / the D-pad, or Use again.
 ## Standing beside a thing is not using it.
+	if frame_profiling:
+		_fp("ft:order, prompt", tf)
+
+
 func _prompt(text: String, more := false) -> void:
 	var k := _target_key(target) if not target.is_empty() else ""
 	if prompt_done != "" and k != prompt_done:
