@@ -184,6 +184,8 @@ jobs:
           res://tests/player_journey_test.gd   # Stage E (B25): a player's journey through the title, creation, work, trade, food, save and days
           res://tests/extra_life_session_test.gd   # Extra Life preview (2026-11-12): a continuous session: talk, pack, fell, mine, hunt, craft, reeve, trade, eat, save and Continue
           res://tests/d2_talk_unreachable_test.gd   # D2 (Extra Life preview): a walk to a villager the player stands still against is given up, with a word
+          res://tests/stream_tunnel_test.gd     # Build 41 stream fix: a long frame never carries the player through a wall
+          res://tests/tile_premake_test.gd      # Build 41 stream fix: every tile the simulation draws in play is made at start
           res://tests/overworld_test.gd
           res://tests/atlas_test.gd
           res://tests/settlement_folk_test.gd

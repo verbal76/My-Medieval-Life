@@ -317,5 +317,7 @@
  "player_journey_test": 80,
  "extra_life_session_test": 25,
  "d2_talk_unreachable_test": 7,
+ "stream_tunnel_test": 5,
+ "tile_premake_test": 6,
  "demo_journey_test": 60
 }
