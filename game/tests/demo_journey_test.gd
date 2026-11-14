@@ -9,7 +9,8 @@ extends SceneTree
 ##   godot --headless --path game --script res://tests/demo_journey_test.gd
 
 const DIR := "user://test_saves/demo_journey_test/"
-const SAVE := DIR + "save1.json"
+const SAVE := DIR + "save1.json"                  # the full game's slot (main.save_path sets it)
+const DEMO_SAVE := DIR + "demo/save1.json"        # B42-DEMO-SAVE-OVERWRITE: the demo's own slot beside it (Demo.slot)
 const DEV_WORDS := ["debug", "cheat", "god mode", "console", "teleport", "warp", "spawn", "give all", "developer", "test"]
 
 var main
@@ -35,8 +36,19 @@ func _init() -> void:
 	main = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
 	main.save_path = SAVE
+	_wipe(DIR)                                    # a fresh test folder (never a player's save: user://test_saves/)
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(DIR))
 	process_frame.connect(_run, CONNECT_ONE_SHOT)
+
+
+func _wipe(dir: String) -> void:
+	if not DirAccess.dir_exists_absolute(dir):
+		return
+	for d in DirAccess.get_directories_at(dir):
+		_wipe(dir.path_join(d))
+	for f in DirAccess.get_files_at(dir):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(dir.path_join(f)))
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(dir))
 
 
 # ------------------------------------------------------------------ export presets ----------------
@@ -114,7 +126,7 @@ func _new_world(name: String) -> bool:
 
 
 func _saved_meta() -> Dictionary:
-	var r := SaveStore.inspect(SAVE, World.SAVE_VERSION)
+	var r := SaveStore.inspect(DEMO_SAVE, World.SAVE_VERSION)
 	return (r.data as Dictionary).get("meta", {}) if r.state == "ok" else {}
 
 
@@ -185,12 +197,14 @@ func _run() -> void:
 	var exported := DIR + "carried.json"
 	var ex: Dictionary = main.export_save_to(exported)
 	check(ex.ok, "the expired world is exported to a file (Settings, Saves: Export) (%s)" % str(ex.get("reason", "")))
-	# the full game: Windows and Linux share the user folder (one config/name), so the full game's Continue finds the demo's world
+	# the full game: Windows and Linux share the user folder (one config/name); B42-DEMO-SAVE-OVERWRITE: the demo saved in its own
+	# slot, so the full game's slot is untouched and its title offers the demo's world, which the player chooses
+	check(not FileAccess.file_exists(SAVE) and FileAccess.file_exists(DEMO_SAVE), "the demo saved in its own slot (demo/save1.json), not the full game's")
 	Demo.force = 0
 	ui.show_title(main.can_continue())
 	_no_dev("the full game's title")
-	check(not _buttons().any(func(t): return t.contains("demo")), "the full game's title says nothing of the demo (%s)" % ", ".join(_buttons()))
-	check(_press("Continue"), "the full game: Continue pressed on the demo's save slot")
+	check(not _buttons().any(func(t): return t.contains("demo") and t != "Continue your demo world"), "the full game's title mentions the demo only to offer its world (%s)" % ", ".join(_buttons()))
+	check(_press("Continue your demo world"), "the full game: Continue your demo world pressed")
 	await process_frame
 	w = main.world
 	check(main.running and not main.paused and not ui.modal() and str(main.save_meta.get("save_id", "")) == id0, "the full game continues the expired demo world (its id %s)" % id0)
@@ -218,7 +232,7 @@ func _run() -> void:
 	await process_frame
 	check(main.running and not main.paused and is_equal_approx(Demo.remaining(main.save_meta), 7200.0) and str(main.save_meta.get("save_id", "")) != id0,
 			"a new demo world has a fresh 120 minutes and its own id")
-	var prev := SAVE.get_basename() + ".previous.json"
+	var prev := DEMO_SAVE.get_basename() + ".previous.json"
 	var kept: bool = FileAccess.file_exists(prev) and str((SaveStore.inspect(prev, World.SAVE_VERSION).data as Dictionary).get("meta", {}).get("save_id", "")) == id0
 	check(kept, "the used-up world is kept beside it (%s)" % prev.get_file())
 	note("FINDING: the kept world (%s) is not offered anywhere in the game's menus: it is reached only by Settings, Saves, Import a save file and choosing that file by hand" % prev.get_file())
@@ -230,7 +244,7 @@ func _run() -> void:
 	ui.show_title(true)
 	check(_press("New game") and _new_world("Cid"), "a third world begun from the title")
 	await process_frame
-	var kept_as := DIR + "save1.expired-%s.json" % id0
+	var kept_as := DIR + "demo/save1.expired-%s.json" % id0
 	var arch: Dictionary = SaveStore.inspect(kept_as, World.SAVE_VERSION).data if FileAccess.file_exists(kept_as) else {}
 	var prev_id := str((SaveStore.inspect(prev, World.SAVE_VERSION).data as Dictionary).get("meta", {}).get("save_id", "")) if FileAccess.file_exists(prev) else ""
 	check(not arch.is_empty() and str(arch.get("meta", {}).get("save_id", "")) == id0 and Demo.expired(arch.get("meta", {})) and prev_id == bea,
