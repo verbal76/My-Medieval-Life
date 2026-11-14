@@ -63,7 +63,10 @@ Both, in different ways.
    43321399738 on `b3c9eb5` (chain 12, success; shard 0: `Ran 196 tests ... OK (skipped=1)`, `check_requirements` exit 0). The 31
    commits `b3c9eb5..0bbee94` (18 to Build 40, 13 more to Build 41) were packaged by `release.yml` (runs 43362745451, 43527275522)
    without a Tests run. `release.yml` runs packaging, Windows smoke and SIM-GATE-01 only: it never runs `unittest discover` or the
-   Godot suites. `tests.yml` triggers automatically only on pushes to `staging/my-medieval-life`; code branches get it only by
+   Godot suites. **Correction (2026-11-14, found by Agent K while writing the Ark entry, verified):** the Godot half of that
+   sentence is wrong. `release.yml` at `0bbee94` (lines 172-178) runs three Godot scripts in its `linux-full` cell
+   (`res://tests/run_tests.gd`, `start_test.gd`, `demo_test.gd`); it runs no Python test and not the other game suites
+   `tests.yml` runs (about 280). The conclusion stands: packaging is not a substitute for a full Tests run on the SHA. `tests.yml` triggers automatically only on pushes to `staging/my-medieval-life`; code branches get it only by
    manual dispatch (KI-04 "Still open").
 
 ## 3. CI behaviour (as configured at `0bbee94`)
@@ -72,7 +75,7 @@ Both, in different ways.
 |---|---|---|---|
 | `tests.yml` | push to staging (paths filter); manual dispatch on any branch | shard 0, `python3 -m unittest discover -s tests` (full run only; a targeted `only`/`group` run skips the Python checks) | `fetch-depth: 2`, then `git fetch --depth=1` of the seven refs; a failed fetch only prints "note: not fetched" |
 | `requirements.yml` | push to staging (register paths); dispatch | `tests.test_requirements` only | the same fetch, same silent note |
-| `release.yml` | dispatch | none | n/a |
+| `release.yml` | dispatch | none (three Godot scripts in `linux-full`: `run_tests.gd`, `start_test.gd`, `demo_test.gd`) | n/a |
 
 ## 4. Other repeatedly inherited failures (last ~10 Tests / release runs and the records)
 
@@ -85,7 +88,7 @@ Both, in different ways.
 | B25R2-BRUSHOFF script error (`dialogue.gd:526`) | strict run 42509510188 | INTEGRATED with Batch A `f0a854c` |
 | KI-09 `demo_test` double free | 42542326507, 42734267343 | FIXED `167b235`; watch |
 | KI-10 partial re-run reports failure | 42542326507 | OPEN (reporting) |
-| KI-05 `housing_test` loft check | first noted before 2026-11-01 | KI entry still OPEN; `wip/b25-ci-green` `a5667ed` changed `housing_test` (clears trees); the KI entry was not updated. Record hygiene |
+| KI-05 `housing_test` loft check | first noted before 2026-11-01 | KI entry still OPEN; `wip/b25-ci-green` `a5667ed` changed `housing_test` (clears trees); the KI entry was not updated. Record hygiene. **2026-11-14:** resolved by `a5667ed` (2026-11-02; bisected to `66fd330`, a stale test premise, no game change); 117 checks, 0 failures in Tests 43321399738 on `b3c9eb5`; draft KI text in section 10 |
 | KI-04 suites not in CI / no automatic CI on code branches | see section 2.3 | OPEN; the coverage half was addressed on 2026-11-05 (34 suites added), the trigger half was not |
 | Expected unittest skip | `test_sim_gate` real-gate test (`MML_GATE_DIR`), `OK (skipped=1)` | expected; no gate checks the skip count |
 
@@ -121,3 +124,135 @@ Both, in different ways.
 Evidence commands (reproducible): `git ls-tree -r --name-only <ref> -- docs/build18/PHASE_A_INVENTORY.md` for `a919963`, `6607000`,
 `0bbee94`, `a5a0b7c`; `git log --format='%h %ci %s' -S PATH_REFS --all -- tools/check_requirements.py`;
 `gh run view 43321399738 --log | grep 'shard 0'`; `gh run view <id> --log-failed` for 43265670635, 43279381316, 43298116326.
+
+---
+
+# Part 2 (2026-11-14): eliminating outdated-branch contamination
+
+Owner directive 2026-11-13, Build 42, section 2 (`docs/directives/2026-11-13_build42_engineering_directive.md` on
+`wip/requirements-control`): "A stale local branch must never again silently produce misleading validation failures."
+Branch `wip/b42-env-guard` (from `74bcc66`, which is directly on `0bbee94`). Sections 1-6 above are kept as written; where
+they are corrected, the correction is marked in place. Status of section 5's recommendations: 1 (clone recipe) done in
+`docs/PROJECT_MEMORY.md`; 4 (skip floor) done; 2, 3 and 5 below.
+
+## 7. Every cross-branch dependency of testing and register validation
+
+Found by searching `tools/`, `tools/git_hooks/`, `tests/` and `.github/workflows/` at `0bbee94` for `origin/`, `ls-tree`,
+`git show REF:`, `cat-file`, `merge-base`, `ls-remote`, `fetch` and `--against`, and by reading each hit.
+
+| # | Dependency | Why it exists | Necessary? | Moving branch or immutable | Authority and freshness | Can stale data change a result? | Simplify without losing traceability |
+|---|---|---|---|---|---|---|---|
+| D1 | `check_requirements.PATH_REFS` (7 branches at `0bbee94`; 8 on `wip/requirements-control`, which adds `wip/expansion20`): a path a record names exists if it is in the tree or on one of them | One register is copied to every branch, but documents and code live on the branch that made them (REQ-CTRL-01, `7f45de4`) | Measured: of 201 paths the `0bbee94` register names, **1** is not in the tree (`docs/build18/PHASE_A_INVENTORY.md`, on staging only). Of 407 the records-branch register names, 179 are not in `0bbee94`'s tree and 33 not in the records branch's tree; those need other branches | Moving branches | GitHub heads; freshness never established before this change (a ref was used as found) | **Yes, both ways:** missing ref = path undecidable, silently not reported (2026-10-30, `61dd5f8`); stale ref = false "exists neither" (2026-11-13) | Implemented: one list (CI fetches what `check_test_env.py --list-refs` derives from it), fetched from and compared with GitHub, recorded with the evidence. Recommended (Agent A / lead): record, for each off-tree path, the commit where it was verified (an immutable SHA), so the check reads `git cat-file -e SHA:path` and no longer depends on where a branch points; the branches stay only as the way to find a new path's commit |
+| D2 | `check_requirements.py --against REF` (`at_ref`): no id disappears, no status changes without history | REQ-CTRL-01 loss detection | Yes | CI: `HEAD~1` (immutable relative to the commit); pre-push hook: the remote's old SHA (immutable); docs example: `origin/staging/my-medieval-life` (moving) | The commit itself | An unresolvable REF prints "note: no register at REF" and **passes** (silent). A stale branch only widens the comparison window; the history rule still applies, so no false pass | Implemented: `--require-commit HEAD~1` makes CI fail as an environment failure when the clone is too shallow. Recommended: make an unresolvable `--against` an error in the check (Agent A's area; it strengthens, not weakens) |
+| D3 | `tools/git_hooks/pre-push`: `git fetch origin staging/my-medieval-life`, then a pushed register must be a version staging had | REQ-CTRL-01: the register is edited in one place | Yes, for pushes | Moving (staging) | Fetched at push time from `origin`; in a `--shared` clone whose origin is the local checkout, that fetch reads the **stale local branch**, and a clone does not inherit `core.hooksPath`, so the hook is usually **inactive** in agent clones | A stale staging could refuse a legitimate push (false failure, loud). No false pass | Recipe sets origin to GitHub and `core.hooksPath` (`docs/PROJECT_MEMORY.md`). Note: the register is now edited on `wip/requirements-control` (REQ-CTRL-02); the hook still compares with staging only, which works because the records branch's versions reach staging; if they stop doing so, every code-branch sync would be refused. Lead to confirm |
+| D4 | CI fetch loops (`tests.yml`, `requirements.yml`) | Give the shallow CI clone the refs of D1 | Yes while D1 reads branches | Moving | GitHub at run time (fresh); a failed fetch only printed "note: not fetched" | Missing ref silently weakened D1. **Drift found:** on `wip/requirements-control` PATH_REFS has 8 refs but both workflows fetch 7, so in CI there `wip/expansion20` is missing and every path that only it holds is unchecked | Implemented: the loops are replaced by `check_test_env.py --fetch --strict --require-authority --candidate SHA --require-commit HEAD~1 --record`; the list comes from PATH_REFS, so the drift cannot recur once this lands on the records branch too |
+| D5 | `tools/build_status.py` `BASE = "a8760be"` | Build 16's starting scope | Historical report only, not in tests or CI | Immutable commit | Needs full history | No (an absent commit errors loudly) | None needed |
+| D6 | `tools/branch_audit.py` (`origin/<integration>`), `tools/requirements_audit.py` `CODE_REFS`, `tools/requirements_migrate_v2.py` | Branch hygiene report; one-off 2026-10-23 reconciliation and v2 migration | Not used by tests or CI | Moving | Whatever the clone has | Their reports could be stale; nothing gates on them | Note in their docstrings to fetch first (low priority) |
+| D7 | `tools/checkpoint.py` (`ls-remote origin`) | Proves a pushed hash is on GitHub | Yes | Exact SHAs | Asks the remote directly | No | None needed |
+| D8 | Simulation baseline (`docs/release/sim_baseline.json`, `tools/sim_gate.py`, `tools/sim_suite.py`) and `release.yml` `reuse_gate_run` | Gate comparison; an owner-approved reuse of an earlier gate | Yes | In-tree file (immutable with the commit); reuse names a run and diffs from its commit with `fetch-depth: 0` | The commit / the run id | No cross-branch read | None needed |
+| D9 | `tests/*.py` | | | | | Only through D1 and D2 (`test_requirements.py`: `test_register_is_valid`, `test_generated_files_are_up_to_date`, `test_document_references_in_any_field_must_exist`) | |
+
+Records-branch check, for scale: `check_requirements.py` on `wip/requirements-control` `26b4695` reported 0 problems in a
+clone **without** `origin/wip/expansion20`, where 6 named paths were undecidable (a silent pass); after fetching it, still 0
+(the paths are on it). The verdict was right by luck, not by check.
+
+## 8. The procedure (automated)
+
+`tools/check_test_env.py` (`mml-test-env/1` records) and `tools/check_unittest_skips.py`, used by agents and CI alike:
+
+1. **Record the candidate.** `--candidate SHA`: unfit if `HEAD` is another commit.
+2. **Required refs.** Read from the tree's own `check_requirements.PATH_REFS` (`--list-refs` prints them); `--require-commit
+   HEAD~1` for `--against HEAD~1`.
+3. **Fetch the authoritative refs.** `--fetch`: from GitHub (`origin`'s URL, or a local source's own `origin`), depth 1 in a
+   shallow clone.
+4. **Validate before dependent tests.** Each ref is compared with GitHub (`git ls-remote`): ok, stale, missing or
+   unverified (`--offline` compares a local clone with its source instead). Unfit: any stale ref; with `--strict`/`--fetch` any
+   missing ref; with `--require-authority` any unverified ref; a wrong candidate; an unresolvable required commit.
+5. **Separate environment failures from defects.** `run -- CMD` runs the command only on a fit environment; otherwise it
+   exits 3 and records "not run: environment". On a fit environment a nonzero exit is recorded as "failed on a fit
+   environment: a candidate defect".
+6. **Record the environment with the evidence.** `--record FILE` writes the candidate SHA, branch, whether tracked files
+   differ, the authority (credentials stripped), every ref's SHA, date, GitHub's SHA and state, the required commits, the
+   verdict and problems, git and Python versions, and the command with its exit code and classification. CI writes it into
+   `ci-out/` (uploaded with `ci-report`).
+7. **No silent skips.** `tools/check_unittest_skips.py` runs `unittest discover -s tests` and fails on a skip not listed in
+   `tools/unittest_expectations.json` (one listed: `test_sim_gate.RealGateSplit.test_real_outputs`, needs `MML_GATE_DIR`) or on
+   fewer tests than `min_tests` (201).
+
+Agent recipe: `docs/PROJECT_MEMORY.md`, "Making a checkout to test in".
+
+Evidence on `wip/b42-env-guard` `5621a56` (`/dev/shm/audC`, 2026-11-14):
+- with `origin/staging/my-medieval-life` set back to `6607000`: "stale ... the authority has a919963", verdict UNFIT, and
+  `run -- python3 -m unittest tests.test_requirements` was **not run** (exit 3, recorded "not run: environment");
+- `--fetch --strict --require-authority --candidate 5621a56 --require-commit HEAD~1 --record ... run -- python3
+  tools/check_unittest_skips.py`: 7 refs ok, verdict fit, 201 tests, 0 failures, 0 errors, 1 skipped (0 unexpected), exit 0,
+  recorded "passed";
+- an earlier run of `check_unittest_skips.py` with no expected skips listed failed: "unexpected skip:
+  test_sim_gate.RealGateSplit.test_real_outputs";
+- `tests/test_check_test_env.py`: 5 tests OK (authority = a bare repository by `file://`; source with a lagging local
+  branch; `clone --shared`: stale online and offline, `--fetch` makes it fit, missing/candidate/shallow unfit, `run` refuses
+  and records, skip floor).
+- `tools/check_requirements.py` on the branch: 0 problems (the new `docs/PROJECT_MEMORY.md` section names only real paths).
+
+Known limit: a branch pushed between the fetch and the `ls-remote` (seconds apart) reads as stale and fails the job as an
+environment failure; a re-run clears it. Loud, never a false pass.
+
+## 9. Why earlier processes did not catch it
+
+1. **The check's verdict was never tied to its inputs.** `path_exists` reads whatever refs exist and records none, so a
+   result could not be reproduced or questioned: nobody could tell a stale-ref failure from a real one without investigating.
+2. **The 2026-10-30 incident was fixed at the symptom.** `61dd5f8` added a fetch to `tests.yml` (the mirror case: refs
+   missing in CI) but left the check environment-dependent and the fetch failure a printed note. The class came back two
+   weeks later in a different environment.
+3. **Two lists for one fact.** PATH_REFS and the workflow loops drifted (8 vs 7 on the records branch) without any check
+   noticing.
+4. **Local and CI environments differ and nothing compared them.** CI fetches GitHub; agent clones (`clone --shared`)
+   inherit the source's local branches, and do not inherit the pre-push hook. No procedure said to fetch, and the shared
+   Build 42 brief's fetch list omits `wip/expansion20`, which the records branch's check reads (fine for `0bbee94`, whose
+   PATH_REFS has 7 refs; wrong on `wip/requirements-control`). `--fetch` derives the list instead.
+5. **Silent passes are invisible.** An undecidable path, an unresolvable `--against`, a skipped unittest and a failed fetch all
+   exit 0. Gates report failures, so they never surfaced.
+6. **Packaging was not tied to testing.** Builds 40 and 41 were packaged 18 and 31 commits after the last full Tests run;
+   `release.yml` runs no Python test, and `tests.yml` triggers automatically only on staging pushes (KI-04). So the code line's
+   Python results for those SHAs existed only in agents' local clones: the one environment that was wrong.
+7. **"Inherited" was not a disposition anywhere.** No record named these failures before 2026-11-13; a failure seen in an
+   older build was treated as background rather than investigated (the owner: "Do not classify the issue as resolved merely
+   because it also occurs in Build 40").
+
+## 10. Draft known-issue text (for the lead; `docs/KNOWN_ISSUES.md` is a records item, not edited here)
+
+**KI-05 (update; proposed status RESOLVED)**
+> ### KI-05 housing_test loft check fails (RESOLVED `a5667ed`, 2026-11-02; record updated 2026-11-14)
+> - **Cause:** the check "short of 3 sleeping places, more than a loft gives: living quarters beside the house" failed from
+>   `66fd330` (Build 22 market merge, village v16), bisected first-parent `a89484a` good / `66fd330` bad. The new village put
+>   trees where seed 2's 9x10 quarters would stand, so `_enlarge` rightly weighed only the loft and the small room (HOUSE-12:
+>   a tree in the way is not legitimate ground). The test's premise ("open ground beside the house") had gone stale; the game
+>   was right.
+> - **Fix:** `a5667ed` (`wip/b25-ci-green`): the test clears the trees beside the new house. No game change. Later `c423670`
+>   stocks the small room's blocks.
+> - **Verified:** `housing_test` 117 checks, 0 failures in Tests 43321399738 on `b3c9eb5` (floor 117). This entry stayed OPEN
+>   for 12 days after the fix (audit `docs/audits/2026-11-13_INHERITED_FAILURES_AUDIT.md`, section 4).
+
+**KI-12 (new section under KI-12; proposed status OPEN, recurrence after the fix)**
+> ### KI-12 recurrence after the fix (2026-11-12; found by the inherited-failures audit 2026-11-13)
+> - The fix `dc049d9` (guest reconnects at once after a frame gap over 4 s) is an ancestor of both commits below.
+> - Tests 43279381316 on `428a494` (chain 10), shard 5: `net_fault_test` 55 checks, 1 failure: "the second guest frozen: the
+>   host drops it in its time (playing before the freeze true; dropped false after 20.0 s ...)". This is the **host** side
+>   (dropping a frozen peer), which the fix did not touch; the 2026-11-09 investigation measured the host dropping in
+>   2.8-12.2 s.
+> - Tests 43298116326 on `1d03eea` (chain 11), shard 5: `net_fault_test` 55 checks, 1 failure: "the host stops on purpose: the
+>   guest is told at once and does not wait" (the guest showed "Connection to the host lost. Reconnecting..."). A deliberate
+>   host stop was read as a lost connection: a different path again (the stop notice).
+> - Tests 43321399738 on `b3c9eb5` (chain 12): green. Neither failure has been reproduced or investigated; both commits
+>   touched no network code as far as recorded.
+> - **Next:** treat as two open defects or test-timing faults to be classified with evidence (host peer timeout under
+>   load; stop notice ordering vs disconnect), not as the closed 2026-11-09 race. Do not label "CI timing" without a
+>   measurement.
+
+## 11. What CI must run to prove these changes (not dispatched)
+
+Nothing here has run in GitHub Actions yet. One `tests.yml` dispatch on `wip/b42-env-guard` (or on the integration commit
+that carries it) proves: the new fetch step on a real shallow CI clone (`--fetch`, `ls-remote` with the runner's
+credentials, `HEAD~1` present at `fetch-depth: 2`), `ci-out/test-env.json` in the `ci-report` artifact, and
+`check_unittest_skips.py` in shard 0 (201 tests, 1 expected skip). One `requirements.yml` dispatch proves the same for
+that workflow. The records branch's own workflows need the same change (D4 drift) when the lead next edits them.
