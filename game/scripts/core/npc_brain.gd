@@ -1124,16 +1124,24 @@ func _away_from(n: NPC, o: NPC) -> bool:
 	return Journeys.active(o) or (w.homesteads != null and w.homesteads.remote(o)) or o.depth != n.depth
 
 
+## B42 (reservation defect): the units of food `f` in `n`'s pack it may eat or put away: all of them while the economy is off,
+## else those no contract or earmark holds (EconClaims.spare_for_use).
+func _spare(n: NPC, f: String) -> int:
+	if w.economy == null:
+		return n.inv.count(f)
+	return w.economy.claims.spare_for_use(World.npc_ref(n.id), f)
+
+
 func _plan_eat(n: NPC) -> bool:
 	for f in COOKED:
-		if n.inv.has(f):
+		if _spare(n, f) > 0:                           # B42: never what a contract holds or an earmark claims
 			n.doing = "eating"
 			n.plan = [first(n, work(10, "eat", {"cooked_only": true}, "idle"))]
 			return true
 	var hh: Dictionary = w.households[n.household] if n.household >= 0 else {}
 	var gives_way := JudgmentLive.on(w, JudgmentFamily.FLAG) and JudgmentFamily.defers(w, n, "pantry")      # FAMILY-01: the family eats first
 	if not hh.is_empty() and not gives_way:
-		var home_food := n.inv.has("wheat") or _can_roast(n)
+		var home_food := _spare(n, "wheat") > 0 or _can_roast(n)
 		for f in EDIBLE:
 			if hh.pantry.has(f):
 				home_food = true
@@ -1143,11 +1151,11 @@ func _plan_eat(n: NPC) -> bool:
 			return true
 	# raw food in hand (eggs, milk, fruit, roots) is eaten as it is, as the player eats it (FSE-00 section 1)
 	for f in Decay.eat_order(EDIBLE):                 # MML-INV-02 F6(b): the most perishable first while INV-02 is on
-		if f != "wheat" and not COOKED.has(f) and n.inv.has(f):
+		if f != "wheat" and not COOKED.has(f) and _spare(n, f) > 0:     # B42: not a unit a contract or earmark claims
 			n.doing = "eating"
 			n.plan = [first(n, work(10, "eat", {"item": f}, "idle"))]
 			return true
-	if hh.is_empty() and n.inv.has("wheat"):
+	if hh.is_empty() and _spare(n, "wheat") > 0:
 		n.doing = "eating"
 		n.plan = [first(n, work(10, "eat", {}, "idle"))]
 		return true
@@ -1191,6 +1199,15 @@ func _plan_eat(n: NPC) -> bool:
 		n.doing = "eating from the family's stock"
 		n.plan = [go(_workplace_cell(fam)), doit("eat_family_stock", {"from": fam.id}), work(10, "eat", {"cooked_only": true}, "idle")]
 		return true
+	# B42 (lead decision 2026-11-14: survival is never put behind a contract): with no other meal to be had, a villager eats the
+	# food in their pack a contract or earmark claims; the earmark shrinks by it (EconClaims.used_in_need, "eaten in need") and the
+	# contract follows its own rules
+	for f in Decay.eat_order(EDIBLE):
+		if n.inv.has(f) and (f != "wheat" or hh.is_empty()):
+			n.doing = "eating"
+			n.plan = [first(n, work(10, "eat", {"item": f, "in_need": true}, "idle"))]
+			w.stat("meal_in_need_planned")
+			return true
 	var why := "no_money" if priced else "no_food_for_sale"
 	w.stat("missed_meal_" + why)
 	w.chapel.note_missed(n)                # CHAPEL-PURPOSE: the chapel's emergency round puts this household first
@@ -2514,7 +2531,7 @@ func stock_family_chest(n: NPC) -> void:
 	for f in EDIBLE + ["meat", "log"]:
 		if f == "log" and carrying_for_work:
 			continue
-		var c := n.inv.count(f)
+		var c := mini(n.inv.count(f), _spare(n, f))     # B42: what a contract or earmark claims stays in the pack
 		if c <= 0:
 			continue
 		var put := c - mini(c, _sale_stock(n, f))
@@ -2988,9 +3005,14 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 		"homestead":                                    # B25R1-010: the end of a homesteader's walk (Homesteads.act)
 			return w.homesteads.act(n, a) if w.homesteads != null else false
 		"eat":
+			var in_need := bool(a.get("in_need", false))
 			for f in ([str(a.item)] if a.has("item") else Decay.eat_order(COOKED if a.get("cooked_only", false) else EDIBLE)):     # INV-02 F6(b)
-				if n.inv.has(f):
+				var spare := _spare(n, f)
+				if n.inv.has(f) and (spare > 0 or in_need):     # B42: a claimed unit only in need
 					n.inv.remove(f)
+					if spare <= 0 and w.economy != null:
+						w.economy.claims.used_in_need(World.npc_ref(n.id), f, 1)
+						w.stat("eaten_in_need_" + f)
 					n.hunger = minf(100.0, n.hunger + float(GameData.item(f).food))
 					w.stat("eaten_food", float(GameData.item(f).food))
 					w.stat("eaten_" + f)
