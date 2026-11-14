@@ -25,7 +25,14 @@ var touch_move := "tap"            # GP-JOYSTICK: walking by touch: "tap" (tap t
 var reduce_effects := false        # JUICE J1 (owner Decision 9, B12A-05 slice): particles become one still puff; no flashes or pulses
 var no_blink := false              # JUICE J1 (B12A-05: "turning off the blinking"): low meters and a fallen body stay steady
 var phone := false                 # a phone or tablet: no windows, a larger interface
-var save_copy := ""                # SAVE-05: a file outside the game kept up to date with the save ("" none)
+## SAVE-05: a file outside the game kept up to date with the save ("" none). B42-DEMO-SAVE-OVERWRITE: one for each edition (the two
+## share this settings file on Windows and Linux), so the demo never writes its world over the full game's copy, nor the other way.
+var save_copy: String:
+	get:
+		return save_copies.get("demo" if Demo.is_demo() else "full", "")
+	set(v):
+		save_copies["demo" if Demo.is_demo() else "full"] = v
+var save_copies := {"full": "", "demo": ""}
 var record_gameplay := false       # SIM-GATE-01 amendment: the flight recorder in play, Windows and Linux only (off by default)
 var net_name := ""                 # Build 21: the name last used to join a friend's game
 var net_address := ""              # Build 21: the host's address last typed to join ("" none)
@@ -57,7 +64,8 @@ func load_file(path := PATH) -> void:
 	no_blink = bool(cf.get_value("accessibility", "no_blink", no_blink))
 	var hv: String = str(cf.get_value("gameplay", "harvest", harvest))
 	harvest = hv if hv in ["manual", "continuous"] else "manual"
-	save_copy = str(cf.get_value("saves", "copy", save_copy))
+	save_copies["full"] = str(cf.get_value("saves", "copy", save_copies.full))          # before Build 42 the one copy: the full game's
+	save_copies["demo"] = str(cf.get_value("saves", "copy_demo", save_copies.demo))
 	record_gameplay = bool(cf.get_value("developer", "record_gameplay", record_gameplay))
 	net_name = str(cf.get_value("multiplayer", "name", net_name)).left(16)
 	net_address = str(cf.get_value("multiplayer", "address", net_address)).left(64)
@@ -78,7 +86,8 @@ func save_file(path := PATH) -> void:
 	cf.set_value("accessibility", "reduce_effects", reduce_effects)
 	cf.set_value("accessibility", "no_blink", no_blink)
 	cf.set_value("gameplay", "harvest", harvest)
-	cf.set_value("saves", "copy", save_copy)
+	cf.set_value("saves", "copy", save_copies.full)
+	cf.set_value("saves", "copy_demo", save_copies.demo)
 	cf.set_value("developer", "record_gameplay", record_gameplay)
 	cf.set_value("multiplayer", "name", net_name)
 	cf.set_value("multiplayer", "address", net_address)

@@ -94,7 +94,13 @@ const DEAD_ZONE := Vector2(0.4, 0.35)
 var mid_drag := false                  # the middle mouse button is held: mouse motion pans
 const PAN_SPEED := 700.0               # screen pixels a second the right stick pans at full tilt
 var autosave_hour := -1
-var save_path := SAVE_PATH             # tests point this elsewhere so they never touch a player's save
+var save_base := SAVE_PATH             # the full game's save slot; tests point it elsewhere so they never touch a player's save
+## The save slot of this edition (B42-DEMO-SAVE-OVERWRITE: the demo's is its own, Demo.slot). Setting it sets the full game's slot.
+var save_path: String:
+	get:
+		return Demo.slot(save_base)
+	set(v):
+		save_base = v
 var save_blocked := ""                 # why saving is off this session ("" = saving allowed): see continue_game
 var save_failing := false
 var trigger_held := {}                 # LT / RT pressed past the threshold (one step per press)
@@ -166,6 +172,7 @@ const BLOOD_FADE := 90.0       # seconds blood takes to fade away
 func _ready() -> void:
 	_setup_input()
 	GameData.ensure()
+	apply_window_title()
 	# the interface is laid out for the screen (larger on a phone) and the camera zoom makes up for it
 	settings.load_file()
 	settings.apply(get_tree())
@@ -1088,8 +1095,83 @@ func _ready() -> void:
 
 
 ## There is a save or a backup to continue from.
+## B42-DEMO-WINDOW-TITLE: the demo's window and taskbar say "Forge My Life Demo" (Demo.window_title); the full game's title is the
+## engine's own (config/name), left as it is.
+func apply_window_title() -> void:
+	if Demo.is_demo():
+		get_window().title = Demo.window_title()
+
+
 func can_continue() -> bool:
+	_demo_slot_ready()
 	return SaveStore.any_exists(save_path)
+
+
+## B42-DEMO-SAVE-OVERWRITE: in the demo, its own slot is set up once from the worlds it made in the shared slot before Build 42
+## (Demo.adopt_legacy: copied, never moved); nothing in the full game.
+var _adopted_for := ""
+
+
+func _demo_slot_ready() -> void:
+	if not Demo.is_demo() or _adopted_for == save_base:
+		return
+	_adopted_for = save_base
+	var slot := save_path
+	if SaveStore.any_exists(slot) or FileAccess.file_exists(slot.get_basename() + PREVIOUS_SUFFIX):
+		return
+	var got := Demo.adopt_legacy(save_base, slot)
+	if not got.is_empty():
+		print("demo: %d world file(s) from before Build 42 copied into the demo's own save folder" % got.size())
+
+
+## B42-DEMO-SAVE-OVERWRITE: the demo's world on this device for the full game's title (Windows and Linux: one user folder), {} in
+## the demo, when there is none, or when the full game's slot already holds that world at least as far on. {path, info (the demo
+## world), replaces (the full game's world it would take the place of, "" none)}.
+func demo_world_offer() -> Dictionary:
+	if Demo.is_demo():
+		return {}
+	var slot := Demo.slot(save_base, true)
+	var src := slot
+	var r := SaveStore.inspect(src, World.SAVE_VERSION)
+	if r.state != "ok":
+		src = slot + SaveStore.BAK
+		r = SaveStore.inspect(src, World.SAVE_VERSION)
+		if r.state != "ok":
+			return {}
+	var meta: Dictionary = (r.data as Dictionary).get("meta", {})
+	var cur := _slot_world()
+	if not cur.is_empty():
+		var cm: Dictionary = (cur.data as Dictionary).get("meta", {})
+		if str(cm.get("save_id", "")) == str(meta.get("save_id", "?")) and int(cm.get("saved_at", 0)) >= int(meta.get("saved_at", 0)):
+			return {}
+	return {"path": src, "info": SaveTransfer.describe(r.data), "replaces": SaveTransfer.describe(cur.data) if not cur.is_empty() else ""}
+
+
+## The world in this edition's slot: {path, data} of the save, else of its backup; {} when neither can be read.
+func _slot_world() -> Dictionary:
+	for p in [save_path, save_path + SaveStore.BAK]:
+		var r := SaveStore.inspect(p, World.SAVE_VERSION)
+		if r.state == "ok":
+			return {"path": p, "data": r.data}
+	return {}
+
+
+## B42-DEMO-SAVE-OVERWRITE: the full game continues the demo's world, as the player chose on the title (after a confirmation that
+## named the world it replaces). The demo's file is copied in by Import (SaveTransfer.import_save: checked, migrated, validated; the
+## full game's save it replaces is kept in user://save_backups/), so the demo keeps its own; a full-game world only in the backup
+## file is kept there too. Returns the import's result.
+func continue_demo_world() -> Dictionary:
+	var o := demo_world_offer()
+	if o.is_empty():
+		return {"ok": false, "reason": "there is no demo world on this device to continue"}
+	if not FileAccess.file_exists(save_path):
+		var cur := _slot_world()
+		if not cur.is_empty():
+			var id := str((cur.data as Dictionary).get("meta", {}).get("save_id", "unknown"))
+			var k := SaveStore.write_text("%sreplaced-%s-%d.json" % [SaveTransfer.BACKUP_DIR, id, int(Time.get_unix_time_from_system())], FileAccess.get_file_as_string(cur.path))
+			if not k.ok:
+				return {"ok": false, "reason": "your full-game world could not be kept aside first (%s), so nothing was changed" % k.reason}
+	return import_save_from(str(o.path))
 
 
 func _setup_input() -> void:
@@ -1142,6 +1224,7 @@ func _setup_input() -> void:
 ## no spec (tests, screenshots) the default character.
 func new_game(spec := {}) -> void:
 	if not spec.is_empty():
+		_demo_slot_ready()
 		_keep_previous_game()
 	save_meta = {}
 	_clear_world()
@@ -1417,6 +1500,7 @@ func resume_after_origin() -> void:
 ## written over: it is moved aside unchanged first, then the backup is loaded if it can be, else a
 ## new game starts. If it cannot even be moved aside, saving stays off this session to protect it.
 func continue_game() -> void:
+	_demo_slot_ready()
 	var r := SaveStore.inspect(save_path, World.SAVE_VERSION)
 	if r.state == "ok":
 		var why := _load_save(r.data)
@@ -5948,8 +6032,61 @@ func _real_pads() -> Array:
 	return Input.get_connected_joypads().filter(func(d): return is_pad(Input.get_joy_name(d)))
 
 
+## B42-BEGIN-DOUBLE-CLICK (owner 2026-11-14, C7: "Character creation Begin button sometimes needs a second click"). Cause, traced
+## with real X input (XTest on Xvfb, the packaged Linux test's setting): the first click into the window makes the system move the
+## window's focus out and back in between the button's press and its release; the engine then drops the GUI's hold on the pressed
+## button (a window losing focus ends every press), so the release reaches no control and the button never fires: the second click,
+## with no focus change, works. A name field had the focus only because the keyboard had been used, not the mouse, up to then.
+## Correction: a left click whose press was on a button, interrupted by such a focus change, and released over the same button
+## (enabled, shown) completes that button's click once, as an uninterrupted click would; a release elsewhere does nothing, and a
+## click the button received itself is never repeated.
+var _click_btn: BaseButton = null
+var _click_got_up := false
+var _click_cut := false
+
+
+func _click_watch(e: InputEventMouseButton) -> void:
+	if e.button_index != MOUSE_BUTTON_LEFT:
+		return
+	var c := get_viewport().gui_get_hovered_control()   # the control under the pointer (the GUI's own hit test)
+	while c != null and not (c is BaseButton):
+		c = c.get_parent() as Control
+	if e.pressed:
+		_click_btn = null
+		_click_cut = false
+		if c != null and not (c as BaseButton).disabled:
+			_click_btn = c
+			_click_got_up = false
+			if not _click_btn.button_up.is_connected(_on_click_up):
+				_click_btn.button_up.connect(_on_click_up, CONNECT_ONE_SHOT)
+		return
+	if _click_btn != null and _click_cut and c == _click_btn:
+		_finish_cut_click.call_deferred(_click_btn)      # after the GUI has had the release: only if the button did not
+	elif _click_cut:
+		_click_btn = null                                # released away from it: no click, as with any button
+	_click_cut = false
+
+
+func _on_click_up() -> void:
+	_click_got_up = true
+
+
+func _finish_cut_click(b: BaseButton) -> void:
+	var mine := b == _click_btn
+	_click_btn = null
+	if not mine or _click_got_up or not is_instance_valid(b) or not b.is_visible_in_tree() or b.disabled:
+		return
+	if b.button_up.is_connected(_on_click_up):
+		b.button_up.disconnect(_on_click_up)
+	if b.toggle_mode:
+		b.button_pressed = not b.button_pressed
+	b.pressed.emit()
+
+
 ## Which controls are in use, from the latest input: the HUD follows (touch buttons, prompts).
 func _input(e: InputEvent) -> void:
+	if e is InputEventMouseButton:
+		_click_watch(e)
 	var s := scheme
 	if e is InputEventScreenTouch or e is InputEventScreenDrag:
 		s = "touch"
@@ -6207,6 +6344,7 @@ func _save_meta() -> Dictionary:
 		builds.append(build)                          # the builds this world has been played in (SAVE-02)
 	save_meta["builds"] = builds.slice(maxi(0, builds.size() - 20))
 	save_meta["character"] = world.player.name
+	save_meta["edition"] = "demo" if Demo.is_demo() else "full"      # B42-DEMO-SAVE-OVERWRITE: the edition that saved it last
 	return save_meta.duplicate()
 
 
@@ -6223,9 +6361,33 @@ func _keep_previous_game() -> void:
 	var src := save_path if r.state == "ok" else save_path + SaveStore.BAK
 	if SaveStore.inspect(src, World.SAVE_VERSION).state != "ok":
 		return
-	if FileAccess.file_exists(prev) and not _keep_expired_demo(prev):
+	if FileAccess.file_exists(prev) and not _keep_expired_demo(prev) and not _keep_cross_edition_previous(prev, src):
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(prev))
 	DirAccess.rename_absolute(ProjectSettings.globalize_path(src), ProjectSettings.globalize_path(prev))
+
+
+## B42-DEMO-SAVE-OVERWRITE: before Build 42 the demo saved in the full game's slot, so its New game could put the full game's world
+## aside as the previous game. The full game never removes a previous game that came from the other edition's play (one of it and the
+## world now put aside has a demo record, the other none): it is kept in user://save_backups/ instead. True when it was moved.
+func _keep_cross_edition_previous(prev: String, src: String) -> bool:
+	if Demo.is_demo():
+		return false
+	var a := SaveStore.inspect(prev, World.SAVE_VERSION)
+	var b := SaveStore.inspect(src, World.SAVE_VERSION)
+	if a.state != "ok" or b.state != "ok":
+		return false
+	var a_demo: bool = (a.data as Dictionary).get("meta", {}).get("demo") is Dictionary
+	var b_demo: bool = (b.data as Dictionary).get("meta", {}).get("demo") is Dictionary
+	if a_demo == b_demo:
+		return false
+	var id := str((a.data as Dictionary).get("meta", {}).get("save_id", "unknown")).validate_filename()
+	var to := "%sprevious-%s-%d.json" % [SaveTransfer.BACKUP_DIR, id, int(Time.get_unix_time_from_system())]
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(SaveTransfer.BACKUP_DIR))
+	var k := 2
+	while FileAccess.file_exists(to):
+		to = "%sprevious-%s-%d-%d.json" % [SaveTransfer.BACKUP_DIR, id, int(Time.get_unix_time_from_system()), k]
+		k += 1
+	return DirAccess.rename_absolute(ProjectSettings.globalize_path(prev), ProjectSettings.globalize_path(to)) == OK
 
 
 ## DEMO-01 ("Do not delete expired worlds"; journey finding 3): in the demo, a previous game whose demo time is used up is never
@@ -6300,6 +6462,7 @@ func _demo_expire() -> void:
 func demo_save_expired() -> bool:
 	if not Demo.is_demo():
 		return false
+	_demo_slot_ready()
 	var r := SaveStore.inspect(save_path, World.SAVE_VERSION)
 	if r.state != "ok":
 		return false
@@ -6308,6 +6471,8 @@ func demo_save_expired() -> bool:
 
 
 func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_WINDOW_FOCUS_OUT and _click_btn != null:
+		_click_cut = true                   # B42-BEGIN-DOUBLE-CLICK: a press in flight is dropped by the engine (_click_watch)
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_APPLICATION_PAUSED:
 		app_focused = false                 # DEMO-01: the demo's clock stops in the background
 	elif what == NOTIFICATION_APPLICATION_FOCUS_IN or what == NOTIFICATION_APPLICATION_RESUMED:

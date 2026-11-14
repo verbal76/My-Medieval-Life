@@ -221,6 +221,8 @@ jobs:
           res://tests/region_sim_test.gd
           res://tests/demo_test.gd
           res://tests/demo_journey_test.gd     # DEMO-01 (B25 Stage E): the demo edition played: presets, timer, end screen, full-game continuation
+          res://tests/demo_save_slots_test.gd  # B42-DEMO-SAVE-OVERWRITE: the demo and the full game never touch each other's saves
+          res://tests/creation_begin_click_test.gd  # B42-BEGIN-DOUBLE-CLICK: one click on Begin, also when the window's focus moves mid-click
           res://tests/outside_interact_test.gd
           res://tests/homestead_test.gd          # B25R1-010: a homestead from setting out to a house and a life there
           res://tests/homestead_presence_test.gd # B25R1-010 x 019: the same build watched and unwatched, saved mid-way

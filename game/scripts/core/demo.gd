@@ -33,6 +33,63 @@ static func is_demo() -> bool:
 	return force == 1 if force >= 0 else OS.has_feature("demo")
 
 
+## B42-DEMO-SAVE-OVERWRITE (owner 2026-11-14, B4: "Demo overwrites full-game saves: a player-data protection defect"): the demo
+## keeps its worlds in a folder of its own, "demo/" beside the full game's save (on Windows and Linux both editions have one user
+## folder, named by config/name; on Android each app has its own storage). So nothing the demo does (New game, Continue, autosave,
+## its previous and kept worlds, backups, Import) reaches the full game's save slot, and nothing the full game does reaches the
+## demo's. A demo world goes on in the full game when the player chooses it there ("Continue your demo world", Main.continue_demo_world:
+## the full game's own world is kept aside first), or by Export and Import as on Android.
+const SLOT_DIR := "demo"
+
+
+## The save slot of an edition for the full game's slot `base` ("user://save1.json" -> "user://demo/save1.json" in the demo).
+static func slot(base: String, demo := is_demo()) -> String:
+	return base.get_base_dir().path_join(SLOT_DIR).path_join(base.get_file()) if demo else base
+
+
+## B42-DEMO-SAVE-OVERWRITE, existing players: before Build 42 the demo saved in the full game's slot. The first time the demo finds
+## its own slot empty, the worlds it had made there (a readable save with a demo record that the full game has not marked its own)
+## are COPIED into its slot: the world in the slot (or its backup), the previous game and the kept used-up worlds. Nothing is moved
+## or removed, so the full game's Continue still finds a world it found before. Returns the files written.
+static func adopt_legacy(base: String, demo_slot: String) -> Array:
+	var out := []
+	var stem := base.get_basename()
+	var pairs := []
+	var cur := base if FileAccess.file_exists(base) else base + SaveStore.BAK
+	pairs.append([cur, demo_slot])
+	pairs.append([stem + ".previous.json", demo_slot.get_basename() + ".previous.json"])
+	var dir := base.get_base_dir()
+	if DirAccess.dir_exists_absolute(dir):
+		var names := Array(DirAccess.get_files_at(dir))
+		names.sort()
+		for f in names:
+			if f.begins_with(stem.get_file() + ".expired-") and f.ends_with(".json"):
+				pairs.append([dir.path_join(f), demo_slot.get_base_dir().path_join(f)])
+	for pr in pairs:
+		var from: String = pr[0]
+		var to: String = pr[1]
+		if FileAccess.file_exists(to) or not FileAccess.file_exists(from):
+			continue
+		var text := FileAccess.get_file_as_string(from)
+		var r := SaveStore.inspect_text(text, World.SAVE_VERSION)
+		if r.state != "ok":
+			continue
+		var meta = (r.data as Dictionary).get("meta", {})
+		if not (meta is Dictionary) or not (meta.get("demo") is Dictionary) or str(meta.get("edition", "")) == "full":
+			continue
+		if bool(SaveStore.write_text(to, text).ok):
+			out.append(to)
+	return out
+
+
+## B42-DEMO-WINDOW-TITLE (owner 2026-11-14, C6: "Demo window title lacks 'Demo'"): the window's (and so the taskbar's) title. Godot
+## titles the window with config/name, which also names the user folder, so the demo cannot simply be renamed there (its saves would
+## move to another folder): the demo sets its window's title at start instead (Main._ready). The full game keeps the engine's title.
+static func window_title() -> String:
+	var name := str(ProjectSettings.get_setting("application/config/name", "Forge My Life"))
+	return name + " Demo" if is_demo() else name
+
+
 ## The world's demo record, made whole (a world from before the demo, or the full game's, starts its allowance now).
 static func state(meta: Dictionary) -> Dictionary:
 	if not (meta.get("demo") is Dictionary):

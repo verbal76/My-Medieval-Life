@@ -1754,6 +1754,9 @@ func show_title(can_continue: bool) -> void:
 		_label("Demo: each world you start has 120 minutes of play, and continues in the full game.", 14)
 	var spent: bool = can_continue and main.demo_save_expired()      # DEMO-01: a world whose demo time is used up, kept and marked
 	_button("Continue (demo time used: continue it in the full game)" if spent else "Continue", func(): main.continue_game(), can_continue)
+	var demo_world: Dictionary = main.demo_world_offer()      # B42-DEMO-SAVE-OVERWRITE: the full game, a demo world on this device
+	if not demo_world.is_empty():
+		_button("Continue your demo world", func(): show_demo_world(demo_world)).name = "DemoWorld"
 	_button("New game", func(): show_creation({}))
 	_button("Host a game", show_host_start)        # B25R2-HOSTMENU (owner 2026-11-07): your world, open to friends, from the start
 	_button("Join a game", func(): NetWindow.show_join(self))      # Build 21: a friend's world on this network
@@ -1800,6 +1803,26 @@ func _steam_button() -> void:
 	b.name = "SteamButton"
 	if SteamPromo.note() != "":
 		_label(SteamPromo.note(), 13)
+
+
+## B42-DEMO-SAVE-OVERWRITE (owner 2026-11-14, B4): the full game takes up the demo's world only when the player says so, told which
+## world of theirs it takes the place of and that that one is kept (Main.continue_demo_world). With no full-game world, it goes on.
+func show_demo_world(o: Dictionary) -> void:
+	if str(o.get("replaces", "")) == "":
+		_continue_demo_world()
+		return
+	_open("demo_world", "Continue your demo world", false)
+	_label("Your demo world: %s." % str(o.info))
+	_label("It takes the place of your world in the full game: %s. That world is not lost: it is kept in the game's save_backups folder, and Settings, Saves, Import brings it back. The demo keeps its own copy of the demo world." % str(o.replaces), 15)
+	_button("Continue the demo world", _continue_demo_world).name = "DemoWorldYes"
+	_button("Back", func(): show_title(main.can_continue())).name = "DemoWorldBack"
+
+
+func _continue_demo_world() -> void:
+	var r: Dictionary = main.continue_demo_world()
+	if not bool(r.get("ok", false)):
+		show_title(main.can_continue())
+		message("The demo world could not be continued: %s" % str(r.get("reason", "")), 10.0)
 
 
 ## DEMO-01: the demo's end for this world: saved and kept, continued in the full game; start a new world, the main menu, or exit.
