@@ -15,7 +15,14 @@ var tag := "g2"
 var last_seq := -1
 var t := 0.0
 var releases: Array = []       # input events to release on the next frame (a key or a pad button pressed by a command)
-var cmp := {}                  # the last "compare": {seq, bad}
+var cmp := {}                  # the last "compare": {seq, bad, early_bad, mark_seen, waited_ms}
+## B42-NET-MP4-STALE: the last mark the host put on a sync this copy took (NetSession.world_synced), and a "compare" waiting for the
+## sync the host marked with its dump: the copy is the host's frozen moment only once that sync is taken in, not when the command
+## file is read (a different channel, which under load arrives first).
+var last_mark := -1
+var mark_world: World = null   # the copy the mark was taken into: a rejoin builds a new one, and a restarted host numbers from 1 again
+var pending := {}
+var watch = preload("res://tests/net_watch.gd").new()     # B42-NET-MP4-STALE (diagnostic): its reconnections and long frames
 var toasts: Array = []         # every message this screen showed (sampled), for checks of what a player was told
 
 
@@ -31,10 +38,29 @@ func _init() -> void:
 
 
 func _join() -> void:
+	if not main.net.world_synced.is_connected(_synced):
+		main.net.world_synced.connect(_synced)
 	main.net.join("127.0.0.1", int(a[0]), str(a[1]), str(a[2]), str(a[3]))
 
 
+func _synced(m: int) -> void:
+	if main.world != mark_world:
+		mark_world = main.world
+		last_mark = -1
+	if m >= 0:
+		last_mark = maxi(last_mark, m)
+
+
+func _has_mark(m: int) -> bool:
+	return m < 0 or (mark_world == main.world and last_mark >= m)
+
+
 func _process(delta: float) -> bool:
+	watch.step(main)
+	if not pending.is_empty() and (_has_mark(int(pending.mark)) or Time.get_ticks_msec() - int(pending.t0) > NetSession.JOIN_TIMEOUT_MS):
+		cmp = {"seq": int(pending.seq), "bad": _compare(pending.keys), "early_bad": pending.early, "mark_seen": _has_mark(int(pending.mark)),
+			"waited_ms": Time.get_ticks_msec() - int(pending.t0)}
+		pending = {}
 	for e in releases:
 		Input.parse_input_event(e)
 	releases.clear()
@@ -144,10 +170,19 @@ func _commands() -> void:
 			main.ui.hide_all()
 		"leave":                                     # this player leaves the host's world (a disconnection)
 			main.leave_guest_world("")
-		"compare":                                   # this copy against the host's frozen dump
-			var df := FileAccess.open(dir + "dump.json", FileAccess.READ)
-			var dump = JSON.parse_string(df.get_as_text()) if df != null else {}
-			cmp = {"seq": last_seq, "bad": Snap.compare(main.world, main.net.my_pid, dump if dump is Dictionary else {}, c.get("keys", []))}
+		"compare":                                   # this copy against the host's frozen dump, once it has taken the dump's marked sync
+			var mark := int(c.get("mark", -1))
+			var early := _compare(c.get("keys", []))
+			if not _has_mark(mark):
+				pending = {"seq": last_seq, "mark": mark, "keys": c.get("keys", []), "early": early, "t0": Time.get_ticks_msec()}
+			else:
+				cmp = {"seq": last_seq, "bad": early, "early_bad": early, "mark_seen": true, "waited_ms": 0}
+
+
+func _compare(keys: Array) -> Array:
+	var df := FileAccess.open(dir + "dump.json", FileAccess.READ)
+	var dump = JSON.parse_string(df.get_as_text()) if df != null else {}
+	return Snap.compare(main.world, main.net.my_pid, dump if dump is Dictionary else {}, keys)
 
 
 func _status() -> void:
@@ -155,7 +190,7 @@ func _status() -> void:
 		toasts.append(main.ui.toast.text)
 	var d := {"seq": last_seq, "toasts": toasts.slice(-20), "welcomed": main.guest_world, "pid": main.net.my_pid, "refusal": main.net.refusal,
 		"reconnecting": main.net.reconnecting, "reconnects": main.net.reconnects, "connected": main.net.connected(), "cmp": cmp,
-		"world": main.world != null, "running": main.running}
+		"world": main.world != null, "running": main.running, "syncs": main.net.syncs, "last_mark": last_mark, "silent_losses": main.net.host_silent_losses, "watch": watch.log, "firsts": watch.firsts, "watch_gaps": watch.gaps, "now": Time.get_ticks_msec(), "my_id": main.net.my_id}
 	if main.guest_world:
 		var w: World = main.world
 		var ui: GameUI = main.ui

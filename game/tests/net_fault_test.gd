@@ -454,6 +454,11 @@ func _host_stops() -> void:
 	await wait(slow)
 	multiplayer_poll = true
 	check(stopping, "the host stops on purpose while the guest is busy for %.1f s" % slow)
+	var t_poll := Time.get_ticks_msec()
 	var gone := await until(func(): return not main.guest_world, 10.0)
+	if not (said.has(NetSession.HOST_STOPPED) and not main.net.reconnecting):
+		# KI-12 (diagnostic): whether the goodbye (z_bye) was read at all, and when the view ended after this guest read the network again
+		print("diag KI-12: goodbye read %s ('%s'), view ended %d ms after polling again, reconnecting %s, the host process running %s" % [
+			main.net.bye != "", main.net.bye, Time.get_ticks_msec() - t_poll, main.net.reconnecting, OS.is_process_running(host_pid)])
 	check(gone and said.has(NetSession.HOST_STOPPED) and not main.net.reconnecting, "the host stops on purpose: the guest is told at once and does not wait (%s)" % str(said))
 	await until(func(): return not OS.is_process_running(host_pid), 15.0)

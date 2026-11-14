@@ -119,6 +119,12 @@ var _host_frame_msec := -1          # host (ND-26): when its last frame ran (its
 var _t_beat := 0.0
 var watchdog_drops := 0             # host (ND-26): playing guests dropped for silence (tests, the log)
 var host_heard := -1                # guest (ND-26): when the host was last heard while playing (msec), -1 when not watched
+## B42-NET-MP4-STALE: whether this guest has heard the host's heartbeat since it built the world it was sent. Until it has, it waits
+## for the host as long as the host waits for a joining guest (JOIN_TIMEOUT_MS), not TIMEOUT_MAX_MS: what the host sent during the
+## guest's long building frame went unacknowledged, and ENet's resend waits, doubled each time, can hold the host's first heartbeat
+## back for more than ten seconds after the world is built, though the host is there (net_mp4_test under load: a guest that had just
+## rejoined dropped a live host, reconnected, built the world again, and could be dropped again). Once heard, TIMEOUT_MAX_MS.
+var host_heard_since_join := false
 var host_silent_losses := 0         # guest (ND-26): connections ended because the host was silent (tests)
 var queue: Array = []               # requests waiting for the host's next tick: {seq, pid, peer, rid, kind, args}
 var arrivals := 0                   # the arrival counter that orders `queue`
@@ -294,6 +300,7 @@ func stop() -> void:
 	heard.clear()
 	_host_frame_msec = -1
 	host_heard = -1
+	host_heard_since_join = false
 	_built_frame = -1
 	_frame_msec = -1
 	queue.clear()
@@ -665,6 +672,7 @@ func _begin_reconnect() -> void:
 	reconnect_paused = host_paused
 	reconnect_until = _now() + reconnect_window
 	host_heard = -1
+	host_heard_since_join = false
 	_close_peer()
 	_retry_at = _now() + 0.5
 	predicted.clear()
@@ -906,6 +914,7 @@ func zz_tick() -> void:
 			heard[id] = Time.get_ticks_msec()
 	elif is_guest() and id == 1 and host_heard >= 0:
 		host_heard = Time.get_ticks_msec()
+		host_heard_since_join = true
 
 
 ## Host (ND-26): a playing guest silent (no heartbeat) for longer than TIMEOUT_MAX_MS is dropped as ENet drops a dead connection
@@ -1505,7 +1514,7 @@ func _process(dt: float) -> void:
 	if host_heard >= 0:
 		if gap > OWN_GAP_MS:
 			host_heard += gap                          # ND-26: this guest's own long frame is not the host's silence
-		if now_ms - host_heard > TIMEOUT_MAX_MS and main.guest_world and connected():
+		if now_ms - host_heard > (TIMEOUT_MAX_MS if host_heard_since_join else JOIN_TIMEOUT_MS) and main.guest_world and connected():
 			host_heard = -1
 			host_silent_losses += 1
 			_on_server_gone()                          # ND-26: the host silent past TIMEOUT_MAX_MS: lost, as when ENet ends the connection
@@ -1672,6 +1681,7 @@ func _guest_step(dt: float) -> void:
 		_set_timeout(1)                            # the network read once since the world was built: the usual timeouts again
 		rpc_id(1, "zz_playing")                    # and it plays (reliable: the moves may be throttled away for a while)
 		host_heard = Time.get_ticks_msec()         # ND-26: the host watched from now (zz_tick)
+		host_heard_since_join = false              # B42-NET-MP4-STALE: until its first heartbeat, JOIN_TIMEOUT_MS
 		_t_beat = BEAT_SECONDS
 	_t_beat += dt
 	if _t_beat >= BEAT_SECONDS:

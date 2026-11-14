@@ -90,6 +90,18 @@ func holds(cond: Callable, secs: float) -> bool:
 	return cond.call()
 
 
+var seq := 0
+
+
+func command(d: Dictionary) -> void:
+	seq += 1
+	d["seq"] = seq
+	var f := FileAccess.open(dir + "cmd.json", FileAccess.WRITE)
+	f.store_string(JSON.stringify(d))
+	f.close()
+	await until(func(): return int(status().get("seq", -1)) >= seq, 8.0)
+
+
 func in_game() -> bool:
 	return main.guest_world and main.net.connected() and not main.net.reconnecting
 
@@ -99,10 +111,15 @@ func _run() -> void:
 	var up := await until(func(): return status().get("hosting", false), 90.0)
 	check(up, "the host is up")
 	if up:
+		# B42-NET-MP4-STALE: the host's first heartbeats held back past TIMEOUT_MAX_MS, as ENet's resend backoff holds back what the
+		# host sent during a joining guest's long building frame (net_mp4_test under load: 10 s of nothing from a live host)
+		await command({"cmd": "mute_beats", "ms": NetSession.TIMEOUT_MAX_MS + 3000})
 		main.net.join("127.0.0.1", port, KEY, "Ann", "oak")
 		var joined := await until(func(): return in_game() and main.net.host_heard >= 0, 40.0)
 		check(joined, "guest A joins and plays (the host watched from its first frame after the world)")
 		if joined:
+			await _first_beat_late()
+			await command({"cmd": "mute_beats", "ms": 0})
 			await _live()
 			await _guest2()
 			await _host_silent()
@@ -111,6 +128,20 @@ func _run() -> void:
 			OS.kill(p)
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
+
+
+# ---------------------------------------------------------------- the first heartbeat late ----------
+## A guest that has just built its world waits for the host's first heartbeat longer than TIMEOUT_MAX_MS (up to JOIN_TIMEOUT_MS):
+## what the host sent while the guest built its world can be held back by ENet's resend backoff for more than ten seconds after
+## the world is built, though the host is there. Once heard, the usual TIMEOUT_MAX_MS (_host_silent).
+func _first_beat_late() -> void:
+	var net: NetSession = main.net
+	var t0 := Time.get_ticks_msec()
+	var stay := func(): return in_game() and net.reconnects == 0 and net.host_silent_losses == 0
+	var kept := await holds(stay, (NetSession.TIMEOUT_MAX_MS + 3000) / 1000.0 + SLACK)
+	var heard := Time.get_ticks_msec() - net.host_heard if net.host_heard >= 0 else -1
+	check(kept and heard >= 0 and heard < 2500, "the host's first heartbeats late by %.0f s after the guest built its world: it is not taken for gone, then hears them (kept %s, losses %d, reconnects %d, last heard %d ms ago, %.1f s)" % [
+		(NetSession.TIMEOUT_MAX_MS + 3000) / 1000.0, kept, net.host_silent_losses, net.reconnects, heard, (Time.get_ticks_msec() - t0) / 1000.0])
 
 
 # ---------------------------------------------------------------- a live guest -----------------------
