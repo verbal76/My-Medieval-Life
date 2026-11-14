@@ -312,7 +312,7 @@ None.
 | B42-BEGIN-DOUBLE-CLICK | Character creation Begin button sometimes needs a second click | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
 | B42-DEMO-SAVE-OVERWRITE | Demo New game overwrites the full game's save without warning (player-data protection) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
 | B42-DEMO-WINDOW-TITLE | Demo window title does not identify the demo | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
-| B42-EARMARK-SHORT | Cheese contract's earmarked milk fell from 2 to 1 (npc:39, seed 1, day 9): trace the actual item movement; correct or defective | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
+| B42-EARMARK-SHORT | Cheese contract's earmarked milk fell from 2 to 1 (npc:39, seed 1, day 9): trace the actual item movement; correct or defective | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
 | B42-MP-PANTRY-PRIVACY | Multiplayer: household pantry information private by default; shared only by explicit permission | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | unassigned |
 | B42-NET-MP4-STALE | net_mp4_test fails on 0bbee94 and later: after the host is killed or restarted a guest's copy differs (stale values) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | B42-Q-BAND-CHAPEL-RELIEF | Should the chapel stop sending relief parcels to the outlaw band (ND-23 excluded only the manor's relief)? | decision | APPROVED | unassigned |

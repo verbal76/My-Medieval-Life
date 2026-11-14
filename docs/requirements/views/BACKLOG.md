@@ -134,7 +134,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B42-BEGIN-DOUBLE-CLICK | Character creation Begin button sometimes needs a second click | approved | OWNER APPROVED | INTEGRATED |
 | B42-DEMO-SAVE-OVERWRITE | Demo New game overwrites the full game's save without warning (player-data protection) | approved | OWNER APPROVED | INTEGRATED |
 | B42-DEMO-WINDOW-TITLE | Demo window title does not identify the demo | approved | OWNER APPROVED | INTEGRATED |
-| B42-EARMARK-SHORT | Cheese contract's earmarked milk fell from 2 to 1 (npc:39, seed 1, day 9): trace the actual item movement; correct or defective | approved | OWNER APPROVED | IN DEVELOPMENT |
+| B42-EARMARK-SHORT | Cheese contract's earmarked milk fell from 2 to 1 (npc:39, seed 1, day 9): trace the actual item movement; correct or defective | approved | OWNER APPROVED | INTEGRATED |
 | B42-MP-PANTRY-PRIVACY | Multiplayer: household pantry information private by default; shared only by explicit permission | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B42-NET-MP4-STALE | net_mp4_test fails on 0bbee94 and later: after the host is killed or restarted a guest's copy differs (stale values) | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B42-REG08-SHORTFALL | Courier refund cap: record any unpaid shortfall visibly and auditably (REG-08) | approved | OWNER APPROVED | IN DEVELOPMENT |

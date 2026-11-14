@@ -12113,8 +12113,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -12137,6 +12137,11 @@
      "date": "2026-11-14",
      "change": "commits + ff307a5",
      "why": "Agent I wip/b42-contract-earmark ff307a5 (a11a082): own-pack meals and stock_family_chest use only unclaimed units (EconClaims.spare_for_use); a claimed unit is eaten only when no other meal can be planned, shrinking the earmark (used_in_need, recorded); b42_earmark_eat_test 10/0 (7 of 10 fail on 0bbee94); le03 suites passing so far; more suites running"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> b42_earmark_eat 10/0; recorder_test 230/0; 15 economy and contract suites 0 failures; test_commit: None -> 868fea7; commits + 868fea7; commits + 2d8e9bc; integrated_in + wip/b42-integration 9502c67",
+     "why": "merged into wip/b42-integration 9502c67: recorder diagnostics 2d8e9bc (518780e; recorder_test 230/0, on/off identical, cause reported as confirmed spoilage from npc:39's own stock) and the claimed-food fix 868fea7 (b42_earmark_eat_test 10/0, 15 economy/contract suites 0 failures, 10-day fingerprint unchanged); interaction entry renumbered INT-786; integration verification running"
     }
    ],
    "lifecycle": "ACTIVE",
@@ -12144,7 +12149,14 @@
    "branch": "wip/b42-recorder-reservation",
    "commits": [
     "518780e",
-    "ff307a5"
+    "ff307a5",
+    "868fea7",
+    "2d8e9bc"
+   ],
+   "tests": "b42_earmark_eat 10/0; recorder_test 230/0; 15 economy and contract suites 0 failures",
+   "test_commit": "868fea7",
+   "integrated_in": [
+    "wip/b42-integration 9502c67"
    ]
   },
   {

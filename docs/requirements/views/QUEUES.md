@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (37)
+## Workers and task branches (36)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -27,7 +27,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25R1-023 | 20 | IN DEVELOPMENT | b25r1-grassmap worker | wip/b25r1-grassmap |
 | B25R1-024 | 20 | IN DEVELOPMENT | b25r1-grassmap worker | wip/b25r1-grassmap |
 | B25R2-HOSTMENU | 20+ | IMPLEMENTED ON TASK BRANCH | none | wip/b25r2-rev2 |
-| B42-EARMARK-SHORT | unassigned | IN DEVELOPMENT | Agent I (Build 42 flight recorder) | wip/b42-recorder-reservation |
 | B42-MP-PANTRY-PRIVACY | unassigned | IMPLEMENTED ON TASK BRANCH | Agent G (Build 42 multiplayer) | wip/b42-mp-stalls |
 | B42-NET-MP4-STALE | unassigned | IN DEVELOPMENT | Agent G (Build 42 multiplayer) | wip/b42-mp-stalls |
 | B42-REG08-SHORTFALL | unassigned | IN DEVELOPMENT | Agent F (Build 42 regional travel) | wip/b42-reg-travel |
