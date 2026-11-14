@@ -49,3 +49,33 @@ frame, so it is not the substeps. Being broken down next (`ps:*` columns).
 `_find_target` is 4.9 (first bin, start-up), 2.8, 4.5, 4.2, 5.2, 5.5, 6.3, 6.0, 6.0, 6.7, 7.6 ms. It runs every frame
 (the "what can I use here" prompt) and grows with the walk. Per-bin p50/p90 and spikes repeat run 1's pattern
 (p50 8.5-17.9 ms, frames over 50 ms 8-42 a bin, over 100 ms 1-8 a bin). Memory flat 492-500 MB.
+
+### Run ft_south (`e438f1e`, load 7.6-7.9): what the long frames are
+
+`tools/freeze_probe_spikes.py` (each frame over 50 ms put down to its costliest leaf part): **215 frames over 50 ms; 152
+are `ow:prefetch`** (worst 143.7 ms), 26 presence (worst 85.8), 10 autosave (worst 306.1), 9 villagers' plans (worst
+112.6), 3 villagers deciding, 2 chunk builds, 1 field cells, the rest (12) unnamed or small. `_find_target`'s growth is
+`BusinessDesks.faced_all` (`ft:desks`): 1.1, 2.2, 2.7, 3.8, 3.9, 4.9 ms a frame in 60 s bins; everything else in
+`_find_target` is flat (under 1 ms).
+
+**Cause 1 confirmed (the owner's "advance, freeze, advance, freeze" on the trail):** `OverworldView._prefetch` generates
+one chunk of the next ring out on every frame with no chunk to build, on the main thread. The view keeps 5 x 5 chunks of
+32 tiles; the ring outside has 24, so after every chunk border (about every 7 s at walking pace) the new chunks ahead are
+generated on consecutive frames, each 26-140 ms here. In the village there is no prefetch (village chunks are skipped),
+which is why the stutter starts only once the player is out on the trails.
+
+## Fix 1: chunks prepared ahead on a background thread
+
+`OverworldView` now hands the chunk to a worker thread with a private `Overworld` laid out from the same seed, generation,
+gates and the map's stamps (as `AerialMap`'s settlements worker already does, KI-09), and `Overworld.adopt_chunk` takes
+the finished chunk into the world's cache on the main thread (plus the rim steps its generation recorded). The worker
+reads nothing of the live world. A chunk needed first by the main thread is made there as before; the worker's copy is
+then dropped. No simulation code path changes (the simulation's own get_chunk is untouched; headless sims have no view).
+
+`game/tests/chunk_prefetch_test.gd` (6 checks):
+- the worker's Overworld, on a thread, generates the 119 chunks along and round the route south identically to the
+  world's own `get_chunk`, every field, and the same rim steps (7 cells);
+- in the scene, carried south from the gate 422 tiles in 1,500 frames: main-thread prefetch time per frame worst 9.89 ms,
+  0 frames over 15 ms, 47 chunks adopted; every one of the 160 cached chunks equals a fresh generation.
+- With `-- sync` (the old main-thread prefetch, same walk; load 7.0-7.1): worst 70.0 ms, **64 frames over 15 ms**, so
+  the frame check fails (3 failures) before the fix and passes after.
