@@ -155,6 +155,7 @@ func test_death_on_the_road() -> void:
 	var h := _plain(w)
 	var ms: Array = w.brain._members(h)
 	w.treasury = maxi(w.treasury, 100000)
+	w.households[h].pantry.add("bread", 30)        # food for the road (without it a member may starve too: the road's hunger is theirs)
 	var b0 := _books(w)
 	check(Migration._household_out(w, s, ms, true, "work", "farm"), "fixture: the household sets out")
 	step(w, 600.0)
@@ -164,6 +165,8 @@ func test_death_on_the_road() -> void:
 	check(not Journeys.active(lost) and lost.away == "", "one dies on the road: their walk ends, they never reach the settlement")
 	step(w, 8 * 1440.0)
 	var rest := ms.filter(func(o): return o != lost)
+	for o: NPC in rest:
+		print("  member %d %s role %s alive %s away '%s' journey %s at %s hunger %.0f" % [o.id, o.name, o.role, str(o.alive), o.away, str(o.journey), o.cell(), o.hunger])
 	check(rest.all(func(o): return not o.alive and str(o.away) == s.id), "the others go on and join the settlement")
 	check(int(_books(w).coins) == int(b0.coins), "coins conserved (what the dead carried passed by the death rules)")
 

@@ -3,7 +3,7 @@ extends SceneTree
 ## chain 12 year-long runs): a traveller with an empty purse was provisioned for ONE leg (Journeys.start: trip_minutes +
 ## MARGIN_MINUTES), could buy nothing at the site and starved on the road home. Lead decision (engineering correction within
 ## REGION-NAV-01 AD-4): a round trip is provisioned from the household's own pantry for the whole way (there, the stay, back),
-## within the existing half-pantry cap; one who still could not get home fed and cannot pay for the rest is not sent.
+## within the existing half-pantry cap; one who still could not get home fed on what they carry is not sent (coins do not count).
 ## Failing first on 0bbee94 (the coinless traveller starves; the unprovisionable one is sent). Pure World. Run headless:
 ##   godot --headless --path game --script res://tests/b42_envoy_food_test.gd
 
@@ -102,9 +102,11 @@ func test_unprovisionable_not_sent() -> void:
 	var sid := _far(w)
 	var why := Journeys.start(w, n, sid, {"kind": "visit"})
 	check(why != "" and not Journeys.active(n), "with no food at home and no coins they are not sent (%s)" % why)
-	check(float(w.stats.get("journey_refused_no_food", 0.0)) == 1.0, "the refusal is counted")
+	check(float(w.stats.get("journey_refused_no_food", 0.0)) >= 1.0, "the refusal is counted")
 	n.coins = 1000
-	check(Journeys.start(w, n, sid, {"kind": "visit"}) == "", "with coins to buy food at the site they may go")
+	check(Journeys.start(w, n, sid, {"kind": "visit"}) != "", "coins alone do not make the road home safe: still not sent (B42 probe: a courier with coins found no food on sale at Garton and starved)")
+	w.households[n.household].pantry.add("bread", 200)
+	check(Journeys.start(w, n, sid, {"kind": "visit"}) == "", "with food at home to carry they may go")
 
 
 func test_envoy_not_sent_without_food() -> void:

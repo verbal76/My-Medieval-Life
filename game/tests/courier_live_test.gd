@@ -510,6 +510,7 @@ func test_notary_live() -> void:
 	var n := cs.negotiate(order, 1)
 	check(str(n.answer) == "counter" and int(n.quote.parts.get("notarial service", 0)) == int(CourierService.cfg().special.notary_fee), "the fee includes the notarial service (%d)" % int(CourierService.cfg().special.notary_fee))
 	check(cs.describe(order).contains("formal contract") and cs.describe(order).contains("nothing is signed from afar"), "the instruction says it is a formal contract")
+	keeper_home(x)                                    # (a fresh world: the notary's household provisions the round trip, INT-682)
 	var pc0: int = x.player.coins
 	var job := cs.book_special(order, int(n.fee))
 	check(not job.has("error") and int(job.agreement) >= 0, "booked: the delivery carries a document (%s)" % str(job.get("error", "")))
