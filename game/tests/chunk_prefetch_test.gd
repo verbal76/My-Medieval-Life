@@ -13,7 +13,9 @@ extends SceneTree
 ##   godot --headless --path game -s res://tests/chunk_prefetch_test.gd [-- sync]
 ## `sync` walks with the old main-thread prefetch (async_prefetch off): the failing case, for the record.
 
-const PREFETCH_MS := 15.0        # the most _prefetch may hold the main thread in one frame (a chunk's generation is 26 ms or more)
+const PREFETCH_MS := 15.0        # a frame's _prefetch over this is counted (a chunk's generation is 26 ms or more, 70 ms loaded)
+const MOST_OVER := 5             # at most this many (preemption on a loaded machine; the old main-thread prefetch: 64 here)
+const WORST_MS := 50.0           # and none over this
 const STEP := 0.3                # tiles the walk moves a frame (4 x walking pace: more crossings in fewer frames)
 const FRAMES := 1500
 
@@ -132,6 +134,9 @@ func _frame() -> void:
 	frames += 1
 	var w: World = main.world
 	var pf := float(int((main.ow_view.get("prof") as Dictionary).get("ow:prefetch", 0))) / 1000.0
+	var pc := float(int((main.ow_view.get("prof") as Dictionary).get("ow:prefetch(collect)", 0))) / 1000.0
+	if pf > PREFETCH_MS:
+		print("     frame %d: prefetch %.2f ms (collecting %.2f)" % [frames, pf, pc])
 	main.ow_view.set("prof", {})
 	if frames > 5:
 		worst_prefetch = maxf(worst_prefetch, pf)
@@ -155,7 +160,7 @@ func _frame() -> void:
 	var adopted := int(main.ow_view.get("prefetch_adopted"))
 	print("     %d frames, %.0f tiles south to y %.0f; prefetch on the main thread: worst %.2f ms, %d frames over %.0f ms; %d chunks adopted from the worker" % [
 			frames, float(idx), w.player.pos.y, worst_prefetch, over, PREFETCH_MS, adopted])
-	check(over == 0, "the view's prefetch never holds the main thread over %.0f ms in a frame (worst %.2f ms)" % [PREFETCH_MS, worst_prefetch])
+	check(over <= MOST_OVER and worst_prefetch < WORST_MS, "the view's prefetch holds the main thread over %.0f ms on at most %d frames (%d) and never %.0f ms (worst %.2f ms)" % [PREFETCH_MS, MOST_OVER, over, WORST_MS, worst_prefetch])
 	check(adopted >= 10, "chunks prepared ahead come from the worker: %d adopted" % adopted)
 	# every chunk in the cache equals a fresh generation (the adopted ones included)
 	var ow: Overworld = w.map.overworld

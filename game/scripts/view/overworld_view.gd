@@ -67,6 +67,8 @@ func setup(src: MapView, o: Overworld, load_radius: int) -> void:
 	canopy = CanopyFade.new()
 	add_child(canopy)
 	canopy.setup(self, pairs)
+	if async_prefetch:
+		_pf_start()                               # B42: the prefetch worker lays out its own Overworld meanwhile
 
 
 ## Keep the chunks round `center` (tiles) drawn, building at most `budget` this call (a negative
@@ -170,7 +172,10 @@ var _pf_map: VillageMap                        # the village map the world was l
 
 func _prefetch(cc: Vector2i, center: Vector2) -> void:
 	if async_prefetch:
+		var tc := Time.get_ticks_usec() if profiling else 0
 		_pf_collect()
+		if profiling:
+			_pf("ow:prefetch(collect)", tc)
 	var heading := Vector2.ZERO if _last_center == Vector2.INF else (center - _last_center)
 	_last_center = center
 	if heading.length() < 0.01:
@@ -197,24 +202,31 @@ func _prefetch(cc: Vector2i, center: Vector2) -> void:
 		overworld.get_chunk(best)
 		return
 	if _pf_thread == null:
-		_pf_sem = Semaphore.new()
-		_pf_quit = false
-		# the worker reads none of the live world: a copy of what Overworld.create reads (the map's size and stamps; the gates
-		# as this world has them, not the map's exits, which read its live solid cells)
-		var snap := VillageMap.new()
-		snap.w = _pf_map.w
-		snap.h = _pf_map.h
-		snap.data = {"stamps": (_pf_map.data.stamps as Dictionary).duplicate(true)}
-		var gates: Array = []
-		for g in overworld.gates:
-			gates.append({"out": g.out, "dir": g.dir})
-		_pf_thread = Thread.new()
-		_pf_thread.start(_pf_work.bind(overworld.seed, snap, overworld.gen, gates), Thread.PRIORITY_LOW)
+		_pf_start()
 	_pf_mutex.lock()
 	_pf_want = best
 	_pf_mutex.unlock()
 	_pf_busy = true
 	_pf_sem.post()
+
+
+## Start the worker (from setup, while the world is loading, so the copy of the stamps is not made on a frame of play).
+func _pf_start() -> void:
+	if _pf_thread != null or _pf_map == null or overworld == null:
+		return
+	_pf_sem = Semaphore.new()
+	_pf_quit = false
+	# the worker reads none of the live world: a copy of what Overworld.create reads (the map's size and stamps; the gates
+	# as this world has them, not the map's exits, which read its live solid cells)
+	var snap := VillageMap.new()
+	snap.w = _pf_map.w
+	snap.h = _pf_map.h
+	snap.data = {"stamps": (_pf_map.data.stamps as Dictionary).duplicate(true)}
+	var gates: Array = []
+	for g in overworld.gates:
+		gates.append({"out": g.out, "dir": g.dir})
+	_pf_thread = Thread.new()
+	_pf_thread.start(_pf_work.bind(overworld.seed, snap, overworld.gen, gates), Thread.PRIORITY_LOW)
 
 
 ## The worker: a private Overworld (Overworld.create, about 1.5 s, once), then each chunk asked for, generated and handed
