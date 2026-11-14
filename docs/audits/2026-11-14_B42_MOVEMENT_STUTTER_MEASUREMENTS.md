@@ -131,3 +131,19 @@ reaches a site, `Presence._run_providers`), chunk drawing `ow:build` 11 (+3), vi
 frames 17 (+10), field-cell prompt 5, autosave 5 (+3: `to_dict` and the deep copy on the frame), hourly/daily 2 (349 ms:
 the dawn or 17:00 frame), and single frames of other parts under load. The 0.5 s tick frame is still about twice an
 ordinary frame (tick frames p50 22.2 ms against 9.0; before 25.3 against 11.2).
+
+## Before and after: another direction, east (pair 1)
+
+Village, east gate (120, 57), along the road to Ashcombe (330, 40), 219 route cells, then about the hamlet: 5,644 frames,
+94.6 game seconds. Back to back, load 5.8-6.3 for both.
+
+| | before (`e438f1e`) | after (`c0f267a`, same code as `19da97d`) |
+|---|---|---|
+| p50 / p90 / p99 ms | 7.8 / 15.3 / 33.4 | 5.8 / 14.4 / 29.0 |
+| frames over 33 / 50 / 100 / 200 ms | 59 / 28 / 3 / 1 | 39 / 10 / 1 / 0 |
+| max | 225.2 (autosave) | 143.3 (autosave, the frame's to_dict under load) |
+| over 50 ms from chunk prefetch | 22 (worst 84.2) | 0 |
+| over 50 ms from the autosave | 3 (worst 225.2) | 1 + 2 following (worst 143.3) |
+
+The cause is not southbound-specific: east shows the same chunk-crossing stalls before and none after. South shows more
+of them because the walk is longer and crosses more chunks (1,390 route cells against 219).
