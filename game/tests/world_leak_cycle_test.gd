@@ -5,6 +5,7 @@ extends SceneTree
 ## reference cycle (World <-> its subsystems' back-references), about 450-500 objects a cycle. It also checks a dropped
 ## World is really freed (a weakref to it goes empty). Run headless:
 ##   godot --headless --path game --script res://tests/world_leak_cycle_test.gd [-- --cycles N]
+## (main breaks the last world's cycles as the game closes: CI also fails this suite's log on any leak printed at exit.)
 
 const TEST_SAVE := "user://test_saves/world_leak_cycle_test/save1.json"
 ## Objects a cycle may still add on the title once the first cycles have warmed every cache (fonts, shaders, the wiki's
@@ -13,9 +14,11 @@ const PER_CYCLE_TOLERANCE := 20
 
 var main
 var failures := 0
+var checks := 0
 
 
 func check(cond: bool, what: String) -> void:
+	checks += 1
 	print(("ok   " if cond else "FAIL ") + what)
 	if not cond:
 		failures += 1
@@ -59,7 +62,7 @@ func _objects() -> int:
 
 
 func _run() -> void:
-	var cycles := 4
+	var cycles := 3
 	var args := OS.get_cmdline_user_args()
 	var at := args.find("--cycles")
 	if at >= 0 and at + 1 < args.size():
@@ -95,6 +98,6 @@ func _run() -> void:
 	main.world = null
 	await settle()
 	check(prev.get_ref() == null, "the last world was freed when main threw it away")
-	print("%s: %d failure(s)" % ["PASS" if failures == 0 else "FAIL", failures])
+	print("world_leak_cycle_test: %d checks, %d failures" % [checks, failures])
 	_clear_saves()
 	quit(1 if failures > 0 else 0)

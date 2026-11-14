@@ -497,6 +497,7 @@ jobs:
           res://tests/net_liveness_test.gd      # ND-26: the reliable heartbeat watchdog (frozen guest or host dropped within TIMEOUT_MAX_MS)
           res://tests/net_mp4_test.gd            # X20 phase 4.5: one host with two, then three guests (four players)
           res://tests/net_recorder_quit_test.gd  # X20: a flight recording ends whenever its world is closed in order
+          res://tests/world_leak_cycle_test.gd   # B42 KI-08: Save and quit to title, Continue x3: every world thrown away is freed, the title's objects flat
           res://tests/net_soak_test.gd           # X20 item 11: a recorded multiplayer soak, one host and three guests (~3-4 min)
           EOF
           if [ -n "$ONLY" ]; then   # an independent run of named suites: keep only those entries of the list
@@ -516,6 +517,10 @@ jobs:
           # TEST-GOV-01: a suite fails on a SCRIPT ERROR (a check cut short), when it prints no check count, and when it runs
           # fewer checks than its floor (tools/ci_check_floors.json): an early stop can no longer pass
           python3 tools/ci_report.py run --group game --list "$RUNNER_TEMP/game_shard.txt" --prefix "$HOME/godot-bin/godot --headless --path game --script" --logs "$CI_OUT/logs" --results "$CI_OUT/results.jsonl" --fail-on-script-errors --require-counts --floors tools/ci_check_floors.json
+          # B42 KI-08: the world-cycle suite (a world loaded, quit to title and continued) also fails on any leak Godot prints
+          # at exit; the release builds' launch gate starts from the title only, so it cannot see a world kept alive
+          L="$CI_OUT/logs/game/world_leak_cycle_test.log"
+          if [ -f "$L" ] && grep -qE "resources still in use at exit|ObjectDB instances? (were|was) leaked" "$L"; then echo "::error::world_leak_cycle_test: objects or resources leaked at exit"; grep -E "leaked|still in use" "$L"; exit 1; fi
 
       - name: Short economy simulation (FR-07)
         id: sim
