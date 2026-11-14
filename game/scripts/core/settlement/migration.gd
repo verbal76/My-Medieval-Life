@@ -67,6 +67,8 @@ const WHY := {"hunger": "for want of food", "work": "for work", "land": "for lan
 
 
 static var enabled := true           # a test switch (never cleared in the game): with it off nobody moves
+static var walk := true              # a test switch (never cleared in the game): off, a move is made at once as before REG-05 (the
+                                     # decision-rule suites written for the instant move set it; reg05_household_walks_test tests the walk)
 
 ## One visit day: the settlements on the road take and send travellers. Returns how many moves were made.
 static func visit(w: World) -> int:
@@ -799,6 +801,8 @@ const WAIT_DAYS := 2                 # how long the first of a party to arrive w
 
 ## Whether `ms` leave for `s` on foot: the settlement stands in the world with a road from the village to it.
 static func walks(w: World, s: OffMapSettlement, ms: Array) -> bool:
+	if not walk:
+		return false
 	var ow: Overworld = w.map.overworld if w.map != null else null
 	if ow == null or ow.site(s.id).is_empty() or ow.road_route(Journeys.gate_index(w), s.id).is_empty():
 		return false
