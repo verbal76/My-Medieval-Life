@@ -113,6 +113,9 @@ func order_refusal(s: Dictionary, recipe: String, batches: int, keep: int) -> St
 
 ## Order `batches` batches of a recipe, or (keep > 0) keep that many of its goods in stock. "" when done, else why not.
 func add_order(s: Dictionary, recipe: String, batches: int, keep := 0) -> String:
+	# MML-MP-02 (World.mirror): a guest's verb goes to the host, which checks the premises are the guest's (NetActions)
+	if w.mirrors():
+		return w.mirror("business.works.add_order", add_order.bind(s, recipe, batches, keep), [s, recipe, batches, keep])
 	var why := order_refusal(s, recipe, batches, keep)
 	if why != "":
 		return why
@@ -123,6 +126,10 @@ func add_order(s: Dictionary, recipe: String, batches: int, keep := 0) -> String
 
 
 func cancel_order(s: Dictionary, i: int) -> void:
+	# MML-MP-02 (World.mirror): a guest's verb goes to the host, which checks the premises are the guest's (NetActions)
+	if w.mirrors():
+		w.mirror("business.works.cancel_order", cancel_order.bind(s, i), [s, i])
+		return
 	if i >= 0 and i < orders(s).size():
 		s.orders.remove_at(i)
 		if s.orders.is_empty():
@@ -132,6 +139,9 @@ func cancel_order(s: Dictionary, i: int) -> void:
 
 ## Set materials aside from the pack in the workroom. "" when done, else why not.
 func stock_work(s: Dictionary, id: String, qty: int, actor: PlayerState = null) -> String:
+	# MML-MP-02 (World.mirror): a guest's verb goes to the host, which checks the premises are the guest's (NetActions)
+	if w.mirrors():
+		return w.mirror("business.works.stock_work", stock_work.bind(s, id, qty), [s, id, qty])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, stock_work.bind(s, id, qty))
 	if not biz.is_mine(s):
@@ -147,6 +157,9 @@ func stock_work(s: Dictionary, id: String, qty: int, actor: PlayerState = null) 
 
 ## Bring materials or goods from the workroom back to the pack.
 func fetch_work(s: Dictionary, id: String, qty: int, actor: PlayerState = null) -> String:
+	# MML-MP-02 (World.mirror): a guest's verb goes to the host, which checks the premises are the guest's (NetActions)
+	if w.mirrors():
+		return w.mirror("business.works.fetch_work", fetch_work.bind(s, id, qty), [s, id, qty])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, fetch_work.bind(s, id, qty))
 	var have := int(work_of(s).get(id, 0))
@@ -165,6 +178,9 @@ func fetch_work(s: Dictionary, id: String, qty: int, actor: PlayerState = null) 
 
 ## Put goods from the workroom up for sale (the listing rules of Business.list_item). "" when done, else why not.
 func shelve(s: Dictionary, id: String, qty: int) -> String:
+	# MML-MP-02 (World.mirror): a guest's verb goes to the host, which checks the premises are the guest's (NetActions)
+	if w.mirrors():
+		return w.mirror("business.works.shelve", shelve.bind(s, id, qty), [s, id, qty])
 	var have := int(work_of(s).get(id, 0))
 	if qty <= 0 or qty > have or not biz.can_list(id):
 		return "That cannot be put up."

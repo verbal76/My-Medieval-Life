@@ -1337,6 +1337,9 @@ func apply_requests() -> void:
 			sync_due[int(q.peer)] = true                # MP C: its copy takes the sections this changed, at once (send_syncs)
 			if str(r.get("path", "")) in OFFER_VERBS and synced.has(int(q.peer)):
 				synced[int(q.peer)]["player_offers"] = -1     # X20: the offers go again even when the host's did not change (OFFER_VERBS)
+			if synced.has(int(q.peer)) and q.args is Dictionary:
+				for k in NetActions.resync_sections(str(q.args.get("path", ""))):
+					synced[int(q.peer)][k] = -1       # MML-MP-02: the premises the guest's guess changed go again, applied or refused (RESYNC)
 	send_syncs(false)
 
 

@@ -70,6 +70,28 @@ const MELEE_SLACK := 1.5
 ## ND-28: the host's clock for pacing (seconds); tests set it.
 static var clock := Callable()
 
+## MML-MP-02: the verbs that manage a market stall or a shop (the stall window, StallWindow), and the types of their arguments after
+## the premises. The premises (the first argument) must be named, a pitch or stall by its id ({"$r": "stall"}) or a shop by its
+## building ({"$r": "shop"}), never sent as a record (a made-up copy with a full till would be paid out as the guest's own), and must
+## be the guest's own to run (Business.is_mine read as the guest: the pitch it rents, the stall it built, a shop in a room it holds).
+## Another player's, a villager's or a merchant's stall is refused whatever the verb would check itself, as the host's own window
+## never offers them. Sharing (MP-05) does not extend to running a stall: only its holder runs it (open question M2-Q2). The
+## management verbs are instant in single player (no timed action), so none is PACED.
+const PREMISES_VERBS := {"business.list_item": [TYPE_STRING, TYPE_INT], "business.unlist": [TYPE_STRING, TYPE_INT],
+	"business.collect": [], "business.deposit": [TYPE_INT], "business.withdraw": [TYPE_INT], "business.close": [],
+	"business.pay_arrears": [], "business.fetch": [TYPE_STRING, TYPE_INT], "business.dismiss": [],
+	"business.set_price": [TYPE_STRING, TYPE_INT], "business.set_display": [TYPE_STRING], "business.upgrade": [],
+	"business.store_item": [TYPE_STRING, TYPE_INT], "business.hire": [TYPE_OBJECT],
+	"business.stalls.open": [TYPE_STRING], "business.stalls.close": [],
+	"business.works.add_order": [TYPE_STRING, TYPE_INT, TYPE_INT], "business.works.cancel_order": [TYPE_INT],
+	"business.works.stock_work": [TYPE_STRING, TYPE_INT], "business.works.fetch_work": [TYPE_STRING, TYPE_INT],
+	"business.works.shelve": [TYPE_STRING, TYPE_INT]}
+## MML-MP-02: what a verb's prediction on the guest's machine may have changed in its copy beyond its own character: those sections
+## go to it again after the request (NetSession.apply_requests), applied or refused, so a guess the host did not make (a refusal,
+## someone first) is put right at once rather than at the section's next change.
+const RESYNC := {"business.": ["stalls", "buildings"], "fitting.": ["buildings"]}
+
+
 ## Every player verb a guest's interface can call, by the path World.mirror sends: "" the World itself, "<field>." a module the World
 ## holds, "<Class>:" a static verb taking the World first. The sub-batch is the BATCH_C.md checklist row it belongs to.
 const VERBS := {
@@ -100,6 +122,12 @@ const VERBS := {
 	"carts.park": "C4", "carts.hitch": "C4", "business.build_storefront": "C4", "business.open_front": "C4",
 	"business.open_shop": "C4", "business.rent": "C4", "business.set_display": "C4", "business.store_item": "C4",
 	"business.upgrade": "C4", "business.set_price": "C4", "business.hire": "C4", "fitting.place": "C4",
+	# MML-MP-02: the rest of the stall window (StallWindow), the guest's own premises only (PREMISES_VERBS)
+	"business.list_item": "C4", "business.unlist": "C4", "business.collect": "C4", "business.deposit": "C4",
+	"business.withdraw": "C4", "business.close": "C4", "business.pay_arrears": "C4", "business.fetch": "C4",
+	"business.dismiss": "C4", "business.stalls.open": "C4", "business.stalls.close": "C4",
+	"business.works.add_order": "C4", "business.works.cancel_order": "C4", "business.works.stock_work": "C4",
+	"business.works.fetch_work": "C4", "business.works.shelve": "C4",
 	"ventures.offer": "C4", "ventures.withdraw": "C4", "ventures.buy": "C4",     # B25-BIZ-D5: workshops offered, bought and sold
 	"fitting.remove": "C4", "fitting.trade": "C4",
 	# C5: society
@@ -159,8 +187,11 @@ static func target(w: World, path: String) -> Callable:
 			return func(): pass                       # called by name in apply_verb (a static verb taking the World or its contracts first)
 		return Callable()
 	if path.contains("."):
-		var obj = w.get(path.get_slice(".", 0))
-		var fn2 := path.get_slice(".", 1)
+		var parts := path.split(".")
+		var obj: Variant = w
+		for i in parts.size() - 1:                  # "<field>.<verb>", or a module's own module ("business.stalls.open")
+			obj = (obj as Object).get(parts[i]) if obj is Object else null
+		var fn2 := parts[parts.size() - 1]
 		if obj == null or not (obj is Object) or not (obj as Object).has_method(fn2):
 			return Callable()
 		return Callable(obj, fn2)
@@ -207,6 +238,11 @@ static func apply_verb(w: World, p: PlayerState, path: String, raw: Array) -> Di
 	# MP-05: a guest takes hold of a cart as itself only (Carts.hitch takes the puller as an argument and checks only that one).
 	if bad.why == "" and path == "carts.hitch" and (args.size() != 2 or str(args[1]) != w.player_ref(p)):
 		bad.why = "That is not yours."
+	# MML-MP-02: a stall or shop is run only by its own holder, named, never described; the verb's other arguments as it takes them.
+	if bad.why == "" and PREMISES_VERBS.has(path):
+		bad.why = premises_refusal(w, p, path, raw, args)
+	if bad.why == "" and path == "business.rent" and not raw.is_empty() and not (raw[0] is Dictionary and str(raw[0].get("$r", "")) == "stall"):
+		bad.why = "That pitch is not free to rent."
 	if bad.why != "":
 		return _answer(w, p, false, str(bad.why))
 	if path == "player_loot" and args.size() == 1 and args[0] is Dictionary:
@@ -216,7 +252,8 @@ static func apply_verb(w: World, p: PlayerState, path: String, raw: Array) -> Di
 		if _out_of_reach(w, p, [args[0]]):
 			return _answer(w, p, false, "That is too far away.")       # MP-GUEST-TRUST: the pile's place and level, before it becomes an index
 		args = [i]
-	var far := _out_of_reach(w, p, args) if not path in DIRECTION_VERBS else false
+	# (MML-MP-02: an attendant is hired from the stall window wherever they are, as the host hires; the stall itself is in reach)
+	var far := _out_of_reach(w, p, args if path != "business.hire" else args.slice(0, 1)) if not path in DIRECTION_VERBS else false
 	if far:
 		return _answer(w, p, false, "That is too far away.")
 	var no_place := place_refusal(w, p, path, args)
@@ -247,6 +284,46 @@ static func apply_verb(w: World, p: PlayerState, path: String, raw: Array) -> Di
 	out["result"] = enc(w, r)
 	out["path"] = path
 	return out
+
+
+## MML-MP-02: why guest `p` may not ask management verb `path` (PREMISES_VERBS) with these arguments (`raw` as sent, `args` decoded;
+## whole numbers sent as floats are taken as ints in place), "" when it may: the premises named by id and the guest's own to run, the
+## other arguments of the verb's types, and OPEN STALL in the guest's own name.
+static func premises_refusal(w: World, p: PlayerState, path: String, raw: Array, args: Array) -> String:
+	var mine := "That is not your stall."
+	if raw.is_empty() or not (raw[0] is Dictionary) or not (str(raw[0].get("$r", "")) in ["stall", "shop"]) \
+			or not (args[0] is Dictionary) or (args[0] as Dictionary).is_empty():
+		return mine
+	var types: Array = PREMISES_VERBS[path]
+	if args.size() != 1 + types.size():
+		return "That cannot be done."
+	for i in types.size():
+		var v = args[i + 1]
+		match int(types[i]):
+			TYPE_INT:
+				if v is float and is_finite(v) and v == floorf(v):
+					args[i + 1] = int(v)
+				elif not (v is int):
+					return "That cannot be done."
+			TYPE_STRING:
+				if not (v is String):
+					return "That cannot be done."
+			TYPE_OBJECT:
+				if not (v is NPC):
+					return "They cannot work for you."
+	if not bool(w.as_actor(p, w.business.is_mine.bind(args[0]))):
+		return mine
+	if path == "business.stalls.open" and str(args[1]) != w.player_ref(p):
+		return "That is not yours."
+	return ""
+
+
+## MML-MP-02: the sections a guest's copy takes again after its request `path` (RESYNC), whatever the host answered.
+static func resync_sections(path: String) -> Array:
+	for k in RESYNC:
+		if path.begins_with(str(k)):
+			return RESYNC[k]
+	return []
 
 
 ## X20-MP-ECON-INTEGRITY: whether guest `p` is on the side of contract `c` that verb `path` acts for (CONTRACT_SIDE).
@@ -620,6 +697,9 @@ static func _enc_record(w: World, d: Dictionary) -> Dictionary:
 	for id in w.stalls:
 		if is_same(w.stalls[id], d):
 			return {"$r": "stall", "k": str(id)}
+	for id in w.buildings:                         # MML-MP-02: a shop, by the building it is in (the building's "shop")
+		if is_same(w.buildings[id].get("shop"), d):
+			return {"$r": "shop", "k": str(id)}
 	for id in w.stations:
 		if is_same(w.stations[id], d):
 			return {"$r": "station", "k": str(id)}
@@ -825,6 +905,8 @@ static func _dec_record(w: World, p: PlayerState, kind: String, k) -> Dictionary
 			return w.buildings.get(str(k), {})
 		"stall":
 			return w.stalls.get(str(k), {})
+		"shop":
+			return w.buildings.get(str(k), {}).get("shop", {})
 		"station":
 			return w.stations.get(str(k), {})
 		"plots", "fields", "containers":
