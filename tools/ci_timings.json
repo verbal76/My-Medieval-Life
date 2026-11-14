@@ -13,7 +13,7 @@
   "python/check_materials",
   "python/check_requirements",
   "python/check_resources",
-  "python/unittest discover",
+  "python/check_unittest_skips",
   "sim/economy_sim"
  ],
  "defaults": {
@@ -234,7 +234,7 @@
   "python/check_materials": 0.2,
   "python/check_requirements": 0.3,
   "python/check_resources": 6.7,
-  "python/unittest discover": 170.3,
+  "python/check_unittest_skips": 170.3,
   "sim/economy_sim": 210.3,
   "game/low_grass_test": 12.9,
   "game/life_decisions_test": 39.9,

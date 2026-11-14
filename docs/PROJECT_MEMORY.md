@@ -96,6 +96,31 @@ The ledger's Roadmap section lists them under "Waiting on an owner decision" and
 
 Never answer an open decision on the owner's behalf, and never treat a proposal as approved.
 
+## Making a checkout to test in (owner, 2026-11-13, Build 42 directive section 2)
+
+The register check and the register tests read seven integration branches as well as the working tree (`PATH_REFS` in
+`tools/check_requirements.py`), so their result depends on which copies of those branches the checkout holds. A
+`git clone --shared` of a working checkout gives the clone that checkout's **local** branches as `origin/*`, which can be
+weeks behind GitHub: on 2026-11-13 that made Build 40 and the Build 41 candidate falsely fail two register tests
+(`docs/audits/2026-11-13_INHERITED_FAILURES_AUDIT.md`). Before trusting any register check or Python test result:
+
+```sh
+git clone -q --shared /home/user/My-Medieval-Life /dev/shm/<name>      # or clone from GitHub
+cd /dev/shm/<name>
+git remote set-url origin "$(git -C /home/user/My-Medieval-Life remote get-url origin)"
+git config core.hooksPath tools/git_hooks                             # a clone does not inherit the pre-push hook
+git checkout -q -b <branch> <candidate sha>
+python3 tools/check_test_env.py --fetch --candidate <candidate sha> --record /dev/shm/<name>-out/test-env.json
+# then, so a test only runs on a fit environment and its record is kept with the evidence:
+python3 tools/check_test_env.py --record /dev/shm/<name>-out/test-env.json run -- python3 tools/check_unittest_skips.py
+```
+
+`tools/check_test_env.py` fetches the branches the register check names from GitHub, compares each with GitHub, and says
+`fit` or `UNFIT`. On an unfit checkout a failing register test is an **environment** failure, not a defect: fix the
+checkout (the tool prints the command) and run again; do not change the register, the check or the game to make it pass.
+`tools/check_unittest_skips.py` runs the Python tests and also fails on a skip not listed in
+`tools/unittest_expectations.json` or on fewer tests than its floor. CI runs both (`tests.yml`, `requirements.yml`).
+
 ## Sources that cannot be checked from the repository
 
 A few early register entries cite chat messages or uploads that were never committed (for example REC-002, REC-007 and REC-013). Their wording is copied into the entry itself, under `owner_wording`. Treat that copy as the record, and ask the owner only if it is not enough to act on.
