@@ -106,3 +106,28 @@ equals the frame's save byte for byte except the wall-clock `saved_at` (370,530 
 main thread 18.7 ms against 54.7 ms for the whole save; a save asked during one waits and lands after it; a failing
 background save sets `save_failing` and leaves the last save; in play the hour's autosave runs in the background and
 leaves a good save.
+
+## Before and after: the owner's route south (pair 1)
+
+Same probe, same route (village, south gate, Wendholt, Milton, Elmcote; 19,522 frames, 326 game seconds), seed 1, fixed
+60 fps headless. Before = `e438f1e` (Build 41 + probes only); after = `19da97d` (fixes 1-3). Run back to back.
+
+| | before (`e438f1e`) | after (`19da97d`) |
+|---|---|---|
+| load average during | 6.9 -> 5.9 | 8.9 -> 6.9 (busier) |
+| p50 / p90 / p99 ms | 11.5 / 23.6 / 51.7 | 9.1 / 22.0 / 44.1 |
+| frames over 33 ms | 682 | 511 |
+| frames over 50 ms | 222 | 114 |
+| frames over 100 ms | 16 | 11 |
+| frames over 200 ms | 7 | 1 |
+| max | 298.7 | 349.1 (a 06:00/17:00 hourly frame, cause 5) |
+| over 50 ms from chunk prefetch | 113 (worst 166.6) | **0** |
+| over 50 ms from the autosave | 9 (worst 298.7) | 5 + 3 following (worst 172.7) |
+| over 50 ms from desks (`ft:desks`) | 3 | 0 |
+| static memory | 495-500 MB | 512-523 MB (+~23 MB: the worker's private Overworld; flat over the walk) |
+
+What is left over 50 ms after the fixes (114): presence 29 (+9 following; settlement residents materialised as the player
+reaches a site, `Presence._run_providers`), chunk drawing `ow:build` 11 (+3), villagers' plans and decisions on tick
+frames 17 (+10), field-cell prompt 5, autosave 5 (+3: `to_dict` and the deep copy on the frame), hourly/daily 2 (349 ms:
+the dawn or 17:00 frame), and single frames of other parts under load. The 0.5 s tick frame is still about twice an
+ordinary frame (tick frames p50 22.2 ms against 9.0; before 25.3 against 11.2).
