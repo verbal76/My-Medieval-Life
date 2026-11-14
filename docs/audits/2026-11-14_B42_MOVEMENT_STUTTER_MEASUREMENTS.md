@@ -191,3 +191,82 @@ against after 48.0 / 104.7 / 170.8; frames over 100 ms 1,458 against 1,463, over
 dominates both); **frames with over 20 ms of chunk prefetch 126 against 3**; the autosave's main-thread cost per hour
 60-197 ms (6 saves) against 18-71 ms. Draw p50 36.9 against 36.0 ms. The game-side causes behave as headless; the
 rasteriser hides the rest.
+
+# Part 2: chunk drawing in parts (branch `wip/b42-stutter-2`, from `wip/b42-integration` `9dffa6e`)
+
+Lead's assignment (2026-11-14): time-slice `ow:build`, view-only and result-neutral; the 0.5 s tick, presence
+materialising and the dawn/17:00 frames stay out (owner decision B42-Q-STUTTER-PART2: Build 42 ships the result-neutral
+fixes; the owner checks the remaining hitches on real hardware).
+
+## Fix 4: a chunk drawn in parts
+
+`OverworldView._build` drew a chunk whole in one frame: median 7 ms, up to 55 ms on the southern walk at load 7-9, and
+up to 2,560 tiles placed in one frame (a settlement chunk). It is now `_build_begin` + `_build_part`:
+- its cells 2 rows at a time;
+- its grass tufts 2 rows at a time;
+- its trees;
+- its settlement buildings, a few slots a part until 300 tiles are placed (`_site_begin/_site_step/_site_end`; the whole
+  `_draw_site_buildings` loops the same steps);
+- then its works and a lifted roof.
+
+These run in the whole build's order and layers. `follow` spends at most `build_budget_usec` (3 ms) a frame (at least one
+part), and settlement buildings start a frame of their own. The chunk is in `chunks` from its first part, so a road,
+live water or a felled tree changed while it is drawn reaches it as it reaches a loaded chunk, and each part draws the
+world as it is then. A chunk freed mid-draw is dropped with its layers. `_build` still draws whole (first view,
+teleport, tests).
+
+Found while slicing: `road_tile` read a neighbour across the chunk edge with `Overworld.is_road`, which **generated
+that neighbour on the main thread** when it was not cached (one 21-24 ms part). It now reads the drawn chunk's own padded
+road mask when the neighbour is not generated. On seed 1 the two agree on all 203,400 pad cells of 300+ chunks
+(probe, rows -2..25 x columns -3..9).
+
+`game/tests/chunk_slice_test.gd`: walking pace (0.075 tiles a frame) south from the gate, 3,600 frames, 242 tiles,
+budget 0 (one part a frame). It checks drawing work by count (`MapView.tiles_put`), which does not depend on load, plus
+equality.
+- after (`3777e87`, load 7.0-7.4): 3/0. Most tiles placed in one frame 588 (a chunk drawn whole: up to 2,560). Every
+  one of 35 drawn chunks equals the chunk drawn whole now, cell for cell in every layer.
+- failing case, `-- whole` (old one-chunk-a-frame path, same code, load 6.8-7.8): most 2,560 tiles, so the tiles check
+  and the slicing check fail (2 failures); equality still holds.
+- frame times (printed, not asserted; load 7-8): after, frames drawing over 10 / 15 / 20 / 30 ms: 3 / 0 / 0 / 0, worst
+  12.5. Whole: 13 / 8 / 5 / 1, worst 38.2. On `9dffa6e` itself: 12 / 4 / 2 / 2, worst 53.1. The remaining 9-12 ms frames
+  are single 2-row parts of 70-90 tiles, i.e. preemption at load 7-8.
+
+## Before and after on the probe walks (part 2)
+
+Before = `9dffa6e` (integration: fixes 1-3); after = `3777e87`/`b4fc55d` (+ chunks drawn in parts; the later commit is
+docs only). Headless, fixed 60 fps, the first 130 frames (the first view) skipped. `ow:build` = main-thread time drawing
+chunks in a frame.
+
+| run (load at start) | ow:build frames | p50 / p90 / max ms | ow:build over 10 / 20 / 50 ms | all frames over 33 / 50 / 100 ms |
+|---|---|---|---|---|
+| south 1 before (8.7) | 224 | 6.1 / 14.2 / 47.4 | 49 / 8 / 0 | 276 / 78 / 7 |
+| south 1 after (7.5) | 565 | 3.1 / 6.3 / 23.4 | 14 / 1 / 0 | 298 / 81 / 11 |
+| south 2 before (7.4) | 221 | 4.5 / 9.5 / 31.8 | 21 / 4 / 0 | 115 / 24 / 5 |
+| south 2 after (6.1) | 687 | 4.1 / 6.9 / 24.6 | 25 / 1 / 0 | 460 / 104 / 13 |
+| east before (6.8) | 47 | 7.8 / 12.8 / 15.3 | 8 / 0 / 0 | 67 / 17 / 2 |
+| east after (5.0) | 149 | 4.5 / 6.5 / 14.3 | 2 / 0 / 0 | 97 / 17 / 3 |
+
+The chunk drawing is spread out: the same work over about 2.5-3 times as many frames. Its p90 is about halved; its worst
+is 47.4 -> 23.4 and 31.8 -> 24.6; frames over 20 ms are 8 -> 1 and 4 -> 1. The remaining 10-25 ms drawing frames are a
+3 ms budget plus one small part, inflated by preemption at load 5-9: by count, no frame places more than 588 tiles.
+
+**Whole-frame counts did not improve measurably.** They are now set by the causes left out of Build 42 (the 0.5 s tick,
+presence, villagers' plans, dawn/17:00) and by the machine's load, which varied between back-to-back runs: south 2
+"before" ran in a quiet spell, with fewer frames over 33 ms than either after run. This fix removes the drawing's share
+of the long frames, about 8 frames over 20 ms per walk. It is not a step change like fix 1 (prefetch: 113-153 frames
+over 50 ms -> 0).
+
+## Part 2 tests
+
+- On `b4fc55d`: tree_test 45/0, polish_p2_test 110/0, water_test 67/0, road_types_test 14/0, road_wear_test 40/0,
+  tile_premake_test 6/0, travel_perf_test 1/0, chunk_prefetch_test 6/0, stream_tunnel_test 5/0, chunk_slice_test 3/0,
+  world_test 339/0. **overworld_test 440/1**: "returning shows the same tiles at (-30, 40)". Main's first view asks for
+  the nearest 6 chunks at once (`follow(..., 6)`), and the sliced path drew them over frames, so a chunk the test samples
+  was not yet drawn.
+- Fixed in `ddff382`: only the streaming call of play (one chunk a frame) draws in parts. A first view (6) or a teleport
+  (-1) draws whole chunks as before. The test queries `ground_value`/`grass_value` finish a chunk being drawn first.
+  overworld_test 440/0.
+- On `ddff382`: chunk_slice_test 3/0, tree_test 45/0, polish_p2_test 110/0, start_test 524 steps/0, road_wear_test 40/0,
+  water_test 67/0, chunk_prefetch_test 6/0.
+- 10-day fingerprint not rerun: part 2 changes drawing only (`overworld_view.gd`, plus a counter in `map_view.gd`), which
+  the headless simulation never runs.

@@ -201,6 +201,7 @@ jobs:
           res://tests/stream_tunnel_test.gd     # Build 41 stream fix: a long frame never carries the player through a wall
           res://tests/tile_premake_test.gd      # Build 41 stream fix: every tile the simulation draws in play is made at start
           res://tests/chunk_prefetch_test.gd    # B42 stutter: chunks made on a worker thread equal get_chunk's; no prefetch stall on the walk
+          res://tests/chunk_slice_test.gd       # B42 stutter: chunk drawing split across frames draws the same tiles
           res://tests/desks_faced_test.gd       # B42 stutter: the reach-filtered desk prompt gives the same answer
           res://tests/autosave_async_test.gd    # B42 stutter: the background autosave writes the same file, in order
           res://tests/overworld_test.gd

@@ -170,7 +170,11 @@ func set_tile(layer: TileMapLayer, cell: Vector2i, v: int) -> void:
 	_put(layer, cell, v)
 
 
+var tiles_put := 0                    # B42 (diagnostics): tiles placed or erased by _put, ever (a frame's drawing work, by count)
+
+
 func _put(layer: TileMapLayer, cell: Vector2i, v: int) -> void:
+	tiles_put += 1
 	if v < 0:
 		layer.erase_cell(cell)
 		return
