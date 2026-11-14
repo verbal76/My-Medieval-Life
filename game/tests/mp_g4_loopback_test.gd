@@ -75,8 +75,10 @@ func read_json(name: String) -> Dictionary:
 	var f := FileAccess.open(dir + name, FileAccess.READ)
 	if f == null:
 		return {}
-	var d = JSON.parse_string(f.get_as_text())
-	return d if typeof(d) == TYPE_DICTIONARY else {}
+	var j := JSON.new()                                   # quietly: a file the host is writing this moment reads as empty
+	if j.parse(f.get_as_text()) != OK:
+		return {}
+	return j.data if typeof(j.data) == TYPE_DICTIONARY else {}
 
 
 func status() -> Dictionary:
@@ -315,6 +317,8 @@ func scenario() -> void:
 		"MP-05 before any agreement: the host's cart stands in the guest's copy with its load withheld (host: %d logs)" % int(g4().get("cart", {}).get("logs", -1)))
 	await act(func(): return main.world.carts.hitch(cart_in_copy(), main.world.acting_ref()))
 	check(refused(last_reply()) and str(g4().cart.puller) == "", "and pulling it is refused by the host (%s)" % str(last_reply().get("text", "")))
+	check(str(last_reply().get("text", "")).find("tier 3") >= 0 and str(last_reply().get("text", "")).find("family") < 0,
+		"the refusal names the player-cart rule (its owner or a tier 3 sharing partner), not family: being the host's spouse does not open it")
 	check(share_from_window(3), "the guest's Players window offers Asset sharing, tier 3 (pressed)")
 	await until(func(): return (g4().get("offers", []) as Array).any(func(o): return str(o.kind) == "asset_share"), 4.0)
 	var off: Array = (g4().get("offers", []) as Array).filter(func(o): return str(o.kind) == "asset_share")
