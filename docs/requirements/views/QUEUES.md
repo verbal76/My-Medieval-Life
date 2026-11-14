@@ -29,7 +29,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25R2-HOSTMENU | 20+ | IMPLEMENTED ON TASK BRANCH | none | wip/b25r2-rev2 |
 | B42-ENVOY-ROUNDTRIP | unassigned | IN DEVELOPMENT | Agent F (Build 42 regional travel) | wip/b42-reg-travel |
 | B42-MP-PANTRY-PRIVACY | unassigned | IMPLEMENTED ON TASK BRANCH | Agent G (Build 42 multiplayer) | wip/b42-mp-stalls |
-| B42-NET-MP4-STALE | unassigned | IN DEVELOPMENT | Agent G (Build 42 multiplayer) | wip/b42-mp-stalls |
+| B42-NET-MP4-STALE | unassigned | IN DEVELOPMENT | Agent G (Build 42 multiplayer) | wip/b42-net-resync |
 | B42-REG08-SHORTFALL | unassigned | IN DEVELOPMENT | Agent F (Build 42 regional travel) | wip/b42-reg-travel |
 | DOC-RECON-01 | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |

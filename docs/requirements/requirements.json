@@ -12230,15 +12230,21 @@
      "date": "2026-11-14",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> mp_pantry_privacy_test 27/0; test_commit: None -> c4b3a6b; commits + c4b3a6b",
      "why": "Agent G c4b3a6b on wip/b42-mp-stalls: player households' pantries go only to their own players and tier-3 sharers; mp_pantry_privacy_test 27/0 (10 fail at 728e625); not yet integrated; owner questions on the sharing tier and villager pantries"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "tests: mp_pantry_privacy_test 27/0 -> mp_pantry_privacy_test 27/0; mp02_guest_stall_management 92/0; mp_pantry_privacy 26/0; test_commit: c4b3a6b -> c1614de; commits + c1614de",
+     "why": "Agent G c1614de: owner answers applied (tier-3 partners run the holder's stall, holder-only actions provisional; pantry visible at tier 2 and 3); mp02 92/0, mp_pantry_privacy 26/0; pending merge"
     }
    ],
    "lifecycle": "ACTIVE",
    "assigned_worker": "Agent G (Build 42 multiplayer)",
    "branch": "wip/b42-mp-stalls",
-   "tests": "mp_pantry_privacy_test 27/0",
-   "test_commit": "c4b3a6b",
+   "tests": "mp_pantry_privacy_test 27/0; mp02_guest_stall_management 92/0; mp_pantry_privacy 26/0",
+   "test_commit": "c1614de",
    "commits": [
-    "c4b3a6b"
+    "c4b3a6b",
+    "c1614de"
    ]
   },
   {
@@ -12320,11 +12326,19 @@
      "date": "2026-11-14",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Agent G (Build 42 multiplayer); branch: None -> wip/b42-mp-stalls",
      "why": "assigned to Agent G"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "branch: wip/b42-mp-stalls -> wip/b42-net-resync; commits + 1f847f8",
+     "why": "Agent G: reproduced on 0bbee94 (148 checks, 3 failures, load 6-9); 18 instrumented runs: no resync defect; three test faults fixed on wip/b42-net-resync 1f847f8 (compare after the marked sync; checked live waits; freeze keeps the host's network running); 154 checks; still fails under heavy load during extra reconnects after a host restart (possible ND-26 robustness defect, root cause open); KI-12 traced to a 0.7 s margin (BYE_WAIT_SECONDS 2 s vs the test's 1.3 s busy read), unconfirmed"
     }
    ],
    "lifecycle": "ACTIVE",
    "assigned_worker": "Agent G (Build 42 multiplayer)",
-   "branch": "wip/b42-mp-stalls"
+   "branch": "wip/b42-net-resync",
+   "commits": [
+    "1f847f8"
+   ]
   },
   {
    "id": "B42-Q-BAND-CHAPEL-RELIEF",
