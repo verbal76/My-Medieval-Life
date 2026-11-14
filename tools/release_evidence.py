@@ -252,8 +252,16 @@ class GitHub:
     def ref_sha(self, ref):
         return self._api("commits/%s" % ref).get("sha")
 
-    def dispatch(self, workflow, ref):
-        self._api("actions/workflows/%s/dispatches" % workflow, "--method", "POST", "-f", "ref=%s" % ref, raw=True)
+    def dispatch(self, workflow, ref, sha):
+        # release_sha puts the run in a concurrency group of its own commit (tests.yml): it cancels no other Tests run and no
+        # push's run cancels it (owner 2026-11-14, B42-Q-RELEASE-TESTS item 2)
+        self._api("actions/workflows/%s/dispatches" % workflow, "--method", "POST", "-f", "ref=%s" % ref,
+                  "-f", "inputs[release_sha]=%s" % sha, raw=True)
+
+    def runs_since(self, workflow, ref, since):
+        """Runs of the workflow on the branch created at or after `since` (to see a started run that tests another commit)."""
+        return [r for r in self._api("actions/workflows/%s/runs?branch=%s&event=workflow_dispatch&per_page=30" % (workflow, ref)).get("workflow_runs", [])
+                if (r.get("created_at") or "") >= since]
 
 
 def collect_evidence(gh, run):
@@ -312,7 +320,7 @@ def find_tests(gh, sha, ref, req, tree, when_missing, sleep=time.sleep, now=time
             if head != sha:
                 return record(sha, "blocked", None, judged, "no full Tests run of %s exists, and one cannot be started: the head of %s is now %s, so a "
                               "run started on it would test another commit. Start Tests on this commit, or release the newer commit." % (sha[:12], ref, str(head)[:12]))
-            gh.dispatch(t["workflow"], ref)
+            gh.dispatch(t["workflow"], ref, sha)
             at = datetime.datetime.now(datetime.timezone.utc)
             dispatched = at.strftime("%Y-%m-%dT%H:%M:%SZ")
             dispatched_floor = (at - datetime.timedelta(minutes=2)).strftime("%Y-%m-%dT%H:%M:%SZ")   # clock skew
@@ -320,6 +328,12 @@ def find_tests(gh, sha, ref, req, tree, when_missing, sleep=time.sleep, now=time
             sleep(t["poll_seconds"])
             continue
         started = dispatched and any((j["run"].get("created_at") or "") >= dispatched_floor for j in judged)
+        if dispatched and not started:
+            moved = [r for r in gh.runs_since(t["workflow"], ref, dispatched_floor) if r.get("head_sha") != sha]
+            if moved:
+                return record(sha, "blocked", None, judged, "the Tests run started for this release (%s) tests commit %s: %s moved on "
+                              "after the check. Nothing is published; release the newer commit, or start Tests on this one."
+                              % (moved[0].get("id"), str(moved[0].get("head_sha"))[:12], ref), dispatched)
         if decision == "wait" or (dispatched and not started):
             if now() >= deadline:
                 return record(sha, "blocked", None, judged, "the Tests run of this commit did not finish within %s minutes" % t["max_wait_minutes"], dispatched)
