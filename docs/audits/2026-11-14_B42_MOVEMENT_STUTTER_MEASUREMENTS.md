@@ -255,3 +255,18 @@ presence, villagers' plans, dawn/17:00) and by the machine's load, which varied 
 "before" ran in a quiet spell, with fewer frames over 33 ms than either after run. This fix removes the drawing's share
 of the long frames, about 8 frames over 20 ms per walk. It is not a step change like fix 1 (prefetch: 113-153 frames
 over 50 ms -> 0).
+
+## Part 2 tests
+
+- On `b4fc55d`: tree_test 45/0, polish_p2_test 110/0, water_test 67/0, road_types_test 14/0, road_wear_test 40/0,
+  tile_premake_test 6/0, travel_perf_test 1/0, chunk_prefetch_test 6/0, stream_tunnel_test 5/0, chunk_slice_test 3/0,
+  world_test 339/0. **overworld_test 440/1**: "returning shows the same tiles at (-30, 40)". Main's first view asks for
+  the nearest 6 chunks at once (`follow(..., 6)`), and the sliced path drew them over frames, so a chunk the test samples
+  was not yet drawn.
+- Fixed in `ddff382`: only the streaming call of play (one chunk a frame) draws in parts. A first view (6) or a teleport
+  (-1) draws whole chunks as before. The test queries `ground_value`/`grass_value` finish a chunk being drawn first.
+  overworld_test 440/0.
+- On `ddff382`: chunk_slice_test 3/0, tree_test 45/0, polish_p2_test 110/0, start_test 524 steps/0, road_wear_test 40/0,
+  water_test 67/0, chunk_prefetch_test 6/0.
+- 10-day fingerprint not rerun: part 2 changes drawing only (`overworld_view.gd`, plus a counter in `map_view.gd`), which
+  the headless simulation never runs.
