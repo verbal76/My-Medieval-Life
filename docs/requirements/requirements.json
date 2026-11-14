@@ -12099,8 +12099,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -12113,11 +12113,50 @@
      "date": "2026-11-14",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Agent G (Build 42 multiplayer); branch: None -> wip/b42-mp-stalls",
      "why": "assigned 2026-11-14 (owner accountability directive)"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> mp_pantry_privacy_test 27/0; test_commit: None -> c4b3a6b; commits + c4b3a6b",
+     "why": "Agent G c4b3a6b on wip/b42-mp-stalls: player households' pantries go only to their own players and tier-3 sharers; mp_pantry_privacy_test 27/0 (10 fail at 728e625); not yet integrated; owner questions on the sharing tier and villager pantries"
     }
    ],
    "lifecycle": "ACTIVE",
    "assigned_worker": "Agent G (Build 42 multiplayer)",
-   "branch": "wip/b42-mp-stalls"
+   "branch": "wip/b42-mp-stalls",
+   "tests": "mp_pantry_privacy_test 27/0",
+   "test_commit": "c4b3a6b",
+   "commits": [
+    "c4b3a6b"
+   ]
+  },
+  {
+   "id": "B42-NET-MP4-STALE",
+   "kind": "approved",
+   "title": "net_mp4_test fails on 0bbee94 and later: after the host is killed or restarted a guest's copy differs (stale values)",
+   "description": "net_mp4_test fails on 0bbee94 and later: after the host is killed or restarted a guest's copy differs (stale values)",
+   "source": "docs/audits/2026-11-14_B42_LEAD_LOG.md",
+   "owner_wording": "Do not silently defer, dismiss, or remove an issue from the tracker.",
+   "approval": "owner, 2026-11-14 (accountability directive: no inherited failure carried silently)",
+   "acceptance": [
+    "reproduced on 0bbee94, root cause found (defect or test timing), fixed or classified with evidence; net_mp4_test passes reliably under load"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/audits/2026-11-14_B42_LEAD_LOG.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
   },
   {
    "id": "B42-Q-EMIG-WORK",

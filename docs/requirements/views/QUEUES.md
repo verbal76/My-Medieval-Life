@@ -32,7 +32,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B42-DEMO-SAVE-OVERWRITE | unassigned | IN DEVELOPMENT | Agent O (Build 42 demo and front end) | wip/b42-demo-frontend |
 | B42-DEMO-WINDOW-TITLE | unassigned | IN DEVELOPMENT | Agent O (Build 42 demo and front end) | wip/b42-demo-frontend |
 | B42-EARMARK-SHORT | unassigned | IN DEVELOPMENT | Agent I (Build 42 flight recorder) | wip/b42-recorder-reservation |
-| B42-MP-PANTRY-PRIVACY | unassigned | IN DEVELOPMENT | Agent G (Build 42 multiplayer) | wip/b42-mp-stalls |
+| B42-MP-PANTRY-PRIVACY | unassigned | IMPLEMENTED ON TASK BRANCH | Agent G (Build 42 multiplayer) | wip/b42-mp-stalls |
 | B42-REG08-SHORTFALL | unassigned | IN DEVELOPMENT | Agent F (Build 42 regional travel) | wip/b42-reg-travel |
 | DOC-RECON-01 | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |

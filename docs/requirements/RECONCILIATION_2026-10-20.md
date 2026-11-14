@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 914 (513 of them still open) |
-| **Open entries now** (rules excluded) | | **671** |
+| Entries added since | | 915 (514 of them still open) |
+| **Open entries now** (rules excluded) | | **672** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (914)
+## Added since the baseline (915)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -313,7 +313,8 @@ None.
 | B42-DEMO-SAVE-OVERWRITE | Demo New game overwrites the full game's save without warning (player-data protection) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | B42-DEMO-WINDOW-TITLE | Demo window title does not identify the demo | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | B42-EARMARK-SHORT | Cheese contract's earmarked milk fell from 2 to 1 (npc:39, seed 1, day 9): trace the actual item movement; correct or defective | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
-| B42-MP-PANTRY-PRIVACY | Multiplayer: household pantry information private by default; shared only by explicit permission | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
+| B42-MP-PANTRY-PRIVACY | Multiplayer: household pantry information private by default; shared only by explicit permission | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | unassigned |
+| B42-NET-MP4-STALE | net_mp4_test fails on 0bbee94 and later: after the host is killed or restarted a guest's copy differs (stale values) | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B42-Q-EMIG-WORK | Should leaving for work be judged per person (no job and no earnings for about a week) instead of per household? | decision | APPROVED | unassigned |
 | B42-Q-JOB02 | Approve the job-board offered-pay rules (J2-Q1..Q7 as built) and switch them on only after a four-seed with/without year-long comparison? | decision | APPROVED | unassigned |
 | B42-Q-POP-LEVERS | Change population growth levers (birth rate, hunger arrivals, 2% young homesteading, deposit sizes) for Build 42? | decision | APPROVED | unassigned |
