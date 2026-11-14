@@ -108,6 +108,8 @@ func hitch(c: Dictionary, ref: String) -> String:
 	if w.mirrors():
 		return w.mirror("carts.hitch", hitch.bind(c, ref), [c, ref])
 	if not may_use(c, ref):
+		if World.is_player_ref(str(c.owner)):              # may_use: a player's cart is its owner's, or a tier-3 sharing partner's (MP-05)
+			return "It is %s cart: only its owner, or a player who shares assets with them at tier 3, may take it." % whose(c)
 		return "It is %s cart: only they, their family or their hired help may take it." % whose(c)
 	if str(c.puller) != "" and str(c.puller) != ref:
 		return "Someone is pulling it."

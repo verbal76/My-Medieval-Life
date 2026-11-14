@@ -8,7 +8,9 @@ extends SceneTree
 ##     hunger, position, breeding and product clocks), every pen's owner, tenant and trough, every villager's health, armour,
 ##     life and place, the hunters' claims (rebuilt from their saved plans);
 ##  2. what the save documents as not kept (docs/design/SAVE_WILDLIFE_COMBAT_CONTINUITY.md) is reset, not half kept: the fight,
-##     the animal's anger, a tree's axe blows;
+##     the animal's anger, a tree's axe blows, and (Build 42) a struck animal's flight (B25-ANIMAL-HUNT-AI, Build 40: startle_left,
+##     alarm, alarm_left, run_dir, zig_left, zig_side, slide, pause_left, breaking, at_bay): an animal saved mid-flight loads calm,
+##     with its health and place, and runs again by the ordinary rules when struck after the load;
 ##  3. the same save loaded twice independently, and loaded, saved again and loaded (reload-save-reload), goes on identically
 ##     for six game hours: the whole saved world, plus the wildlife and combat transients the save leaves out;
 ##  4. saving straight after a load writes the same save again (a fixed point of load and save, within ND-15's tolerance).
@@ -64,7 +66,11 @@ func persistent(w: World) -> Dictionary:
 func transients(w: World) -> String:
 	var parts := ["move_rng %s" % w.fauna.move_rng.state]
 	for a: Animal in w.fauna.animals:
-		parts.append("a%d %s %s %s %s %s %s %s %s" % [a.id, a.goal, a.wait, a.moving, a.hunt, a.anger, a.anger_left, a.bite_cd, a.facing])
+		parts.append("a%d %s %s %s %s %s %s %s %s %s %s" % [a.id, a.goal, a.wait, a.moving, a.hunt, a.anger, a.anger_left, a.bite_cd, a.facing,
+			a.act, a.act_left])
+		# B25-ANIMAL-HUNT-AI (Build 40): a struck animal's flight, not saved either
+		parts.append("f%d %s %s %s %s %s %s %s %s %s %s" % [a.id, a.startle_left, a.alarm, a.alarm_left, a.run_dir, a.zig_left, a.zig_side,
+			a.slide, a.pause_left, a.breaking, a.at_bay])
 	for n: NPC in w.npcs:
 		parts.append("n%d %s %s %s" % [n.id, n.target, n.attack_cd, n.chase_route])
 	var trees := w.tree_damage.keys()
@@ -128,6 +134,18 @@ func _init() -> void:
 	# and a tree with axe blows in it (World.tree_damage)
 	w.tree_damage[Vector2i(3, 3)] = {"hits": 2, "side": 1, "at": w.minutes}
 	run_hours(w, 0.25)                 # a quarter of an hour into the fight
+	# and a struck animal running from its attacker (B25-ANIMAL-HUNT-AI): a villager strikes a grazer and it is saved mid-flight
+	var prey := w.fauna.animals.filter(func(a: Animal): return a.alive and not bool(a.spec().get("people", false)) \
+		and not w.fauna.pens.has(a.area))
+	check(not prey.is_empty(), "seed 1 has a wild grazer to strike (%d)" % prey.size())
+	var runner: Animal = prey[0] if not prey.is_empty() else null
+	if runner != null:
+		var striker: NPC = fighters[2] if fighters.size() > 2 else f1
+		w.fauna.provoke(runner, "npc:%d" % striker.id)
+		for i in 3:
+			w.update(0.5)              # past the startle (startle_seconds 0.35), into the flight (flee_seconds 6)
+		check(runner.alive and runner.alarm != "" and runner.alarm_left > 0.0 and runner.startle_left == 0.0, \
+			"the world is saved with a struck %s mid-flight (alarm '%s', %.1f s left)" % [runner.species, runner.alarm, runner.alarm_left])
 	var mid_fight := f1.target != -1 or (beast != null and beast.anger != "")
 	check(mid_fight, "the world is saved with a fight going on (villager target %d, animal anger '%s')" % [f1.target, beast.anger if beast != null else ""])
 	var hp_before := f2.hp
@@ -149,6 +167,33 @@ func _init() -> void:
 				lb = a
 		check(lb != null and lb.anger == "" and lb.alive == beast.alive and lb.hp == beast.hp, "the animal is kept with its health; its anger is not (documented)")
 	check(l1.tree_damage.is_empty(), "a tree's axe blows are not kept (documented: they heal)")
+	if runner != null:
+		var lr: Animal = null
+		for a: Animal in l1.fauna.animals:
+			if a.id == runner.id:
+				lr = a
+		var fresh := Animal.new()
+		var calm := lr != null and lr.startle_left == fresh.startle_left and lr.alarm == fresh.alarm and lr.alarm_left == fresh.alarm_left \
+			and lr.run_dir == fresh.run_dir and lr.zig_left == fresh.zig_left and lr.zig_side == fresh.zig_side and lr.slide == fresh.slide \
+			and lr.pause_left == fresh.pause_left and lr.breaking == fresh.breaking and lr.at_bay == fresh.at_bay
+		check(calm and lr.alive == runner.alive and _within(str(lr.pos), str(runner.pos)) and _within(str(lr.hp), str(runner.hp)), \
+			"the animal saved mid-flight loads calm (its ten flight fields at their defaults, documented), alive, with its health and place")
+		# loads sensibly: in a separate copy, struck again after the load it is startled and runs by the ordinary rules
+		var l4 := loaded(s)
+		var r4: Animal = null
+		for a: Animal in l4.fauna.animals:
+			if a.id == runner.id:
+				r4 = a
+		var striker4: NPC = l4.npc(fighters[2].id if fighters.size() > 2 else f1.id)
+		var p0 := r4.pos
+		l4.fauna.provoke(r4, "npc:%d" % striker4.id)
+		for i in 6:
+			l4.update(0.5)
+		check(r4.alarm != "" and r4.pos.distance_to(p0) > 0.1, "struck again after the load it runs by the ordinary rules (moved %.2f tiles)" % r4.pos.distance_to(p0))
+		for i in 40:
+			l4.update(0.5)             # 20 s: past flee_seconds; it calms down unless still within calm_distance of its attacker
+		check(r4.alarm == "" or r4.pos.distance_to(striker4.pos) <= float(GameData.b("wildlife").struck.calm_distance) + 1.0, \
+			"and its flight ends by the ordinary rules (alarm '%s')" % r4.alarm)
 
 	# 4: a save is a fixed point of load and save
 	var s2 := save_text(l1)
@@ -164,6 +209,6 @@ func _init() -> void:
 	var t1 := save_text(l1)
 	check(t1 == save_text(l2), "the same save loaded twice goes on identically for six hours (the whole saved world)")
 	check(t1 == save_text(l3), "loaded, saved again and loaded, it goes on identically too")
-	check(transients(l1) == transients(l2) and transients(l1) == transients(l3), "and so do the wildlife and combat transients the save leaves out (animals' strolls, anger, bites; villagers' fights; trees)")
+	check(transients(l1) == transients(l2) and transients(l1) == transients(l3), "and so do the wildlife and combat transients the save leaves out (animals' strolls, anger, bites, flights; villagers' fights; trees)")
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)

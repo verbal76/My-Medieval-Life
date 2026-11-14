@@ -5,6 +5,11 @@ extends SceneTree
 ## contacts, killings, debts, villagers' asks or refusals, crime cases, contracts, stored goods (unless the MP-05 tier shares them), law
 ## lessons, heir's ties or kept messages, and not the villagers' judgment store. The host's world is unchanged; the view is
 ## deterministic; the guest loads it; an asset-sharing agreement shares assets, never private records.
+## Household members (owner 2026-11-12, docs/directives/2026-11-12_extra_life_owner_decisions.md item 7: "Test multiplayer visibility
+## for the owner, unrelated guests, household members, and other players"; "Family membership does not automatically authorize another
+## player to access a household's private records"): Cara marries Bran and Dora marries the host by the players' own consent
+## (player_offer / player_answer, MP-D8); each spouse's view shows the marriage and the couple's household (public family records) and
+## still none of the spouse's private records.
 var checks := 0
 var failures := 0
 
@@ -210,5 +215,80 @@ func _init() -> void:
 	var sc: Dictionary = (ds.carts.carts as Array).filter(func(c): return int(c.id) == int(cb.id))[0]
 	check((ds.chests.stash as Dictionary).has(ub) and Inventory.from_dict(sc.store).count("log") == 3, "MP-05 tier 3 with Bran: his chest and cart goods are shared with Ann")
 	check(not ds.get("justice", {}).get("cases", {}).has(bref) and not (ds.relations.ties as Dictionary).has(Relations.key(bid, v1.id)) and not (ds.credit.debts as Array).any(func(x): return str(x.debtor) == bref and str(x.creditor) != aref), "and still none of his cases, ties or debts (sharing grants no private information)")
+	# -- household members: a guest married into another player's household (Bran's; the host's)
+	w.asset_shares.erase(World._asset_share_key(aref, bref))
+	household_members(w, bran, bref, bid, ub, cb, v1)
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
+
+
+## Cara marries Bran (guest and guest), Dora marries the host (guest and host), each by offer and answer. The spouse's view: the
+## marriage and the couple's household are there (public family records, MP-PLAYER-FAMILY); the spouse's ties, trade contacts,
+## debts, villagers' asks, crime cases, contracts, unshared chest and cart goods, purse and pack, kept messages, prospecting and
+## courier deliveries are not. And the other way: Bran's view holds none of Cara's.
+func household_members(w: World, bran: PlayerState, bref: String, bid: int, ub: String, cb: Dictionary, v1: NPC) -> void:
+	var cara := _guest(w, "Cara", "Weaver")
+	var dora := _guest(w, "Dora", "Fletcher")
+	var cref: String = w.player_ref(cara)
+	var cid: int = w.person_id(cara)
+	var host: PlayerState = w.host_player()
+	var hid: int = w.person_id(host)
+	w.relations.tie(cid, v1.id).regard = 4.0                       # Cara's own private tie and case
+	w.justice.record(cref, "theft", v1, v1.pos, 1)
+	w.messages.by_ref[cref] = [[0, "note", "Cara's own note"]]
+	var wed := func(a: PlayerState, b: PlayerState) -> String:
+		var why := w.player_offer("partner", b.pid, "", 1, a)
+		if why != "":
+			return why
+		for o in w.offers:
+			if str(o.kind) == "partner" and str(o.to) == w.player_ref(b):
+				return w.player_answer(int(o.id), true, b)
+		return "no offer recorded"
+	var why_c: String = wed.call(cara, bran)
+	var why_d: String = wed.call(dora, host)
+	check(why_c == "" and bran.partner == cid and cara.partner == bid, "setup: Cara and Bran marry by offer and answer (%s)" % why_c)
+	check(why_d == "" and host.partner == w.person_id(dora) and dora.partner == hid, "setup: Dora and the host marry by offer and answer (%s)" % why_d)
+	var hh_cb := Life.couple_household(w, cara, bran)
+	var hh_dh := Life.couple_household(w, dora, host)
+	check(hh_cb >= 0 and hh_dh >= 0, "setup: each couple has its household (%d, %d)" % [hh_cb, hh_dh])
+	for case in [[cara, bran, bref, bid], [dora, host, World.PLAYER, hid]]:
+		var me: PlayerState = case[0]
+		var sp: PlayerState = case[1]
+		var sref: String = case[2]
+		var sid: int = case[3]
+		var who := "%s (married to %s)" % [me.name, "the host" if sref == World.PLAYER else sp.name]
+		var mref: String = w.player_ref(me)
+		var mid: int = w.person_id(me)
+		var d: Dictionary = NetSession.welcome_view(w, me.pid)
+		var sp_rec: Dictionary = d.player if sref == World.PLAYER else d.players.by_pid[str(sp.pid)]
+		var me_rec: Dictionary = d.players.by_pid[str(me.pid)]
+		check(int(sp_rec.get("partner", -1)) == mid and int(me_rec.get("partner", -1)) == sid, "%s: the marriage is in the view, on both records (public family link)" % who)
+		var hh := Life.couple_household(w, me, sp)
+		check(JSON.stringify(d.households) == JSON.stringify(w.to_dict().households) and (d.households as Array).any(func(h): return int(h.id) == hh), "%s: the couple's household is in the view (public)" % who)
+		check(not (d.relations.ties as Dictionary).keys().any(func(k): return _ids(k).has(sid) and not _ids(k).has(mid)), "%s: none of the spouse's ties with anyone else (relationships are private)" % who)
+		check(not (d.relations.trades as Dictionary).keys().any(func(k): return _ids(k).has(sid) and not _ids(k).has(mid)), "%s: none of the spouse's trade contacts" % who)
+		check(not (d.credit.debts as Array).any(func(x): return sref in [str(x.creditor), str(x.debtor)] and not mref in [str(x.creditor), str(x.debtor)]), "%s: none of the spouse's debts" % who)
+		check(not (d.credit.requests as Array).any(func(r): return str(r.get("to", "")) == sref) and not (d.credit.get("refused_by", {}) as Dictionary).has(sref), "%s: none of the villagers' asks or refusals put to the spouse" % who)
+		check(not (d.get("justice", {}).get("cases", {}) as Dictionary).has(sref) and (d.get("justice", {}).get("cases", {}) as Dictionary).has(mref) == (mref == cref), "%s: none of the spouse's crime cases (the viewer's own kept)" % who)
+		check(not (d.contracts.list as Array).any(func(c): return sref in [str(c.buyer), str(c.seller)] and not mref in [str(c.buyer), str(c.seller)]), "%s: none of the spouse's contracts" % who)
+		check(d.get(MessageJournal.KEY, {}).keys().all(func(k): return str(k) == mref), "%s: kept messages: the viewer's own only" % who)
+		check(d.get("law_lessons", {}).keys().all(func(k): return str(k) == mref), "%s: law lessons: the viewer's own only" % who)
+		check(not (d.prospecting.bags as Dictionary).has(sref), "%s: none of the spouse's prospecting samples" % who)
+		check(not (d.couriers.jobs as Array).any(func(j): return str(j.get("sender", "")) == sref), "%s: none of the spouse's courier deliveries" % who)
+		if sref == bref:
+			check(not (d.chests.stash as Dictionary).has(ub), "%s: the spouse's house chest goods withheld (no MP-05 agreement; marriage grants none)" % who)
+			var vc: Dictionary = (d.carts.carts as Array).filter(func(c): return int(c.id) == int(cb.id))[0]
+			check(Inventory.from_dict(vc.store).total() == 0, "%s: the spouse's cart stands in the view with its load withheld" % who)
+			check(int(sp_rec.get("coins", 0)) == 0 and JSON.stringify(sp_rec).find("bread") < 0, "%s: the spouse's purse and pack withheld (public look only)" % who)
+			check(JSON.stringify(d).find("Bran's private note") < 0, "%s: no trace of the spouse's kept note anywhere in the payload" % who)
+		else:
+			check(int(sp_rec.get("coins", 0)) == 0, "%s: the host's purse withheld (public look only)" % who)
+		# the sync path to the spouse carries none either
+		var sd := w.to_dict().duplicate(false)
+		NetSession._private_for(sd, mref, w)
+		var ch := NetSync.changed(sd, {})
+		check(not (ch.justice.cases as Dictionary).has(sref) and not (ch.relations.ties as Dictionary).keys().any(func(k): return _ids(k).has(sid) and not _ids(k).has(mid)), "%s: a section sync carries none of the spouse's cases or ties" % who)
+	# the other way round: Bran's view holds none of his wife Cara's private records
+	var db: Dictionary = NetSession.welcome_view(w, bran.pid)
+	check(not (db.relations.ties as Dictionary).has(Relations.key(cid, v1.id)) and not (db.get("justice", {}).get("cases", {}) as Dictionary).has(cref) and not db.get(MessageJournal.KEY, {}).has(cref), "Bran (married to Cara): none of Cara's ties, cases or kept messages")
+	check(int((db.players.by_pid[str(cara.pid)] as Dictionary).get("partner", -1)) == bid, "Bran: Cara's public record shows the marriage")

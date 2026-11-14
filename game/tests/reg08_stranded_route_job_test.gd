@@ -1,13 +1,15 @@
 extends SceneTree
-## REG-08 (Build 25 audit, WP-1; investigation docs/decisions/REG-08-INVESTIGATION-2026-11-09.md, finding F1; owner decision
-## B25-AUD-REG-08 OPEN): a regular-route delivery waits at the booth ("at_booth") until its carrier leaves. When the carrier (the
-## carrier booth's keeper) is dead and nobody can be hired to keep the booth (CourierService.daily needs Construction.can_hire),
-## CourierService._depart skips the job every departure and tick interrupts only in_transit/returning jobs: the job never ends,
-## its goods stay in the booth's store and the sender's flat fee is gone. This is the FAILING-FIRST reproduction. The fix needs the
-## owner's policy (who receives the goods, how and when a waiting job ends, whether the fee is refunded), so no game code changes
-## here and this test is not in the CI suite list until a policy is chosen; it then becomes the fix's acceptance test.
-## What must already hold (and does): nothing is lost or made while it waits, and a save keeps it as it was.
-## What fails today: the job ends (a terminal state) within three departures with no carrier, and its goods leave the booth.
+## REG-08 (Build 25 audit, WP-1; investigation docs/decisions/REG-08-INVESTIGATION-2026-11-09.md, finding F1). A regular-route
+## delivery waits at the booth ("at_booth") until its carrier leaves; with the carrier (the booth's keeper) dead and nobody free to
+## hire as keeper it once waited for ever, its goods in the booth's store and the sender's flat fee gone. Owner rule 2026-11-12
+## (docs/directives/2026-11-12_extra_life_owner_decisions.md item 2, "Estate + timeout"): "a delivery not dispatched within a set
+## time (e.g. 7 days) ends; the goods return to the sender (or their estate) and the unearned fee is refunded".
+## CourierService._expire (couriers.json routes.wait_days 7) implements it. This test checks, across a save and load while it
+## waits: nothing is lost or made; the delivery ends; its goods leave the booth and REACH THE SENDER (their pack, or their
+## deposit at the booth when the pack is full); the fee is refunded in full (refunded == fee) to the sender, paid by whoever
+## received it (the dead keeper's heir). Engineering point, not changed here: _expire refunds only as far as the fee's receiver
+## (or heir) still holds coins (`mini(fee, coins_of(payer))`, none with no heir), so that no coin is made; the owner's rule is
+## unconditional. This fixture's heir holds the fee, so the full refund is required here.
 ##   godot --headless --path game --script res://tests/reg08_stranded_route_job_test.gd
 
 const Census := preload("res://tests/census.gd")
@@ -102,6 +104,8 @@ func test_stranded() -> void:
 			j2 = j
 	check(not j2.is_empty() and str(j2.state) == "at_booth" and coin_gap(w2) == coin_gap(w), "saved and loaded, it waits as it was and the coins balance")
 	var item2 := items(w2)
+	var pack0 := w2.player.inv.count(ITEM)
+	var coins0 := w2.player.coins
 	var departures := 4                                   # 9 days: past the 7-day wait (REG-08 owner rule 2026-11-12)
 	run_days(w2, float(departures * int(route.every_days)) + 1.0)
 	var vb2 := w2.couriers.booth_of("village")
@@ -112,3 +116,12 @@ func test_stranded() -> void:
 	# owner rule 2026-11-12 (Estate + timeout): the waiting delivery ends and its goods go back
 	check(str(j2.state) != "at_booth", "with no carrier for %d departures the waiting delivery ends (state %s)" % [departures, str(j2.state)])
 	check((vb2.store as Inventory).count(ITEM) == 0, "and its goods leave the booth's store (%d there)" % (vb2.store as Inventory).count(ITEM))
+	var dep: Dictionary = ((vb2.deposits as Dictionary).get("player", {}) as Dictionary)
+	var deposited := int((dep.get("items", {}) as Dictionary).get(ITEM, 0))
+	var got := w2.player.inv.count(ITEM) - pack0
+	print("REG-08 sender: %d %s back in the pack, %d deposited for them; fee %d, refunded %s; sender's coins %d -> %d" % [got, ITEM,
+		deposited, int(j2.fee), str(j2.get("refunded", "-")), coins0, w2.player.coins])
+	check(got + deposited == 3, "the goods reach the sender: %d in their pack + %d deposited for them at the booth (booked 3)" % [got, deposited])
+	check(str(j2.get("outcome", "")) == "expired" and str(j2.state) == "returned", "the job ends as expired and returned (outcome %s)" % str(j2.get("outcome", "")))
+	check(int(j2.get("refunded", -1)) == int(j2.fee) and int(j2.fee) > 0, "the unearned fee is refunded in full: refunded %s == fee %d" % [str(j2.get("refunded", "-")), int(j2.fee)])
+	check(w2.player.coins - coins0 == int(j2.fee), "the sender's purse rises by the fee (%d -> %d, fee %d)" % [coins0, w2.player.coins, int(j2.fee)])

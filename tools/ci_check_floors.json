@@ -319,5 +319,6 @@
  "d2_talk_unreachable_test": 7,
  "stream_tunnel_test": 5,
  "tile_premake_test": 6,
- "demo_journey_test": 60
+ "demo_journey_test": 60,
+ "mp_g4_loopback_test": 34
 }
