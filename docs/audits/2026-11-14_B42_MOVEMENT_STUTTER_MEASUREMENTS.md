@@ -79,3 +79,15 @@ then dropped. No simulation code path changes (the simulation's own get_chunk is
   0 frames over 15 ms, 47 chunks adopted; every one of the 160 cached chunks equals a fresh generation.
 - With `-- sync` (the old main-thread prefetch, same walk; load 7.0-7.1): worst 70.0 ms, **64 frames over 15 ms**, so
   the frame check fails (3 failures) before the fix and passes after.
+
+## Fix 2: the desk prompt checks only the desks beside the player
+
+`BusinessDesks.faced_all` (every frame, from `Main._find_target`) built the whole desk list with names and called
+`World.reaches` twice for every desk before its distance test; `reaches` costs more the farther the player is from the
+village. `BusinessDesks.all(w, near, reach)` now skips desks beyond `reach` before naming them, and `faced_all` asks only
+for those within `World.STATION_BESIDE` (its own last test, so the answer cannot change).
+`game/tests/desks_faced_test.gd` (5 checks): 34,375 points round the 11 desks (two game hours in), five facings each:
+0 answers differ from the old function (531 desks found); the filtered list equals the whole list filtered, in order;
+a call costs 0.057 ms against 0.343 in the village and **0.069 ms against 3.521 ms at (195.5, 650.5) on the trail south**
+(load 5.7-6.4). This is a steady per-frame cost, not a spike, but it raised every frame on the trail (and so pushed the
+0.5 s tick frames further over budget).
