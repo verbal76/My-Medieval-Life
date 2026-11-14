@@ -91,3 +91,18 @@ for those within `World.STATION_BESIDE` (its own last test, so the answer cannot
 a call costs 0.057 ms against 0.343 in the village and **0.069 ms against 3.521 ms at (195.5, 650.5) on the trail south**
 (load 5.7-6.4). This is a steady per-frame cost, not a spike, but it raised every frame on the trail (and so pushed the
 0.5 s tick frames further over budget).
+
+## Fix 3: the hourly autosave's text and file on a background thread
+
+`tests/autosave_cost_probe.gd` (new game, 5 repeats, load 6.2-6.8): save 453 KB; `to_dict` 9.0-15.5 ms, `JSON.stringify`
+18.7-43.3, `SaveStore.write_text` (write, read back, the old save parsed, backup) 7.1-24.8; whole `save_game` 45.9-93.7 ms,
+every game hour (30 real seconds). On the southern walk the autosave frames reached 306 ms.
+
+`Main.save_game(show, background)`: the hourly autosave (only) takes the save on the frame (`to_dict`, then a deep copy so
+the thread reads nothing live) and makes the text and the file (the same `SaveStore.write_text`) on a thread. Its outcome
+(failure message, recorder note, linked copy) follows when done; every other save, load and save-slot check waits for it
+first (one writer; saves land in order). `game/tests/autosave_async_test.gd` (11 checks, 0 failures): the background file
+equals the frame's save byte for byte except the wall-clock `saved_at` (370,530 bytes) and the backup chain is as before;
+main thread 18.7 ms against 54.7 ms for the whole save; a save asked during one waits and lands after it; a failing
+background save sets `save_failing` and leaves the last save; in play the hour's autosave runs in the background and
+leaves a good save.

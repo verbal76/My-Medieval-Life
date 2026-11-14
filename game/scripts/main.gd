@@ -1089,6 +1089,7 @@ func _ready() -> void:
 
 ## There is a save or a backup to continue from.
 func can_continue() -> bool:
+	finish_background_save()               # B42: an autosave still being written lands first
 	return SaveStore.any_exists(save_path)
 
 
@@ -1141,6 +1142,7 @@ func _setup_input() -> void:
 ## A new world with the character from character creation (name, family, sex, look, sprite); with
 ## no spec (tests, screenshots) the default character.
 func new_game(spec := {}) -> void:
+	finish_background_save()               # B42: an autosave still being written lands first
 	if not spec.is_empty():
 		_keep_previous_game()
 	save_meta = {}
@@ -1417,6 +1419,7 @@ func resume_after_origin() -> void:
 ## written over: it is moved aside unchanged first, then the backup is loaded if it can be, else a
 ## new game starts. If it cannot even be moved aside, saving stays off this session to protect it.
 func continue_game() -> void:
+	finish_background_save()               # B42: an autosave still being written lands first
 	var r := SaveStore.inspect(save_path, World.SAVE_VERSION)
 	if r.state == "ok":
 		var why := _load_save(r.data)
@@ -2000,6 +2003,7 @@ func _fp(key: String, t0: int) -> int:
 
 
 func _process(delta: float) -> void:
+	finish_background_save(false)          # B42: an hourly autosave written in the background: its outcome, once it is done
 	if world == null:
 		return
 	var tp := 0
@@ -2046,7 +2050,7 @@ func _process(delta: float) -> void:
 		var h := int(world.minutes / 60.0)
 		if h != autosave_hour:
 			autosave_hour = h
-			save_game(false)
+			save_game(false, true)              # B42: the text and the file are made on a background thread
 			if frame_profiling:
 				tp = _fp("autosave", tp)
 	if running and not world.player.alive and not ui.is_open("death"):
@@ -6184,7 +6188,18 @@ func _tap(screen_pos: Vector2) -> void:
 # ---------------------------------------------------------------- saving ---------------------
 ## Save safely (SaveStore): written aside, verified, then swapped in, the previous save kept as the
 ## backup. Returns whether it saved; a failure leaves the last save unchanged and says why.
-func save_game(show := true) -> bool:
+## B42 (B25-MOVE-STUTTER-INV): `background` (the hourly autosave only): the world's save is taken on this frame (to_dict, then a
+## deep copy, so nothing of the live world is read later), and its text and the file (SaveStore.write_text: the same atomic write,
+## backup and read-back) are made on a background thread; 50-300 ms on the main thread every game hour before. The outcome (a
+## failure's message, the recorder's note, the linked copy) follows when it is done (finish_background_save, every frame). Any
+## other save, a load or a check of the save slot finishes a background save first, so there is one writer and saves land in
+## order. The file is byte for byte the one save_game would write on this frame (autosave_async_test).
+var _save_thread: Thread
+var _save_job := {}
+
+
+func save_game(show := true, background := false) -> bool:
+	finish_background_save()
 	if guest_world:
 		return false                       # MP A2: the host keeps the world and every player's character
 	if world == null or (not world.player.alive and not net.has_guests()):
@@ -6198,14 +6213,38 @@ func save_game(show := true) -> bool:
 	for k in save_extra:
 		if not d.has(k):
 			d[k] = save_extra[k]
+	if background:
+		_save_job = {"d": d, "show": show}
+		_save_thread = Thread.new()
+		_save_thread.start(_write_save.bind(save_path, d.duplicate(true)))
+		return true
 	var r := SaveStore.write_text(save_path, JSON.stringify(d, "", true, true), true)          # full precision: times and positions reload exactly
+	return _save_written(r, d, show)
+
+
+static func _write_save(path: String, d: Dictionary) -> Dictionary:
+	return SaveStore.write_text(path, JSON.stringify(d, "", true, true), true)
+
+
+## B42: the background save's outcome, once its thread is done (`wait`: wait for it; else only if it has finished).
+func finish_background_save(wait := true) -> void:
+	if _save_thread == null or (not wait and _save_thread.is_alive()):
+		return
+	var r: Dictionary = _save_thread.wait_to_finish()
+	_save_thread = null
+	var job := _save_job
+	_save_job = {}
+	_save_written(r, job.d, bool(job.show))
+
+
+func _save_written(r: Dictionary, d: Dictionary, show: bool) -> bool:
 	if not r.ok:
 		if show or not save_failing:
 			ui.message("Could not save: %s. Your last save is unchanged." % r.reason, 8.0)
 		save_failing = true
 		return false
 	save_failing = false
-	if world.recorder != null:
+	if world != null and world.recorder != null:
 		world.recorder.saved(d)        # REC-19
 	_update_linked_copy()
 	if show:
@@ -6306,6 +6345,7 @@ func _save_meta() -> Dictionary:
 ## (replacing the one kept before) instead of letting the new game overwrite it; a save that cannot
 ## be read is moved aside unchanged, as when continuing.
 func _keep_previous_game() -> void:
+	finish_background_save()               # B42: an autosave still being written lands first
 	var prev := save_path.get_basename() + PREVIOUS_SUFFIX
 	var r := SaveStore.inspect(save_path, World.SAVE_VERSION)
 	if r.state != "ok" and r.state != "missing":
@@ -6324,6 +6364,7 @@ func _keep_previous_game() -> void:
 ## removed to make room for the next: it is moved aside as "save1.expired-<save_id>.json" (its stable world id, so it stays
 ## identifiable; a number added if that name is taken) and can be exported or imported as any save. True when it was moved.
 func _keep_expired_demo(prev: String) -> bool:
+	finish_background_save()               # B42: an autosave still being written lands first
 	if not Demo.is_demo():
 		return false
 	var r := SaveStore.inspect(prev, World.SAVE_VERSION)
@@ -6352,6 +6393,7 @@ func end_recording() -> void:
 
 
 func _exit_tree() -> void:
+	finish_background_save()               # B42: an autosave still being written lands before the game goes
 	AerialMap.drop()                       # B25R1-025: the settlements' worker thread is stopped and joined
 	end_recording()
 
@@ -6388,6 +6430,7 @@ func _demo_expire() -> void:
 
 ## DEMO-01: whether the world in the save slot has used up its demo time (the title marks it).
 func demo_save_expired() -> bool:
+	finish_background_save()               # B42: an autosave still being written lands first
 	if not Demo.is_demo():
 		return false
 	var r := SaveStore.inspect(save_path, World.SAVE_VERSION)
