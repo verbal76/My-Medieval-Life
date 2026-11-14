@@ -532,7 +532,8 @@ var build_usec := 0                   # time spent building chunks (_build), for
 ## later change (a road, live water, a felled tree) reaches it as it reaches a loaded chunk, and each part draws the world
 ## as it is then: the result is the chunk drawn whole at the end (chunk_slice_test compares every layer). _build draws a
 ## chunk whole at once (a first view, a teleport, tests).
-const ROWS_PER_PART := 4
+const ROWS_PER_PART := 2
+const SITE_TILES_PER_PART := 300             # a part draws settlement building slots until it has placed this many tiles
 var slice_builds := true
 var build_budget_usec := 3000
 var built_ungenerated := 0                     # chunks drawn whose data was not ready (probes, tests)
@@ -609,13 +610,19 @@ func _build_part() -> void:
 		if tree_sink != null:
 			tree_sink.load_chunk(cc, overworld.chunk_trees(cc))
 		_job.stage = 3
+		_job.site = _site_begin(cc)
 		build_usec += Time.get_ticks_usec() - t0
 		if profiling:
 			_pf("ow:build(trees)", t0)
 		return
+	elif _site_step(c.root, cc, _job.site, SITE_TILES_PER_PART):
+		build_usec += Time.get_ticks_usec() - t0
+		if profiling:
+			_pf("ow:build(sites, works)", t0)
+		return                                     # more of the settlement's buildings next part
 	else:
 		var root: Node2D = c.root
-		c.site_above = _draw_site_buildings(root, cc)
+		c.site_above = _site_end(_job.site)
 		var works := Node2D.new()             # B14-07: steps, stairs and walkways, over the ground and the cliff's rim
 		works.name = "works"
 		root.add_child(works)
@@ -757,57 +764,84 @@ func _draw_homes() -> void:
 ## art and layers as a house or workshop in the village): ground, path and "below" layers under the characters, "above"
 ## layers (roofs) over them. Only the cells inside this chunk, so a building across a seam is drawn once.
 func _draw_site_buildings(root: Node2D, cc: Vector2i) -> Array:
+	var state := _site_begin(cc)
+	while _site_step(root, cc, state, -1):
+		pass
+	return _site_end(state)
+
+
+## B42: the site drawing above in parts (a settlement's chunk places 1,000+ tiles): the slots in this chunk, in the order the
+## whole drawing takes them, then _site_step draws them a few at a time (at least one; `tiles` placed at most, -1 all), then
+## _site_end gives the "above" layers. Same layers, same order, same tiles as at once.
+func _site_begin(cc: Vector2i) -> Dictionary:
 	var box := Rect2i(cc * Overworld.CHUNK, Vector2i(Overworld.CHUNK, Overworld.CHUNK))
-	var layers := {}
-	var sorted: TileMapLayer = null       # this chunk's site front walls, drawn among the characters
+	var todo: Array = []
 	for st in overworld.sites + overworld.structures:   # (B25R1-018: and the landmarks built in the country)
 		if not (st.rect as Rect2i).intersects(box):
 			continue
 		for sl in st.slots + st.get("props", []):     # (B25R1-018: and the yard pieces)
-			var r: Rect2i = sl.rect
-			if not r.intersects(box):
-				continue
-			var stamp: Dictionary = overworld.stamps.get(Overworld.slot_stamp(sl), overworld.stamps.house)   # (B25R1-022: its house style's)
-			var swap: Dictionary = _look_swap(str(sl.get("look", "")))    # B25R1-018: the building's colour variant (region_stamps.json)
-			var names: Array = (stamp.layers as Dictionary).keys()
-			names.sort_custom(func(a: String, b: String) -> bool:
-				var ra := 0 if a.begins_with("ground") else 1 if a.begins_with("path") else 2 if a.begins_with("below") else 3
-				var rb := 0 if b.begins_with("ground") else 1 if b.begins_with("path") else 2 if b.begins_with("below") else 3
-				return ra < rb or (ra == rb and a < b))
-			for lname in names:
-				var l: TileMapLayer = layers.get(lname)
-				if l == null:
-					l = _layer(root, 10 if str(lname).begins_with("above") else 0)
-					l.name = str(lname)
-					layers[lname] = l
-					if str(lname).begins_with("above"):
-						above_layers.append(l)
-				var cells: Array = stamp.layers[lname]
-				var clip := r.intersection(box)          # only this chunk's part (a town's walls are one stamp round it all)
-				for j in range(clip.position.y - r.position.y, clip.end.y - r.position.y):
-					for i in range(clip.position.x - r.position.x, clip.end.x - r.position.x):
-						var v := int(cells[j * int(stamp.w) + i])
-						if not swap.is_empty():
-							v = int(swap.get(str(v), v))
-						var cell := r.position + Vector2i(i, j)
-						if v < 0 or not box.has_point(cell):
-							continue
-						if str(lname).begins_with("above") and _site_sorts(stamp, str(lname), i, j, cell):
-							if sorted == null:
-								sorted = TileMapLayer.new()
-								sorted.name = "site_front_%d_%d" % [cc.x, cc.y]
-								sorted.tile_set = tileset
-								sorted.y_sort_enabled = true
-								_site_sorted_parent.add_child(sorted)
-							_put(sorted, cell, v)
-						else:
-							set_tile(l, cell, v)
+			if (sl.rect as Rect2i).intersects(box):
+				todo.append(sl)
+	return {"box": box, "todo": todo, "next": 0, "layers": {}, "sorted": null}
+
+
+func _site_step(root: Node2D, cc: Vector2i, state: Dictionary, tiles: int) -> bool:
+	var box: Rect2i = state.box
+	var layers: Dictionary = state.layers
+	var p0 := tiles_put
+	while int(state.next) < (state.todo as Array).size():
+		var sl: Dictionary = state.todo[int(state.next)]
+		state.next = int(state.next) + 1
+		var r: Rect2i = sl.rect
+		var stamp: Dictionary = overworld.stamps.get(Overworld.slot_stamp(sl), overworld.stamps.house)   # (B25R1-022: its house style's)
+		var swap: Dictionary = _look_swap(str(sl.get("look", "")))    # B25R1-018: the building's colour variant (region_stamps.json)
+		var names: Array = (stamp.layers as Dictionary).keys()
+		names.sort_custom(func(a: String, b: String) -> bool:
+			var ra := 0 if a.begins_with("ground") else 1 if a.begins_with("path") else 2 if a.begins_with("below") else 3
+			var rb := 0 if b.begins_with("ground") else 1 if b.begins_with("path") else 2 if b.begins_with("below") else 3
+			return ra < rb or (ra == rb and a < b))
+		for lname in names:
+			var l: TileMapLayer = layers.get(lname)
+			if l == null:
+				l = _layer(root, 10 if str(lname).begins_with("above") else 0)
+				l.name = str(lname)
+				layers[lname] = l
+				if str(lname).begins_with("above"):
+					above_layers.append(l)
+			var cells: Array = stamp.layers[lname]
+			var clip := r.intersection(box)          # only this chunk's part (a town's walls are one stamp round it all)
+			for j in range(clip.position.y - r.position.y, clip.end.y - r.position.y):
+				for i in range(clip.position.x - r.position.x, clip.end.x - r.position.x):
+					var v := int(cells[j * int(stamp.w) + i])
+					if not swap.is_empty():
+						v = int(swap.get(str(v), v))
+					var cell := r.position + Vector2i(i, j)
+					if v < 0 or not box.has_point(cell):
+						continue
+					if str(lname).begins_with("above") and _site_sorts(stamp, str(lname), i, j, cell):
+						if state.sorted == null:
+							var sorted := TileMapLayer.new()
+							sorted.name = "site_front_%d_%d" % [cc.x, cc.y]
+							sorted.tile_set = tileset
+							sorted.y_sort_enabled = true
+							_site_sorted_parent.add_child(sorted)
+							state.sorted = sorted
+						_put(state.sorted, cell, v)
+					else:
+						set_tile(l, cell, v)
+		if tiles >= 0 and tiles_put - p0 >= tiles:
+			break
+	return int(state.next) < (state.todo as Array).size()
+
+
+func _site_end(state: Dictionary) -> Array:
+	var layers: Dictionary = state.layers
 	var above := []
 	for lname in layers:
 		if str(lname).begins_with("above"):
 			above.append(layers[lname])
-	if sorted != null:
-		above.append(sorted)              # (freed with the chunk; see _free)
+	if state.sorted != null:
+		above.append(state.sorted)              # (freed with the chunk; see _free)
 	return above
 
 
@@ -942,6 +976,13 @@ func _site_roof_restore() -> void:
 
 func _free(cc: Vector2i) -> void:
 	if _job.get("cc", null) == cc:
+		var st: Dictionary = _job.get("site", {})
+		if not st.is_empty():                 # its settlement buildings begun: their layers go with it
+			for l in (st.layers as Dictionary).values():
+				above_layers.erase(l)
+			if st.sorted != null:
+				above_layers.erase(st.sorted)
+				(st.sorted as Node).queue_free()
 		_job = {}                             # B42: a chunk freed while being drawn is not finished
 	canopy.restore_all()                  # faded tiles go back to their layers before the layer goes
 	_site_roof_restore()                  # (B25R1-022: and a lifted site roof; lifted again next frame if still inside)
