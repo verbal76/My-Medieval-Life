@@ -82,6 +82,14 @@ static func adopt_legacy(base: String, demo_slot: String) -> Array:
 	return out
 
 
+## B42-DEMO-WINDOW-TITLE (owner 2026-11-14, C6: "Demo window title lacks 'Demo'"): the window's (and so the taskbar's) title. Godot
+## titles the window with config/name, which also names the user folder, so the demo cannot simply be renamed there (its saves would
+## move to another folder): the demo sets its window's title at start instead (Main._ready). The full game keeps the engine's title.
+static func window_title() -> String:
+	var name := str(ProjectSettings.get_setting("application/config/name", "Forge My Life"))
+	return name + " Demo" if is_demo() else name
+
+
 ## The world's demo record, made whole (a world from before the demo, or the full game's, starts its allowance now).
 static func state(meta: Dictionary) -> Dictionary:
 	if not (meta.get("demo") is Dictionary):

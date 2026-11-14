@@ -172,6 +172,7 @@ const BLOOD_FADE := 90.0       # seconds blood takes to fade away
 func _ready() -> void:
 	_setup_input()
 	GameData.ensure()
+	apply_window_title()
 	# the interface is laid out for the screen (larger on a phone) and the camera zoom makes up for it
 	settings.load_file()
 	settings.apply(get_tree())
@@ -1094,6 +1095,13 @@ func _ready() -> void:
 
 
 ## There is a save or a backup to continue from.
+## B42-DEMO-WINDOW-TITLE: the demo's window and taskbar say "Forge My Life Demo" (Demo.window_title); the full game's title is the
+## engine's own (config/name), left as it is.
+func apply_window_title() -> void:
+	if Demo.is_demo():
+		get_window().title = Demo.window_title()
+
+
 func can_continue() -> bool:
 	_demo_slot_ready()
 	return SaveStore.any_exists(save_path)

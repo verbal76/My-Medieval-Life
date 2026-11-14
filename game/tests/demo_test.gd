@@ -96,6 +96,13 @@ func _frames(n: int, dt: float) -> void:
 
 func _run() -> void:
 	main.set_process(false)
+	# B42-DEMO-WINDOW-TITLE: the full game (no demo feature) keeps its window's own title; the demo build's start sets its own
+	check(root.title.begins_with("Forge My Life") and not root.title.contains("Demo"), "the full game's window title is its own (%s)" % root.title)
+	Demo.force = 1
+	main.apply_window_title()
+	check(root.title == "Forge My Life Demo", "the demo's start titles its window Forge My Life Demo (%s)" % root.title)
+	Demo.force = -1
+	root.title = str(ProjectSettings.get_setting("application/config/name"))
 	Demo.force = 1
 	# the title (no world yet): nothing counts; the Steam button is there in the demo
 	var ui = main.ui

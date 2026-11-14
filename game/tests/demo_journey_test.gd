@@ -71,11 +71,21 @@ func _test_presets() -> void:
 				"%s Demo ships the same files as the full game (one source)" % base)
 		check(str(cf.get_value(full, "exclude_filter", "")).contains("tests/*"), "%s: the test scripts (developer tools) are left out of the package" % base)
 		check(str(cf.get_value(full, "export_path", "")) != str(cf.get_value(demo, "export_path", "")), "%s: the demo exports to its own file" % base)
+	var w_full: String = by_name.get("Windows Desktop", "")
+	var w_demo: String = by_name.get("Windows Desktop Demo", "")
+	if w_full != "" and w_demo != "":
+		for k in ["application/product_name", "application/file_description"]:
+			var vf := str(cf.get_value(w_full + ".options", k, ""))
+			var vd := str(cf.get_value(w_demo + ".options", k, ""))
+			check(not vf.contains("Demo") and vd.contains("Demo"), "Windows: %s names the demo as the demo, the full game not (%s, %s)" % [k, vf, vd])
 	var a_full: String = by_name.get("Android", "")
 	var a_demo: String = by_name.get("Android Demo", "")
 	if a_full != "" and a_demo != "":
 		var id_full := str(cf.get_value(a_full + ".options", "package/unique_name", ""))
 		var id_demo := str(cf.get_value(a_demo + ".options", "package/unique_name", ""))
+		var n_full := str(cf.get_value(a_full + ".options", "package/name", ""))
+		var n_demo := str(cf.get_value(a_demo + ".options", "package/name", ""))
+		check(not n_full.contains("Demo") and n_demo.contains("Demo"), "Android: the launcher names the demo as the demo, the full game not (%s, %s)" % [n_full, n_demo])
 		check(id_full == "com.hotatticgames.mymedievallife.dev" and id_demo == id_full + ".demo", "Android: the full game keeps its package id and the demo has its own (%s, %s)" % [id_full, id_demo])
 
 
@@ -135,6 +145,8 @@ func _run() -> void:
 	var ui = main.ui
 	main.set_process(false)
 	check(ui.is_open("title"), "the demo opens on its title")
+	# B42-DEMO-WINDOW-TITLE (owner C6): the demo's window, and so its taskbar entry, says it is the demo
+	check(root.title == "Forge My Life Demo", "the demo's window title is \"Forge My Life Demo\" (%s)" % root.title)
 	check(_labels().any(func(t): return t.contains("120 minutes")), "the demo's title says each world has 120 minutes")
 	check(ui.panel_body.find_child("SteamButton", true, false) != null, "the demo's title has the Steam button")
 	_no_dev("the demo's title")
