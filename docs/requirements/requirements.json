@@ -11879,6 +11879,118 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "B42-Q-EMIG-WORK",
+   "kind": "decision",
+   "title": "Should leaving for work be judged per person (no job and no earnings for about a week) instead of per household?",
+   "description": "Should leaving for work be judged per person (no job and no earnings for about a week) instead of per household?",
+   "source": "docs/audits/2026-11-14_B42_LEAD_LOG.md",
+   "owner_wording": null,
+   "owner_answer": "Judge per person (Recommended): an adult with no job and no earnings for about a week may leave for work, whatever the household's food. Keep the spouse rule. Measured in the Build 42 campaign.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/audits/2026-11-14_B42_LEAD_LOG.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner AskUserQuestion answer, 2026-11-14 (Build 42 lead session)"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B42-Q-JOB02",
+   "kind": "decision",
+   "title": "Approve the job-board offered-pay rules (J2-Q1..Q7 as built) and switch them on only after a four-seed with/without year-long comparison?",
+   "description": "Approve the job-board offered-pay rules (J2-Q1..Q7 as built) and switch them on only after a four-seed with/without year-long comparison?",
+   "source": "docs/audits/2026-11-14_B42_LEAD_LOG.md",
+   "owner_wording": null,
+   "owner_answer": "Approve rules, compare first (Recommended): accept the recommended answers to the seven open job-pay questions as built; keep it off in Build 42; switch it on only after a four-seed with/without campaign shows the effect.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/audits/2026-11-14_B42_LEAD_LOG.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner AskUserQuestion answer, 2026-11-14 (Build 42 lead session)"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B42-Q-POP-LEVERS",
+   "kind": "decision",
+   "title": "Change population growth levers (birth rate, hunger arrivals, 2% young homesteading, deposit sizes) for Build 42?",
+   "description": "Change population growth levers (birth rate, hunger arrivals, 2% young homesteading, deposit sizes) for Build 42?",
+   "source": "docs/audits/2026-11-14_B42_LEAD_LOG.md",
+   "owner_wording": null,
+   "owner_answer": "No change for Build 42 (Recommended): keep the existing rules; measure everything in the Build 42 campaign on the current code and bring the evidence back.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/audits/2026-11-14_B42_LEAD_LOG.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner AskUserQuestion answer, 2026-11-14 (Build 42 lead session)"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B42-Q-REG08-CAP",
+   "kind": "decision",
+   "title": "Accept the MML-REG-08 expired-delivery refund capped at what the payer's heir holds (never creating coins)?",
+   "description": "Accept the MML-REG-08 expired-delivery refund capped at what the payer's heir holds (never creating coins)?",
+   "source": "docs/audits/2026-11-14_B42_LEAD_LOG.md",
+   "owner_wording": null,
+   "owner_answer": "Accept the cap (Recommended): refund up to what is held; never create coins. Recorded as a decision.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/audits/2026-11-14_B42_LEAD_LOG.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner AskUserQuestion answer, 2026-11-14 (Build 42 lead session)"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B7-001",
    "title": "Starting coins",
    "kind": "approved",

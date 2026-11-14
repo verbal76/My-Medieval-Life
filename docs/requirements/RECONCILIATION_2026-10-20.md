@@ -10,7 +10,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 901 (505 of them still open) |
+| Entries added since | | 905 (505 of them still open) |
 | **Open entries now** (rules excluded) | | **663** |
 | Open entries moved to another build | | 15 |
 
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (901)
+## Added since the baseline (905)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -308,6 +308,10 @@ None.
 | B25R2-Q4 | How should the Claude usage budget be spent on the B25R2 repairs? | decision | APPROVED | 25 |
 | B25R2-STUTTER | Walking south of the starter village to the next settlement froze the game for about a second every other step: fix? | decision | APPROVED | 20+ |
 | B25R2-VER-01 | How should the next Play Test Build One package identify itself? | decision | APPROVED | 25 |
+| B42-Q-EMIG-WORK | Should leaving for work be judged per person (no job and no earnings for about a week) instead of per household? | decision | APPROVED | unassigned |
+| B42-Q-JOB02 | Approve the job-board offered-pay rules (J2-Q1..Q7 as built) and switch them on only after a four-seed with/without year-long comparison? | decision | APPROVED | unassigned |
+| B42-Q-POP-LEVERS | Change population growth levers (birth rate, hunger arrivals, 2% young homesteading, deposit sizes) for Build 42? | decision | APPROVED | unassigned |
+| B42-Q-REG08-CAP | Accept the MML-REG-08 expired-delivery refund capped at what the payer's heir holds (never creating coins)? | decision | APPROVED | unassigned |
 | BAN-B | Expansion 23 BAN-B: faction identity, membership, hierarchy, safehouse ownership and persistent faction resources | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
 | BAN-C | Expansion 23 BAN-C: career actions, recruitment, theft and raids, resale, suspicion and response (within E23-SCOPE) | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
 | BAN-D | Expansion 23 BAN-D: rank, challenge, leadership, schism and autonomous succession | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
