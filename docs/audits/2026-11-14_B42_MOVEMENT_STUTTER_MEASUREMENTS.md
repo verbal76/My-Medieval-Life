@@ -176,3 +176,12 @@ off the main thread, not hidden.
   tile_premake_test 6/0, start_test 524 steps/0, desks_faced_test 5/0, autosave_async_test 11/0 (checks/failures).
 - chunk_prefetch_test on `19da97d`: 6/0 (load 8.7; the earlier strict threshold failed twice at load 7.7-8.9 on 1-3
   frames of 15.6-23 ms of preemption, which is why it now allows 5 such frames and none over 50 ms; the old path gives 64).
+- On `2721b85`: presence_test 37/0, world_test 339/0, chunk_prefetch_test 6/0 (load 7.6-9.3).
+
+## Renderer run (Xvfb, OpenGL 3, Mesa llvmpipe: a CPU software rasteriser, not real-hardware evidence)
+
+After (`703e5d6`), the route south, 200 game seconds, 11,970 frames, load 8.7-10.0: the draw itself (RenderingServer
+pre to post draw) p50 36.0 ms, p90 76.0, max 165.4, so every frame is over 16.7 ms and 5,584 over 50 ms, almost all of
+them outside main._process (the rasteriser). Visual smoothness cannot be established on this machine: llvmpipe on a
+shared 4-core container at load 10 draws slower than the stalls being measured. The headless walks above are the
+evidence for the game's own work; a real GPU check needs the lead's playable build.
