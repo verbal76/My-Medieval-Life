@@ -4121,6 +4121,13 @@ func _public_works(obligations: float) -> int:
 	return used
 
 
+## ND-23 (owner 2026-11-12) and B42-Q-BAND-CHAPEL-RELIEF (owner 2026-11-14), "Exclude the band": the outlaw band's household and
+## its clan children's (a homestead claim of the outlaw faction, the band test of Life's births: B25R1-014) fend for themselves, as
+## outlaws: neither the manor's relief (_relief) nor the chapel's food parcels (Chapel.relief_round, Chapel.food_alms) go to them.
+func outlaw_household(h: int) -> bool:
+	return w.households[h].get("band", false) or (w.homesteads != null and str(w.homesteads.claim_of_household(h).get("faction", "")) == "outlaw")
+
+
 ## Food relief into household pantries. Returns how many households were helped.
 func _relief(obligations: float, reserve: float) -> int:
 	var helped := 0
@@ -4130,7 +4137,7 @@ func _relief(obligations: float, reserve: float) -> int:
 	for h in w.households.size():
 		# ND-23 (owner 2026-11-12, "Exclude the band"): the manor's relief is for the village's households; the outlaw band's
 		# household (and its clan children) fend for themselves, as outlaws (the band test of Life's births: B25R1-014)
-		if w.households[h].get("band", false) or (w.homesteads != null and str(w.homesteads.claim_of_household(h).get("faction", "")) == "outlaw"):
+		if outlaw_household(h):
 			continue
 		if not _members(h).is_empty():
 			# CHAPEL-PURPOSE: the chapel's food on its way to the household (set aside today or yesterday) is counted, so the

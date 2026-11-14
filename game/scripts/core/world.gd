@@ -829,6 +829,17 @@ func _walk_failed(n: NPC) -> void:
 	stat("walk_backoff")
 
 
+## B42-NAV (MML-NPC-01; chain 12 flight finding F009): whether `n`'s plan walks again after its current step. A path found for an
+## earlier walk of a plan does not end a run of failed walks: a plan whose first walk is found and whose next is not (a chapel
+## parcel taken up at the door for a household out of reach) cleared the count each time, so the back-off never began and the
+## plan was made again every game minute (seed 2: 200 to 554 times a day). The plan's last walk found still clears it.
+func _later_walk(n: NPC) -> bool:
+	for i in range(1, n.plan.size()):
+		if str(n.plan[i].get("k", "")) == "go":
+			return true
+	return false
+
+
 ## The path of `n` from its cell to `to` (n.path from its start): below ground on its level's map, in the village on the
 ## village's grid, else over the world's cells.
 func _path_to(n: NPC, to: Vector2i) -> void:
@@ -838,7 +849,101 @@ func _path_to(n: NPC, to: Vector2i) -> void:
 		n.path = map.find_path(n.cell(), to)
 	else:
 		n.path = map.find_path_world(n.cell(), to)     # REGION-NAV-01: a traveller at a neighbouring settlement walks the world's cells (the village's grid would pull them home)
+		if (n.path.is_empty() or short_of(n.path, to)) and n.cell() != to:
+			var far := path_far(n.cell(), to)           # B42-NAV: beyond the bounded search, by the gates and the roads
+			if not far.is_empty() and (n.path.is_empty() or not short_of(far, to)):
+				n.path = far
+				stat("walk_far")
+			else:
+				stat("walk_far_none")
 	n.path_i = 0
+
+
+## B42-NAV (chain 12 campaign 43332151718: 24 villagers starved standing "lost" outside the village): a walk on the surface whose
+## ends are farther apart than the world's bounded path search (VillageMap.find_path_world: a box of at most WORLD_PATH_CELLS,
+## with a margin of 10 cells round its ends) found no path, so a villager who had walked out (a chapel parcel carried to the
+## outlaws' camp or a homestead, a companion followed) could not walk home again (the destinations differ, so the box out can fit
+## where the box back does not; a box that fits can also cut off the only bridge). Such a walk goes the way the travellers and the
+## homesteaders already go (Journeys, Homesteads._path_home): the bounded search to a gate of the village (the nearest first) or,
+## failing that, to the nearest cell of a road out of the south gate (the road routes, Overworld.road_route, nearest first), along
+## that road to the gate, and the village's own grid inside. Only for a walk into the village (`b` in it, `a` outside): a walk out,
+## or with both ends outside, is unchanged (empty here).
+## Empty when none of these is found (the walk fails as before). Deterministic: fixed orders, ties by index.
+func path_far(a: Vector2i, b: Vector2i) -> PackedVector2Array:
+	if map.overworld == null:
+		return PackedVector2Array()
+	var av := map.in_village(a)
+	var bv := map.in_village(b)
+	if av and bv:
+		return PackedVector2Array()
+	if bv:
+		return _path_in(a, b)
+	# a walk out of the village, or with both ends outside (a traveller between settlements, a journey resumed after a load), is
+	# left to the bounded search as before: routed this way, seed 2's villagers walked 170 cells out by night to buy seed from a
+	# farmer at his homestead (an errand chosen without regard to distance, which the bounded search had refused), and a resumed
+	# traveller was turned back to the gate (reg01_journey_reload_route_test). Only the way back in is what was missing.
+	return PackedVector2Array()
+
+
+## B42-NAV: from `o` (outside the village) to `v` (inside it), by a gate or a road (path_far). Empty when neither is found.
+func _path_in(o: Vector2i, v: Vector2i) -> PackedVector2Array:
+	var ex: Array = map.exits()
+	var order := []
+	for k in ex.size():
+		order.append([absi(Vector2i(ex[k].out).x - o.x) + absi(Vector2i(ex[k].out).y - o.y), k])
+	order.sort()
+	for e in order:
+		var g: Dictionary = ex[int(e[1])]
+		var seg := map.find_path_world(o, Vector2i(g.out))
+		if seg.is_empty():
+			continue
+		var inside := Vector2i(g.out) - Vector2i(g.dir)
+		var out := _joined(seg, PackedVector2Array([Vector2(inside)]))
+		return _joined(out, map.find_path(inside, v))
+	var gi := Journeys.gate_index(self)
+	if gi < 0 or homesteads == null:
+		return PackedVector2Array()
+	var roads := []
+	for st in map.overworld.sites:
+		var road: PackedVector2Array = homesteads._road(str(st.id))
+		if road.is_empty():
+			continue
+		var k := Journeys._nearest(road, o)
+		roads.append([absi(int(road[k].x) - o.x) + absi(int(road[k].y) - o.y), roads.size(), road, k])
+	roads.sort_custom(func(x: Array, y: Array) -> bool: return x[0] < y[0] or (x[0] == y[0] and x[1] < y[1]))
+	for r in roads:
+		var road: PackedVector2Array = r[2]
+		var k: int = r[3]
+		var seg := PackedVector2Array([Vector2(o)]) if Vector2i(road[k]) == o else map.find_path_world(o, Vector2i(road[k]))
+		if seg.is_empty():
+			continue
+		for q in range(k, -1, -1):
+			seg = _joined(seg, PackedVector2Array([road[q]]))
+		var g: Dictionary = ex[gi]
+		var inside := Vector2i(g.out) - Vector2i(g.dir)
+		seg = _joined(seg, PackedVector2Array([Vector2(Vector2i(g.out)), Vector2(inside)]))
+		return _joined(seg, map.find_path(inside, v))
+	return PackedVector2Array()
+
+
+## B42-NAV: whether path `p` stops short of `to`: the bounded search returns the nearest reachable part of the way when its box
+## cuts off the only way round (a river crossed by a bridge outside it), and the walk then "arrived" there, far from where it was
+## going (seed 4: 95 cells short of a house). A path ending within 6 cells counts as reaching it (a solid destination is reached
+## at the nearest open cell, at most 5 away: VillageMap._nearest_open).
+static func short_of(p: PackedVector2Array, to: Vector2i) -> bool:
+	if p.is_empty():
+		return true
+	var e := Vector2i(p[p.size() - 1])
+	return maxi(absi(e.x - to.x), absi(e.y - to.y)) > 6
+
+
+## `a` followed by `b`, a cell repeated where they meet written once.
+static func _joined(a: PackedVector2Array, b: PackedVector2Array) -> PackedVector2Array:
+	var out := a.duplicate()
+	for c in b:
+		if out.is_empty() or out[out.size() - 1] != c:
+			out.append(c)
+	return out
 
 
 ## Move along a path to s.to; returns true on arrival.
@@ -867,7 +972,8 @@ func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 			n.doing = "lost"
 			_walk_failed(n)
 			return false
-		n.path_fails = 0                 # NPC-01: a path found ends a run of failed walks
+		if not _later_walk(n):
+			n.path_fails = 0             # NPC-01: a path found ends a run of failed walks (B42-NAV: on the plan's last walk only)
 	if n.path_i >= n.path.size() and not leg.is_empty():
 		_npc_through(n, leg, s)
 		return false

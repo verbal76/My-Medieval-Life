@@ -668,8 +668,8 @@ func relief_round() -> float:
 	var fill := float(GameData.b("relief_fill_days"))
 	var rows := []
 	for h in w.households.size():
-		if w.households[h].get("ended", false) or w.brain._members(h).is_empty():
-			continue
+		if w.households[h].get("ended", false) or w.brain._members(h).is_empty() or w.brain.outlaw_household(h):
+			continue                     # B42-Q-BAND-CHAPEL-RELIEF (owner 2026-11-14): no parcels for the outlaw band (NPCBrain.outlaw_household)
 		var d := projected_days(h)
 		if d < trig or (is_missing_meals(h) and d < fill):
 			rows.append(_row(h, d, 0))
@@ -1138,8 +1138,8 @@ func food_alms() -> float:
 	var line_days := float(cfg().alms_line_days)
 	var rows := []
 	for h in w.households.size():
-		if w.households[h].get("ended", false) or w.brain._members(h).is_empty():
-			continue
+		if w.households[h].get("ended", false) or w.brain._members(h).is_empty() or w.brain.outlaw_household(h):
+			continue                     # B42-Q-BAND-CHAPEL-RELIEF: no parcels for the outlaw band
 		var m := household_means(h)
 		if int(m.wealth) >= int(m.line) * int(cfg().alms_wealth_lines):
 			continue
