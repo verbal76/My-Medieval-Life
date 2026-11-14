@@ -1439,7 +1439,30 @@ func test_b42_earmark_short() -> void:
 	var v := unbacked_alerts(rec).filter(func(a): return ("npc:%d:log" % car.id) in str(a.values) or World.npc_ref(car.id) + ":log" in str(a.values))
 	check(v.is_empty(), "B42: a spoiled earmarked unit is not a violation (%s)" % JSON.stringify(v))
 	var es := rows(rec, "factor").filter(func(f): return str(f.factor) == "earmark_short_claims" and (World.npc_ref(car.id) + ":log") in str(f.value))
-	check(not es.is_empty() and "likely spoilage" in str(es[-1].value), "B42: it is the earmark_short observation, with its likely cause (%s)" % (str(es[-1].value) if not es.is_empty() else "none"))
+	check(not es.is_empty() and "suspected spoilage" in str(es[-1].value), "B42: it is the earmark_short observation; spoilage only counted village-wide is 'suspected', never 'confirmed' (%s)" % (str(es[-1].value) if not es.is_empty() else "none"))
+	var sums := rows(rec, "factor").filter(func(f): return str(f.factor) == "reservation_summary" and str(f.value) == "violations 0; earmark short 1 claim, 1 log")
+	check(not sums.is_empty(), "B42: a zero-violation summary still shows the shortfall ('violations 0; earmark short 1 claim, 1 log')")
+	# the cause labels by evidence (owner follow-up 2026-11-14): confirmed only from a per-holder spoilage record
+	var u := {"owner": World.npc_ref(car.id), "item": "log", "short": 1}
+	var key := World.npc_ref(car.id) + ":log"
+	rec._earmark_first.erase(key)
+	rec.holder_spoiled(World.npc_ref(car.id), "log", 1)
+	check(rec._earmark_cause(u).begins_with("confirmed spoilage (1 log spoiled from %s's own stock" % World.npc_ref(car.id)), "B42: per-holder spoilage evidence is 'confirmed' (%s)" % rec._earmark_cause(u))
+	rec._holder_spoiled = {}
+	for k in w.stats:
+		if str(k).begins_with("spoiled_"):
+			rec._spoiled_seen[k] = w.stats[k]
+	check(rec._earmark_cause(u).begins_with("unknown"), "B42: with no spoilage evidence at all the cause is 'unknown' (%s)" % rec._earmark_cause(u))
+	# Decay.spoil_inv reports each holder's spoiled units to the recorder (the per-holder evidence)
+	var mk: NPC = null
+	for n in w.npcs:
+		if n.alive and n.role == "adult" and n != car and n != lab:
+			mk = n
+			break
+	mk.inv.add("milk", 5)
+	var gone := Decay.spoil_inv(w, mk.inv, World.npc_ref(mk.id), 1000.0)
+	var rep: Dictionary = rec._holder_spoiled.get(World.npc_ref(mk.id) + ":milk", {})
+	check(gone >= 5 and int(rep.get("qty", 0)) == 5 and mk.inv.count("milk") == 0, "B42: Decay.spoil_inv reports the holder's own spoiled milk to the recorder (%s)" % JSON.stringify(rep))
 	# an offer unbacked at the after-dawn check is still a violation (here made unbacked after the reconcile, then checked)
 	var m: NPC = null
 	for n in w.npcs:

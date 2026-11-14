@@ -1275,6 +1275,7 @@ const _UNMET := ["missed_meal_", "station_busy_", "starved_", "skill_short_", "k
 	"proposals_declined", "contracts_lapsed", "contracts_unsigned", "credit_defaulted", "wage_unpaid"]
 var _day_seen := -1                     # the last day whose summaries were written
 var _earmark_first := {}                # B42: "owner:item" -> {day, cause} of each earmark first found short after a dawn reconcile
+var _holder_spoiled := {}               # B42: "holder:item" -> {qty, day, minute} spoiled since the last dawn check (Decay.spoil_inv)
 var _spoiled_seen := {}                 # B42: the world's spoiled_<item> counters at the last dawn check (earmark_short causes)
 var _jstats_seen := {}                  # judgment stats at the last judgment_day
 var _bstats_seen := {}                  # bonds stats at the last judgment_day
@@ -1694,6 +1695,7 @@ func _day_summaries() -> void:
 		factor(em, "model", "earmark_short", split.earmark.size(), "count", "economy_model")
 		if not split.earmark.is_empty():
 			factor(em, "model", "earmark_short_claims", _earmark_causes(split.earmark), "text", "economy_model")
+		factor(em, "model", "reservation_summary", _reservation_summary(split.bad.size(), split.earmark), "text", "economy_model")
 		factor(em, "model", "contract_links", ec.contract_links.links.size(), "count", "economy_model")
 		end(em, "ok" if split.bad.is_empty() and ec.events.ordered() else "failed", "", "")
 		if not split.bad.is_empty():
@@ -1732,20 +1734,55 @@ static func unbacked_split(ec) -> Dictionary:
 	return {"stale": stale, "earmark": earmark, "bad": bad}
 
 
-## B42: the likely cause of earmark-short claims, from the world's own counters since the last dawn check: "spoilage (N <item>
-## spoiled in the village)" when the item spoiled, else "unknown (death, theft or tax; not attributable from the counters)".
-## The counters are village-wide, so this is a likely cause, not a proof. Reads only.
+## B42 (owner follow-up 2026-11-14: "Do not treat reclassification as resolution"): the cause of each earmark-short claim,
+## labelled by the strength of its evidence:
+##   - "confirmed spoilage": Decay.spoil_inv reported spoiling that very holder's item since the last dawn check (holder_spoiled,
+##     per holder, with day and time);
+##   - "suspected spoilage": the item spoiled somewhere in the village (spoiled_<item> rose) but no per-holder record names this
+##     holder (a holder Decay keys differently);
+##   - "unknown": neither (death, theft, tax or another outflow; nothing attributes it).
+## A claim already short at an earlier check keeps its first cause: "still short since day N (first: ...)". Reads only.
 func _earmark_causes(list: Array) -> String:
 	var out := []
 	for u in list:
 		var key := "%s:%s" % [str(u.owner), str(u.item)]
-		var k := "spoiled_" + str(u.item)
-		var n := int(float(w.stats.get(k, 0.0)) - float(_spoiled_seen.get(k, 0.0)))
-		var cause := ("spoilage (%d %s spoiled in the village since the last dawn)" % [n, str(u.item)]) if n > 0 else "unknown (death, theft or tax; not attributable from the counters)"
-		if _earmark_first.has(key) and n <= 0:
-			cause = "still short since day %d (first: %s)" % [int(_earmark_first[key].day), str(_earmark_first[key].cause)]
-		out.append("%s short %d, likely %s" % [key, int(u.short), cause])
+		out.append("%s short %d, %s" % [key, int(u.short), _earmark_cause(u)])
 	return ", ".join(out)
+
+
+func _earmark_cause(u: Dictionary) -> String:
+	var key := "%s:%s" % [str(u.owner), str(u.item)]
+	var own: Dictionary = _holder_spoiled.get(key, {})
+	if not own.is_empty():
+		return "confirmed spoilage (%d %s spoiled from %s's own stock on day %d at %02d:%02d, Decay.spoil_inv)" % [int(own.qty), str(u.item),
+			str(u.owner), int(own.day), int(own.minute) / 60, int(own.minute) % 60]
+	if _earmark_first.has(key):
+		return "still short since day %d (first: %s)" % [int(_earmark_first[key].day), str(_earmark_first[key].cause)]
+	var k := "spoiled_" + str(u.item)
+	var n := int(float(w.stats.get(k, 0.0)) - float(_spoiled_seen.get(k, 0.0)))
+	if n > 0:
+		return "suspected spoilage (%d %s spoiled in the village since the last dawn, none recorded from this holder)" % [n, str(u.item)]
+	return "unknown (no spoilage of this holder's %s recorded; death, theft, tax or another outflow not attributed)" % str(u.item)
+
+
+## B42: Decay.spoil_inv reports each holder's spoiled units (key: the holder's ref, "npc:<id>", "hh:<n>", ...). Kept until the next
+## dawn check reads it. Records only; changes nothing in the world.
+func holder_spoiled(holder: String, item: String, qty: int) -> void:
+	var key := "%s:%s" % [holder, item]
+	var cur: Dictionary = _holder_spoiled.get(key, {"qty": 0})
+	_holder_spoiled[key] = {"qty": int(cur.qty) + qty, "day": w.day(), "minute": int(fmod(w.minutes, World.DAY))}
+
+
+## B42: "violations N; earmark short C claims, Q <item>[, ...]": the shortfall stays visible when there is no violation.
+static func _reservation_summary(violations: int, earmark: Array) -> String:
+	var qty := {}
+	for u in earmark:
+		qty[str(u.item)] = int(qty.get(str(u.item), 0)) + int(u.short)
+	var items: Array = qty.keys()
+	items.sort()
+	var parts := items.map(func(it): return "%d %s" % [int(qty[it]), str(it)])
+	return "violations %d; earmark short %d claim%s%s" % [violations, earmark.size(), "" if earmark.size() == 1 else "s",
+		(", " + ", ".join(parts)) if not parts.is_empty() else ""]
 
 
 ## "owner:item short N" for each unbacked claim, in unbacked()'s order (sorted by owner, item).
@@ -1767,11 +1804,13 @@ func economy_after_dawn(d: int) -> void:
 	factor(ev, "model", "earmark_short", split.earmark.size(), "count", "economy_model")
 	if not split.earmark.is_empty():
 		factor(ev, "model", "earmark_short_claims", _earmark_causes(split.earmark), "text", "economy_model")
+	factor(ev, "model", "reservation_summary", _reservation_summary(ub.size(), split.earmark), "text", "economy_model")
 	var still := {}
 	for u in split.earmark:
 		var key := "%s:%s" % [str(u.owner), str(u.item)]
-		still[key] = _earmark_first.get(key, {"day": d, "cause": _earmark_causes([u]).get_slice(", likely ", 1)})
+		still[key] = _earmark_first.get(key, {"day": d, "cause": _earmark_cause(u)})
 	_earmark_first = still                      # claims no longer short are forgotten
+	_holder_spoiled = {}                        # per-holder spoilage is read once, at the check after the dawn it happened
 	end(ev, "ok" if ub.is_empty() else "failed", "", "")
 	if not ub.is_empty():
 		alert("violation", "economy.unbacked_reservation", "world", "unbacked=%d after the dawn reconcile; %s" % [ub.size(), _claims_text(ub)], ev)

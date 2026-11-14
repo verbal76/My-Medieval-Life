@@ -100,6 +100,8 @@ static func spoil_inv(w: World, inv: Inventory, key: String, m: float = 1.0) -> 
 		if k > 0 and inv.remove(id, k):
 			w.stat("spoiled_" + id, float(k))
 			w.stat("decay_" + id, float(k))           # the part of spoiled_ that is stores spoiling (diagnostics)
+			if w.recorder != null:
+				w.recorder.holder_spoiled(key, id, k)     # B42: per-holder evidence for a short earmark's cause (records only)
 			lost += k
 	return lost
 
