@@ -476,8 +476,12 @@ func test_identity_events() -> void:
 	check(left.size() == 1 and left[0].actor == ref and left[0].category == "identity", "migration: leaving the village is an identity event on the person's permanent reference (%s)" % ref)
 	var lc := changes_of(rec, int(left[0].id))
 	check(lc.size() == 1 and lc[0].prop == "where" and lc[0].before == "village" and lc[0].after == "higham", "leave: the state change says where, village -> higham")
+	var npcs_before := w.npcs.size()
 	var back := come_back(w, id)
 	var ret := evs(rec, "returned_to_village")
+	# SIM-GATE-01 (Build 40, poverty seed 6): a former villager's return is no new person; the recorder says so, so its births and
+	# arrivals match the simulation's count of new people (economy_sim people.births = growth of w.npcs)
+	check(w.npcs.size() == npcs_before and ret.size() == 1 and "cause=rejoined" in ret[0].detail, "a former villager's return is marked cause=rejoined and adds no person (%s)" % (ret[0].detail if ret.size() > 0 else "none"))
 	check(back == who and ret.size() == 1 and ret[0].actor == ref and back.id == id, "migration: returning is an identity event on the identical reference (same NPC record, same id)")
 	var rc := changes_of(rec, int(ret[0].id))
 	check(rc.size() == 1 and rc[0].before == "higham" and rc[0].after == "village", "return: higham -> village")
@@ -511,6 +515,12 @@ func test_identity_events() -> void:
 	check(born >= World.BAND_START and births.any(func(e): return e.actor == "p:%d" % born and "band id" in e.detail), "a settlement birth is a register event with its band id (p:%d)" % born)
 	var bc := changes_of(rec, int(births.filter(func(e): return e.actor == "p:%d" % born)[0].id))
 	check(bc.size() == 1 and bc[0].before == "unregistered" and bc[0].after == "higham", "and its state change says unregistered -> higham")
+	# the settlement-born member's first coming to the village is a new person: a return event without cause=rejoined
+	var npcs_mid := w.npcs.size()
+	var newcomer := come_back(w, born)
+	var first := evs(rec, "returned_to_village").filter(func(e): return e.actor == "p:%d" % born)
+	check(newcomer != null and newcomer.id == born and w.npcs.size() == npcs_mid + 1 and first.size() == 1 and not ("cause=rejoined" in first[0].detail),
+			"a settlement-born member's first arrival adds a person and is not marked rejoined (%s)" % (first[0].detail if first.size() > 0 else "none"))
 	# death: the villager dies, the register moves them to dead under the same reference
 	var victim := plain_adult(w)
 	w.kill(victim, "old age")
