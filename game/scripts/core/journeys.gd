@@ -46,9 +46,19 @@ static func start(w: World, n: NPC, sid: String, purpose: Dictionary) -> String:
 		w.stat("journey_failed_no_road")
 		record(w, n, "refused", {"to": sid, "purpose": purpose.duplicate(true), "why": "no road"})
 		return "There is no road to %s." % w.map.overworld.site(sid).name
+	# B42 envoy starvation (flight recorder run 43332151718, seed 1, p:168: an envoy with an empty purse set out with food for
+	# one leg, could buy none at the site and starved on the road home): a round trip is provisioned for the whole way there,
+	# the stay and the way home, within the same half-pantry cap; a traveller who still could not get home safely (short of
+	# food and without the coins to buy what is missing at the site) is not sent. A one-way walk (ONE_WAY: a runaway, a
+	# migrant) is provisioned for its one leg and never refused for food, as before (the road's hunger is theirs).
+	var need := walk_minutes(w, sid, purpose)
+	if not ONE_WAY.has(str(purpose.get("kind", ""))) and not fed_for(w, n, sid, purpose):
+		w.stat("journey_refused_no_food")
+		record(w, n, "refused", {"to": sid, "purpose": purpose.duplicate(true), "why": "no food for the road home"})
+		return "%s has not the food for the road to %s and back." % [n.name, w.map.overworld.site(sid).name]
 	n.journey = {"to": sid, "purpose": purpose.duplicate(true), "leg": "out", "since": w.day(), "gate": gi}
 	n.plan.clear()
-	provision(w, n, trip_minutes(w, sid) + MARGIN_MINUTES)       # B25R1-009: food for the road from the household's pantry
+	provision(w, n, need)                                       # B25R1-009: food for the road from the household's pantry
 	w.stat("journey_started")
 	record(w, n, "started", {"from": "village", "to": sid, "purpose": purpose.duplicate(true), "trigger": str(purpose.get("kind", "visit")),
 		"seed": bool(purpose.get("seed", false)), "coins": n.coins, "gate": gi})
@@ -241,6 +251,54 @@ static func trip_minutes(w: World, sid: String) -> float:
 	var walk := tiles / maxf(0.01, per_min)
 	var day := float(REST_FROM - REST_TO) * 60.0
 	return walk + floorf(walk / day) * float(24 - REST_FROM + REST_TO) * 60.0
+
+
+## Journeys that do not come back (the walker settles where they go): provisioned for the way there only.
+const ONE_WAY := ["runaway", "migrate"]
+const STAY_MINUTES := 1440.0       # the most a traveller waits at the site before the road home (leg_done: till the next morning)
+
+
+## The game minutes of food a journey to `sid` for `purpose` is provisioned for: there (one way), else there, a stay and back.
+static func walk_minutes(w: World, sid: String, purpose: Dictionary) -> float:
+	var leg := trip_minutes(w, sid)
+	if ONE_WAY.has(str(purpose.get("kind", ""))):
+		return leg + MARGIN_MINUTES
+	return 2.0 * leg + STAY_MINUTES + MARGIN_MINUTES
+
+
+## Whether `n` can set out for `sid` with `purpose` and get home fed: food from the household's pantry (within provision's cap)
+## and their pack, else a purse that could buy what is missing at the site (_can_buy).
+static func fed_for(w: World, n: NPC, sid: String, purpose: Dictionary) -> bool:
+	var short := _short_after_provision(w, n, walk_minutes(w, sid, purpose))
+	return short <= 0.0 or _can_buy(n, short)
+
+
+## The food points `n` would still lack for `minutes` after provision took what it may (nothing is moved: a dry run of provision).
+static func _short_after_provision(w: World, n: NPC, minutes: float) -> float:
+	var short := _short(n, minutes)
+	if short <= 0.0 or n.household < 0 or n.household >= w.households.size():
+		return short
+	var pantry: Inventory = w.households[n.household].pantry
+	var cap := food_in(pantry) * 0.5
+	var taken := 0.0
+	for f in NPCBrain.EDIBLE:
+		var pts := float(GameData.item(f).get("food", 0))
+		var have := pantry.count(f)
+		while pts > 0.0 and have > 0 and short - taken > 0.0 and taken + pts <= cap:
+			taken += pts
+			have -= 1
+	return maxf(0.0, short - taken)
+
+
+## Whether `n`'s purse could buy `pts` food points at the site at the cheapest food's own value a point (an estimate made before
+## setting out: the site's sellers may ask more, or have none, and then the traveller waits by buy_food's rules).
+static func _can_buy(n: NPC, pts: float) -> bool:
+	var per := INF
+	for f in NPCBrain.EDIBLE:
+		var fp := float(GameData.item(f).get("food", 0))
+		if fp > 0.0:
+			per = minf(per, float(GameData.value(f)) / fp)
+	return per < INF and float(n.coins) >= ceilf(pts * per)
 
 
 ## Food points held in `inv` (the items a traveller eats from: NPCBrain.EDIBLE).

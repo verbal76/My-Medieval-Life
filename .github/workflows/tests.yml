@@ -193,6 +193,7 @@ jobs:
           res://tests/water_test.gd
           res://tests/journey_s3_test.gd
           res://tests/journey_site_path_test.gd    # B25 probe: a traveller walks round a settlement's buildings, not through them
+          res://tests/b42_envoy_food_test.gd    # B42: a round trip is provisioned for the way home; one who cannot get home fed is not sent
           res://tests/loot_recover_test.gd
           res://tests/envoy_test.gd
           res://tests/intel_test.gd
