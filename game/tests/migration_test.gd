@@ -75,6 +75,26 @@ func _plain(w: World, after := 2) -> int:
 	return -1
 
 
+## The first plain household (from `after`) whose trade `s` takes (Migration._bt_for: its own business, or one hiring there). REG-05
+## (B42): a household with a member already on the road (the world's seeded buying walks) is barred from leaving, so the lowest
+## plain household can be one whose trade the settlement does not keep (a miner at Wulstead: no quarry) while nothing there is
+## hiring yet; the hunger move is of a household with a trade the settlement takes.
+func _plain_for(w: World, s: OffMapSettlement, after := 2) -> int:
+	var h := _plain(w, after)
+	while h >= 3 and Migration._bt_for(s, _head(w, h).job) == "":
+		h = _plain(w, h)
+	return h
+
+
+## The member Migration._hunger_out names as the household's head: its first adult with a trade, else its first member.
+func _head(w: World, h: int) -> NPC:
+	var ms: Array = w.brain._members(h)
+	for o: NPC in ms:
+		if o.role == "adult" and o.job != "":
+			return o
+	return ms[0]
+
+
 func _feed_settlement(s: OffMapSettlement) -> void:
 	s.biz.farm.stock.wheat = int(s.biz.farm.stock.get("wheat", 0)) + 3000
 	s.reopen_books()
@@ -139,8 +159,9 @@ func test_no_reason_no_move() -> void:
 func test_hunger() -> void:
 	var w := _world()
 	var s: OffMapSettlement = w.regions.by_id["wulstead"]
-	var h := _plain(w)
+	var h := _plain_for(w, s)
 	check(h >= 3, "a household without an office-holder is there to test")
+	check(h >= 3 and s.biz.has(Migration._bt_for(s, _head(w, h).job)), "and its trade is one the settlement takes")
 	_feed_settlement(s)
 	_starve(w, h)
 	w.food_days = 10.0
@@ -465,18 +486,22 @@ func test_carried_across() -> void:
 ## Two moves (a hungry household out, a worker out); returns the books as they stood when the moves began.
 func _make_moves(w: World) -> Dictionary:
 	_feed_settlement(w.regions.by_id["wulstead"])
-	var h := _plain(w)
+	var h := _plain_for(w, w.regions.by_id["wulstead"])
 	_starve(w, h)
 	w.food_days = 0.5
 	var began := _books(w)
 	Migration._hunger_out(w, w.regions.by_id["wulstead"])
 	var s: OffMapSettlement = w.regions.by_id["higham"]
 	s.biz.farm.rate = 12.0
-	var h2 := _plain(w, h)
+	var h2 := h
 	var who: NPC = null
-	for o: NPC in w.brain._members(h2):
-		if o.role == "adult" and Life._may_move(w, o):
-			who = o
+	while who == null:                                   # the next plain household with an adult free to move
+		h2 = _plain(w, h2)
+		if h2 < 0:
+			break
+		for o: NPC in w.brain._members(h2):
+			if o.role == "adult" and Life._may_move(w, o):
+				who = o
 	who.job = ""
 	w.treasury += who.coins - 21                         # (their purse is 21 coins; the difference to or from the treasury)
 	who.coins = 21
