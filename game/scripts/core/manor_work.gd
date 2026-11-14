@@ -1289,6 +1289,7 @@ func _finish(j: Dictionary, who: String) -> void:
 
 ## Dawn: work taken more than `days` ago and not done is released for someone else.
 func dawn() -> void:
+	raise_offers()                  # JOB-02 (off switch): yesterday's refused offers raised before today's weighing
 	for j in jobs.duplicate():
 		if j.taker != "" and w.day() - int(j.day) >= int(j.get("days_allowed", cfg("days"))):
 			var who: String = j.taker
@@ -1430,7 +1431,7 @@ func seek_kind(n: NPC, kinds: Array) -> bool:
 	if not job_of(who).is_empty() or n.role != "adult":
 		return false
 	for j in open_for(who):
-		if kinds.has(str(j.kind)) and take(j, who):
+		if kinds.has(str(j.kind)) and accepts(j, who) and take(j, who):
 			return plan(n)
 	return false
 
@@ -1446,12 +1447,101 @@ func reeve_fallback(n: NPC) -> bool:
 
 
 ## A villager looking for the manor's work takes the most needed open job they can do.
+## JOB-02 (behind its off switch): the first open job, most needed first, whose offer they accept; a declined offer is noted
+## for the manor's dawn raise. Switched off, every offer is accepted: the first open job, as before.
 func seek(n: NPC) -> bool:
 	var who := World.npc_ref(n.id)
-	var open := open_for(who)
-	if open.is_empty() or not take(open[0], who):
-		return false
-	return plan(n)
+	for j in open_for(who):
+		if not accepts(j, who):
+			continue
+		if not take(j, who):
+			return false
+		return plan(n)
+	return false
+
+
+# ---------------------------------------------------------------- JOB-02: offered compensation --------
+## MML-REQ-JOB-02 (owner REC-013 Q4, 2026-10-21, docs/directives/2026-10-21_build17_rec013_final_decisions.md section 5):
+## "Each funded job posting offers compensation. Eligible workers evaluate whether the offered payment is worthwhile and
+## decide whether to accept." A job's `wage` is its current offer (X18-D6: skill-adjusted when taken, wage_for); `base_wage`
+## the rate it was first posted at, `raised` how often the manor raised it, `declined_by` who turned it down since the last
+## dawn. Behind `manor_jobs.offered_pay.enabled` (off: every offer accepted, nothing raised, the board as before). The
+## numbers are agent proposals pending the owner's JOB-02 answers (J2-Q1..Q7). No coin moves here: an offer is a number on
+## a posting; the wage is set aside on taking and paid on completion exactly as before (take, _finish).
+static func offer_cfg() -> Dictionary:
+	return GameData.b("manor_jobs").get("offered_pay", {})
+
+
+static func offers_on() -> bool:
+	return bool(offer_cfg().get("enabled", false))
+
+
+## The share of a working day job `j` takes, for weighing its offer against a day's earnings.
+func day_share(j: Dictionary) -> float:
+	var shares: Dictionary = offer_cfg().get("day_share", {})
+	if shares.has(str(j.kind)):
+		return float(shares[str(j.kind)])
+	if str(j.kind) == "envoy":                 # paid by the days of the trip (Envoys.post), the spare days not counted
+		return maxf(1.0, float(j.get("days_allowed", 1)) - float(Envoys.cfg().get("spare_days", 0)))
+	return float(j.get("days_allowed", 1))
+
+
+## The least villager `n` will take for job `j`: what its own living earned of late (mean of `income_days` days), for the
+## job's share of a day. 0 for someone who has earned nothing (out of work, or new): any offer is worth it.
+func asking_for(j: Dictionary, n: NPC) -> int:
+	var earned := n.avg_income(int(offer_cfg().get("income_days", 5)))
+	if earned <= 0.0:
+		return 0
+	return int(ceil(earned * day_share(j)))
+
+
+## Whether `who` takes job `j` at its offer. Switched off, or for the salaried staff (their wage is their pay: REC-013 Q3),
+## the player (who chooses on the board) and a player's own order: always. A household under `relief_trigger_days` of food
+## takes any offer (its need comes first). Otherwise the pay it would get must reach its asking (asking_for). A refusal is
+## noted on the job (once a worker a day) for the dawn raise.
+func accepts(j: Dictionary, who: String) -> bool:
+	if not offers_on() or not who.begins_with("npc:") or is_staff(who) or is_player_order(j):
+		return true
+	var n := w.npc(World.ref_id(who))
+	if n == null:
+		return true
+	if w.brain.household_food_days(n.household) < float(GameData.b("relief_trigger_days")):
+		return true
+	if wage_for(j, who) >= asking_for(j, n):
+		return true
+	if not j.has("declined_by"):
+		j.declined_by = []
+	if not (j.declined_by as Array).has(who):
+		(j.declined_by as Array).append(who)
+		w.stat("manor_offers_declined")
+	return false
+
+
+## Dawn: the manor raises the offer of each untaken job someone declined since the last dawn, by `raise_step` of its first
+## offer (at least a coin), up to `raise_max_factor` times it, only while the treasury could still fund the raised offer.
+## The refusals are then forgotten (a new day, a new weighing). Never lowered; nothing paid or set aside.
+func raise_offers() -> void:
+	if not offers_on():
+		return
+	var c := offer_cfg()
+	for j in jobs:
+		var declined: Array = j.get("declined_by", [])
+		if declined.is_empty():
+			continue
+		j.declined_by = []
+		if j.taker != "" or is_player_order(j):
+			continue
+		var base := int(j.get("base_wage", j.wage))
+		var top := int(ceil(float(base) * float(c.get("raise_max_factor", 2.0))))
+		var offer := mini(top, int(j.wage) + maxi(1, roundi(float(base) * float(c.get("raise_step", 0.25)))))
+		if offer <= int(j.wage):
+			continue
+		if w.treasury - offer < w.brain.daily_obligations() * float(GameData.b("manor_job_reserve_days")):
+			continue                  # the manor's funds: no offer it could not pay
+		j.base_wage = base
+		j.wage = offer
+		j.raised = int(j.get("raised", 0)) + 1
+		w.stat("manor_offers_raised")
 
 
 func act(n: NPC, what: String, a: Dictionary) -> bool:
@@ -1525,7 +1615,7 @@ func load_dict(d: Dictionary) -> void:
 	yard = Inventory.from_dict(d.get("yard", {}))
 	for jd in d.get("jobs", []):
 		var j: Dictionary = jd.duplicate()
-		for k in ["id", "lot", "qty", "wage", "day", "reserved", "taken", "level", "placed", "days_allowed", "done"]:
+		for k in ["id", "lot", "qty", "wage", "day", "reserved", "taken", "level", "placed", "days_allowed", "done", "base_wage", "raised"]:
 			if j.has(k):
 				j[k] = int(j[k])
 		for k in ["site", "at", "depot"]:
@@ -1533,6 +1623,8 @@ func load_dict(d: Dictionary) -> void:
 				j[k] = [int(j[k][0]), int(j[k][1])]
 		if j.has("sids"):
 			j.sids = (j.sids as Array).map(func(v): return int(v))
+		if j.has("declined_by"):
+			j.declined_by = (j.declined_by as Array).map(func(v): return str(v))     # JOB-02
 		if j.has("to") and j.to.has("hh"):
 			j.to.hh = int(j.to.hh)
 		j.load = Inventory.from_dict(jd.get("load", {}))

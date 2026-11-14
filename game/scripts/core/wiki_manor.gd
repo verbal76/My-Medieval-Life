@@ -49,8 +49,17 @@ static func _jobs(sys: Callable) -> void:
 			"Cut a tunnel: villagers only. While the works lack stone and a sound timber support holds a face below ground, a villager cuts a load from it and brings it to the works yard, at the quarry's rate."]),
 		Wiki.p("Taking a job pays for the labour, whatever is found: a survey that finds nothing and a pit that strikes no ore are paid like the rest. Jobs are the manor's own, not contracts, so there are no counter-offers on the board. You can still make a contract with any villager."),
 		Wiki.p("A tunnel backfill is a job too, but it is yours: you order it and pay the wage, and villagers do it. It is not on the board for you to take; see Backfilling pits and tunnels."),
+	] + _offers() + [
 		Wiki.links(["job:reeve", "sys:manor_treasury", "sys:prospecting", "sys:open_pits", "sys:mine_backfill", "sys:mining", "sys:contracts", "item:pickaxe", "item:prospecting_kit"])],
 			"manor job board work reeve wage survey quarry mend carry haul excavate trial clear ground new field any work for me")
+
+
+## JOB-02 (owner REC-013 Q4): described only while offered pay is switched on (ManorWork.offers_on; off as shipped).
+static func _offers() -> Array:
+	if not ManorWork.offers_on():
+		return []
+	return [Wiki.h("Offers villagers may turn down"),
+		Wiki.p("Each wage on the board is the manor's offer. Villagers paid by the job weigh it before taking the work: someone whose own trade has earned more of late, for the time the job takes, turns it down and keeps to their own work, while someone who has earned nothing, or whose household is short of food, takes it. The manor's hands and the reeve do the board's work for their daily wage as before. When someone has turned a job down, the manor raises its offer the next morning, a little at a time, up to twice the first offer, and only if its treasury could still pay the higher wage; the board then shows how much the offer has risen. Offers never fall, but a job posted again starts from the usual rate. A job nobody will take at the manor's best offer stays undone. You see the same offers and take one or leave it; the wage you take is set aside and paid when the work is done, as for any job.")]
 
 
 # Guardianship (dawn, place, candidates, move, _take_share, player_adopt); game_ui.gd _relation_choices ("Offer a home").
