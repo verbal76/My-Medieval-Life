@@ -319,7 +319,7 @@ None.
 | B42-Q-REG08-CAP | Accept the MML-REG-08 expired-delivery refund capped at what the payer's heir holds (never creating coins)? | decision | APPROVED | unassigned |
 | B42-Q-RELEASE-TESTS | Release gate: start a missing full test run, cancellation on concurrent runs, evidence retention | decision | APPROVED | unassigned |
 | B42-REG08-SHORTFALL | Courier refund cap: record any unpaid shortfall visibly and auditably (REG-08) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
-| B42-RELEASE-EXACT-SHA | Release requires all mandatory tests to pass on the exact packaged commit | approved | IN DEVELOPMENT / TARGETED TESTS PASSED / OPEN | unassigned |
+| B42-RELEASE-EXACT-SHA | Release requires all mandatory tests to pass on the exact packaged commit | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
 | BAN-B | Expansion 23 BAN-B: faction identity, membership, hierarchy, safehouse ownership and persistent faction resources | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
 | BAN-C | Expansion 23 BAN-C: career actions, recruitment, theft and raids, resale, suspicion and response (within E23-SCOPE) | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
 | BAN-D | Expansion 23 BAN-D: rank, challenge, leadership, schism and autonomous succession | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |

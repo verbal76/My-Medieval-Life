@@ -12275,7 +12275,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -12299,15 +12299,21 @@
      "date": "2026-11-14",
      "change": "implementation_status: INTEGRATED -> IN DEVELOPMENT",
      "why": "owner decision B42-Q-RELEASE-TESTS: concurrency must not cancel another run; follow-up implementation required"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; tests: test_release_gates 41 OK; test_android_export 5 OK -> test_release_gates 41 OK; test_android_export 5 OK; test_release_gates 52 OK; test_android_export 5 OK; commits + 22ae7e0",
+     "why": "Agent N 22ae7e0: owner B42-Q-RELEASE-TESTS item 2 (release-requested Tests runs in tests-release-<sha>, never cancel or cancelled; same-SHA run awaited and reused; expired evidence reruns once); test_release_gates 52 OK; merged into wip/b42-integration"
     }
    ],
    "lifecycle": "ACTIVE",
    "assigned_worker": "Agent N (Build 42 release engineering)",
    "branch": "wip/b42-release-gates",
-   "tests": "test_release_gates 41 OK; test_android_export 5 OK",
+   "tests": "test_release_gates 41 OK; test_android_export 5 OK; test_release_gates 52 OK; test_android_export 5 OK",
    "test_commit": "ecc1d3e",
    "commits": [
-    "7fcc47e"
+    "7fcc47e",
+    "22ae7e0"
    ],
    "integrated_in": [
     "wip/b42-integration ecc1d3e"

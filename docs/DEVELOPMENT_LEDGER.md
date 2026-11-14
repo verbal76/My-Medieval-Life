@@ -187,7 +187,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B42-DEMO-WINDOW-TITLE | Demo window title does not identify the demo | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B42-MP-PANTRY-PRIVACY | Multiplayer: household pantry information private by default; shared only by explicit permission | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B42-REG08-SHORTFALL | Courier refund cap: record any unpaid shortfall visibly and auditably (REG-08) | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
-| B42-RELEASE-EXACT-SHA | Release requires all mandatory tests to pass on the exact packaged commit | unassigned | OWNER APPROVED | IN DEVELOPMENT | TARGETED TESTS PASSED | NOT READY | OPEN |
+| B42-RELEASE-EXACT-SHA | Release requires all mandatory tests to pass on the exact packaged commit | unassigned | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B7-001 | Starting coins | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B7-002 | Quest rewards reserved |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | B7-003 | Jewellery/helmets have buyers |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
