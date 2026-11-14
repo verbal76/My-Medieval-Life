@@ -165,3 +165,14 @@ in pair 2; the prefetch and autosave reductions are per-operation and do not dep
 cost per hour (pair 1): before 71-165 ms (10 saves), after 18-74 ms.
 No frame in any run took more than one world tick, and no frame-time clamp was added: the stalls were removed or moved
 off the main thread, not hidden.
+
+## Tests
+
+- 10-day seed-1 fingerprint (`economy_sim.gd --days 10 --seed 1`) on `2721b85`: judgment state hash **2716197525**,
+  the reference: the simulation is unchanged (none of the three fixes touches a rule; headless sims have no view and no
+  autosave).
+- On `7f59038` (fixes 1-3; the later commits move the worker's start and loosen the frame check only): save_exact 15/0,
+  save_continuity 5/0, sav04_reload_determinism 13/0, overworld_test 440/0, travel_perf_test 1/0, stream_tunnel_test 5/0,
+  tile_premake_test 6/0, start_test 524 steps/0, desks_faced_test 5/0, autosave_async_test 11/0 (checks/failures).
+- chunk_prefetch_test on `19da97d`: 6/0 (load 8.7; the earlier strict threshold failed twice at load 7.7-8.9 on 1-3
+  frames of 15.6-23 ms of preemption, which is why it now allows 5 such frames and none over 50 ms; the old path gives 64).
