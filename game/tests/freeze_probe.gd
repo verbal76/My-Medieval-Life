@@ -29,12 +29,16 @@ var snaps := 0
 var site := {}
 var inside_until := -1.0
 var back_forth: Array = []
+var dir := Vector2(0, 1)              # B42: the direction walked (dir=south|north|east|west), the owner's route is south
+var min_dist := 20.0                  # B42: the nearest settlement at least this far (tiles) that way (far=N)
+var hops := 1                         # B42: settlements visited one after another that way (hops=N), by the roads
 var bf_i := 0
 var keys_world := ["hourly (incl. daily)", "villagers (all)", "villagers: decide", "villagers: run plan (incl. walking)", "fauna",
 		"carts", "player", "presence", "neighbouring settlements (a step an hour, mornings)"]
 var keys_main := ["pre (audio, view report)", "world.update", "player_step", "projectiles, look, aerial", "autosave", "fx",
 		"sync_sprites (incl. ow_view.follow)", "levels, marks, outlines", "hud",
-		"ss:doors, pose, signs, canopy", "ss:tree_view", "ss:ow_view.follow"]
+		"ss:doors, pose, signs, canopy", "ss:tree_view", "ss:ow_view.follow",
+		"ps:pre", "ps:gather..reach", "ps:travel, paving, route", "ps:speed", "ps:try_move, slide", "ps:portal, sprite", "ps:find_target"]
 var keys_ow := ["ow:recentre+free", "ow:build", "ow:prefetch", "ow:road_step", "ow:live_step", "ow:works+homes", "ow:roofs", "ow:canopy"]
 var made_seen := 0
 var made_seen_v := 0
@@ -52,6 +56,12 @@ func _init() -> void:
 			limit = float(a.substr(8))
 		elif a.begins_with("stay="):
 			stay = float(a.substr(5))
+		elif a.begins_with("dir="):
+			dir = {"south": Vector2(0, 1), "north": Vector2(0, -1), "east": Vector2(1, 0), "west": Vector2(-1, 0)}[a.substr(4)]
+		elif a.begins_with("far="):
+			min_dist = float(a.substr(4))
+		elif a.begins_with("hops="):
+			hops = int(a.substr(5))
 		elif a.begins_with("csv="):
 			path = a.substr(4)
 	csv = FileAccess.open(path, FileAccess.WRITE)
@@ -66,23 +76,47 @@ func _begin() -> void:
 	var w: World = main.world
 	var ow: Overworld = w.map.overworld
 	var home := Vector2(ow.village.get_center())
-	var best := INF
-	for st in ow.sites:
-		var d := Vector2(st.center) - home
-		if d.y > 20 and absf(d.x) < d.y and d.length() < best:
-			best = d.length()
-			site = st
 	var gate := Vector2i(ow.gates[0].out)
 	for g in ow.gates:
-		if Vector2(g.out).y > Vector2(gate).y:
+		if Vector2(g.out).dot(dir) > Vector2(gate).dot(dir):
 			gate = Vector2i(g.out)
+	# B42: the settlements that way, each the nearest one further on (along dir, within 45 degrees) from the last
+	var chain: Array = []
+	var from := home
+	for h in hops:
+		var best := INF
+		var pick := {}
+		for st in ow.sites:
+			var d := Vector2(st.center) - from
+			var along := d.dot(dir)
+			if along > (min_dist if h == 0 else 20.0) and absf(d.dot(Vector2(dir.y, -dir.x))) < along and d.length() < best:
+				best = d.length()
+				pick = st
+		if pick.is_empty():
+			break
+		chain.append(pick)
+		from = Vector2(pick.center)
+	site = chain[-1]
+	for st in ow.sites:
+		print("SITE %s %s at %s (from the village %s)" % [st.name, st.kind, str(st.center), str(Vector2(st.center) - home)])
 	# inside the village first: from where a new game puts the player to the south gate, by the game's own route finder
 	var r0 := RegionTravel.plan(w, Vector2i(w.player.pos.floor()), gate)
 	var r := RegionTravel.plan(w, gate, Vector2i(site.center))
 	route = PackedVector2Array()
 	if bool(r0.get("ok", false)):
 		route.append_array(r0.cells)
-	route.append_array(r.cells)
+	var r := {"ok": true, "cells": []}
+	var at := gate
+	for st in chain:
+		var rr := RegionTravel.plan(w, at, Vector2i(st.center))
+		print("leg to %s ok=%s cells %d" % [st.name, str(rr.get("ok", false)), (rr.get("cells", []) as Array).size()])
+		if bool(rr.get("ok", false)):
+			route.append_array(rr.cells)
+			r.cells.append_array(rr.cells)
+			at = Vector2i(st.center)
+		else:
+			r.ok = false
+			break
 	print("start %s; gate %s; site %s at %s; village leg ok=%s (%d), journey ok=%s (%d)" % [str(w.player.pos), str(gate),
 			str(site.get("name", "?")), str(site.get("center", "?")), str(r0.get("ok", false)), (r0.get("cells", []) as Array).size(),
 			str(r.ok), (r.get("cells", []) as Array).size()])
@@ -99,7 +133,7 @@ func _begin() -> void:
 	w.tile_changed.connect(func(c: Vector2i, layer: String, v: int): emits.append([c, layer, v]))
 	main.set("aerial_background", true)
 	csv.store_line(",".join(PackedStringArray(["frame", "t_game", "wall_ms", "delta_ms", "ticks", "hour", "minutes", "x", "y",
-			"step", "vx", "vy", "level", "where", "chunks_built_ms", "tiles_made", "snap", "nodes", "render_ms"] \
+			"step", "vx", "vy", "level", "where", "chunks_built_ms", "tiles_made", "snap", "nodes", "render_ms", "mem_mb"] \
 			+ keys_world.map(func(k): return "w:" + k.replace(",", ";")) + keys_main.map(func(k): return "m:" + k.replace(",", ";")) + keys_ow.map(func(k): return "m:" + k))))
 	t_last = Time.get_ticks_usec()
 	ticks0 = _ticks(w)
@@ -135,7 +169,7 @@ func _frame() -> void:
 			int(w.minutes / 60.0) % 24, "%.1f" % w.minutes, "%.3f" % w.player.pos.x, "%.3f" % w.player.pos.y,
 			"%.4f" % w.player.pos.distance_to(pos0), "%.2f" % last_v.x, "%.2f" % last_v.y, w.player.map_level, place,
 			"%.3f" % ((int(main.ow_view.get("build_usec") if main.ow_view.get("build_usec") != null else 0) - b0) / 1000.0), tiles - tiles0, snaps,
-			int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)), "%.3f" % (maxi(0, t_post - t_pre) / 1000.0)])
+			int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)), "%.3f" % (maxi(0, t_post - t_pre) / 1000.0), "%.1f" % (Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0)])
 	for k in keys_world:
 		row.append("%.3f" % ((int(w.prof.get(k, {}).get("us", 0)) - int(prof0.get(k, {}).get("us", 0))) / 1000.0))
 	for k in keys_main:

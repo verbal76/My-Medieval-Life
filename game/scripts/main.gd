@@ -2700,6 +2700,7 @@ func _sync_loot() -> void:
 # ---------------------------------------------------------------- player ---------------------
 func _player_step(delta: float) -> void:
 	var p := world.player
+	var tq := Time.get_ticks_usec() if frame_profiling else 0
 	_swing_step(delta)
 	if not action.is_empty():
 		if ui.prompt_text != "":
@@ -2745,12 +2746,16 @@ func _player_step(delta: float) -> void:
 		reach_to = Vector2.INF
 		if cam_free:
 			recenter()                    # walking with keys or the stick brings the view back
+	if frame_profiling:
+		tq = _fp("ps:pre", tq)
 	_gather_step()
 	_chase_step()
 	_talk_step(delta)
 	_traveller_step()
 	_talk_player_step()
 	_reach_step()
+	if frame_profiling:
+		tq = _fp("ps:gather..reach", tq)
 	travel.step(self, v, delta)           # B25R1-006: auto-travel sets move_to along its route; any manual input suspends it
 	paving.step(self)                     # B25R1-011: a road cell walked up to in paving mode is worked on arrival
 	if v.length() > 0.1:
@@ -2758,6 +2763,8 @@ func _player_step(delta: float) -> void:
 	elif move_to != Vector2.INF:
 		v = _route_step(delta)
 	walking = v.length() > 0.1
+	if frame_profiling:
+		tq = _fp("ps:travel, paving, route", tq)
 	if v.length() > 0.1:
 		var speed := float(GameData.b("player_tiles_per_second")) * _sprint_step(delta) \
 				* (world.carts.pull_speed_for(world.carts.pulled_by(world.acting_ref())) if not world.carts.pulled_by(world.acting_ref()).is_empty() else 1.0)     # B14: a cart is slower going (MIN-F: a minecart on its rails less so)
@@ -2767,6 +2774,8 @@ func _player_step(delta: float) -> void:
 		# same distance, never through a wall. A normal frame (0.075 tiles at 60 fps) is one step, as before.
 		var parts := maxi(1, ceili(full.length() / MAX_STEP_TILES))
 		var step := full / parts
+		if frame_profiling:
+			tq = _fp("ps:speed", tq)
 		var before := p.pos
 		var moved_x := false
 		var moved_y := false
@@ -2780,6 +2789,8 @@ func _player_step(delta: float) -> void:
 		elif not moved_x and absf(v.x) > absf(v.y):
 			_slide_to_gap(Vector2(step.x, 0))
 		walk_stuck = walk_stuck + delta if p.pos.distance_to(before) < full.length() * 0.3 else 0.0
+		if frame_profiling:
+			tq = _fp("ps:try_move, slide", tq)
 		_through_portal(v)
 		player_sprite.face(v)
 		if not player_sprite.striking:     # GP-SWORD-VIS: a blow begun plays through while walking (the walk used to cut it off)
@@ -2793,7 +2804,11 @@ func _player_step(delta: float) -> void:
 		if action.is_empty() and player_sprite.anim in ["walk", "swing", "gather", "work"] and not player_sprite.striking:     # (a weapon's blow plays through)
 			_rest_anim()
 		_through_portal(Vector2.ZERO)        # MIN-A: a tapped adit, reached
+	if frame_profiling:
+		tq = _fp("ps:portal, sprite", tq)
 	_find_target()
+	if frame_profiling:
+		_fp("ps:find_target", tq)
 	if Input.is_action_just_pressed("interact"):
 		interact()
 	if Input.is_action_just_pressed("attack"):
