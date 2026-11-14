@@ -12230,6 +12230,90 @@
    "branch": "wip/b42-mp-stalls"
   },
   {
+   "id": "B42-Q-BAND-CHAPEL-RELIEF",
+   "kind": "decision",
+   "title": "Should the chapel stop sending relief parcels to the outlaw band (ND-23 excluded only the manor's relief)?",
+   "description": "Should the chapel stop sending relief parcels to the outlaw band (ND-23 excluded only the manor's relief)?",
+   "source": "docs/audits/2026-11-14_B42_LEAD_LOG.md",
+   "owner_wording": null,
+   "owner_answer": "Exclude band (Recommended): the chapel no longer gives parcels to the outlaw band, matching 'fend for themselves, as outlaws'.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/audits/2026-11-14_B42_LEAD_LOG.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner AskUserQuestion answer, 2026-11-14"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B42-Q-CLICK-SCOPE",
+   "kind": "decision",
+   "title": "Apply the first-click fix to all buttons?",
+   "description": "Apply the first-click fix to all buttons?",
+   "source": "docs/audits/2026-11-14_B42_LEAD_LOG.md",
+   "owner_wording": null,
+   "owner_answer": "All buttons (Recommended): every button gets the fix; normal clicks still fire exactly once.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/audits/2026-11-14_B42_LEAD_LOG.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner AskUserQuestion answer, 2026-11-14"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B42-Q-DEMO-HANDOFF",
+   "kind": "decision",
+   "title": "Accept the explicit 'Continue your demo world' handoff in place of plain Continue?",
+   "description": "Accept the explicit 'Continue your demo world' handoff in place of plain Continue?",
+   "source": "docs/audits/2026-11-14_B42_LEAD_LOG.md",
+   "owner_wording": null,
+   "owner_answer": "Accept (Recommended): one explicit click; nothing is ever overwritten silently.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/audits/2026-11-14_B42_LEAD_LOG.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner AskUserQuestion answer, 2026-11-14"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B42-Q-EARMARK-SPOIL",
    "kind": "decision",
    "title": "When a contract's earmarked input spoils (or is otherwise lost): (A) stay short [current LE-03 rule], (B) shrink to what is held, or (C) release and notify the contract (OD-LE-13 negotiated breach)?",
@@ -12472,6 +12556,34 @@
      "date": "2026-11-14",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner answer 2026-11-14 (Build 42 lead session)"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B42-Q-STUTTER-PART2",
+   "kind": "decision",
+   "title": "Fix the result-changing stutter causes (0.5 s tick, presence materialising, dawn and 17:00 frames) in Build 42?",
+   "description": "Fix the result-changing stutter causes (0.5 s tick, presence materialising, dawn and 17:00 frames) in Build 42?",
+   "source": "docs/audits/2026-11-14_B42_LEAD_LOG.md",
+   "owner_wording": null,
+   "owner_answer": "After your playtest (Recommended): ship Build 42 with the result-neutral fixes; the owner checks on real hardware whether the remaining hitches matter; then decide.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/audits/2026-11-14_B42_LEAD_LOG.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner AskUserQuestion answer, 2026-11-14"
     }
    ],
    "lifecycle": "ACTIVE"
