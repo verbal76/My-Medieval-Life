@@ -18,7 +18,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25-FINISH-01 | 20 | IN DEVELOPMENT | lead session | wip/region-nav |
 | B25-HH-BIZFOOD-D1 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-audit-sim4 |
 | B25-INV02-SPOIL-D1 | unassigned | IMPLEMENTED ON TASK BRANCH | worker agent (PAR-AGENTS-01) | wip/b25-inv02-proposal |
-| B25-MOVE-STUTTER-INV | unassigned | IN DEVELOPMENT | unassigned (lead; ownership proposed 2026-11-14) | wip/b25-move-stutter-inv |
+| B25-MOVE-STUTTER-INV | unassigned | IN DEVELOPMENT | Agent P (Build 42 performance) | wip/b42-stutter |
 | B25-ND15-TOL-01 | unassigned | IMPLEMENTED ON TASK BRANCH | none | wip/b25-nd15-tolerance |
 | B25-ND16-PREC-01 | unassigned | IMPLEMENTED ON TASK BRANCH | none | wip/b25-nd16-precision |
 | B25-ND29-BAND-CAMPFIRE | unassigned | IN DEVELOPMENT | lead | wip/b25-nd29-band-campfire |
