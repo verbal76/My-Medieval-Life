@@ -526,6 +526,8 @@ jobs:
           res://tests/world_leak_cycle_test.gd   # B42 KI-08: Save and quit to title, Continue x3: every world thrown away is freed, the title's objects flat
           res://tests/net_soak_test.gd           # X20 item 11: a recorded multiplayer soak, one host and three guests (~3-4 min)
           res://tests/mp_g4_loopback_test.gd     # Build 42 G4: MP-05/06/07 between two processes, wire payload tapped (~160 s)
+          res://tests/mp02_guest_stall_management_test.gd   # MML-MP-02: a guest (and a tier-3 partner) runs its stall and shop through the host
+          res://tests/mp_pantry_privacy_test.gd    # B42: player household pantries private below sharing tier 2
           EOF
           if [ -n "$ONLY" ]; then   # an independent run of named suites: keep only those entries of the list
             for t in $ONLY; do grep -E "^ *$t( |$)" "$RUNNER_TEMP/game.txt" || { echo "unknown suite: $t"; exit 1; }; done > "$RUNNER_TEMP/only.txt"

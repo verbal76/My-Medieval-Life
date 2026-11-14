@@ -357,6 +357,29 @@ func is_mine(s: Dictionary) -> bool:
 	return w.is_acting_ref(w.tenant_of(s))            # MP C4: the acting player's (a guest's stall is not the host's)
 
 
+## B42-Q-MP02-TIER3 (owner, 2026-11-14: "Tier 3 partners too: a tier-3 partner can also manage the stall"): the player whose stall or
+## shop this is (the pitch's or built stall's tenant, the shop's opener), "" for none or a villager's.
+func holder_ref(s: Dictionary) -> String:
+	if s.is_empty():
+		return ""
+	var r := str(s.get("by", World.PLAYER)) if is_shop(s) else w.tenant_of(s)
+	return r if World.is_player_ref(r) else ""
+
+
+## B42-Q-MP02-TIER3: whether `ref` (default the acting player) is another player's MP-05 tier-3 partner for this stall or shop: its
+## holder shares property use with them (World.asset_share_tier).
+func partner_runs(s: Dictionary, ref := "") -> bool:
+	var me := ref if ref != "" else w.acting_ref()
+	var h := holder_ref(s)
+	return h != "" and h != me and w.asset_share_tier(h, me) >= 3
+
+
+## Whether the acting player may run the stall or shop day to day: its own (is_mine) or, as a tier-3 partner, its holder's
+## (B42-Q-MP02-TIER3). Giving it up, enlarging it and its production orders stay with the holder (NetActions.HOLDER_ONLY).
+func may_run(s: Dictionary) -> bool:
+	return is_mine(s) or partner_runs(s)
+
+
 func _daily_premises() -> void:
 	for s in premises():
 		if is_shop(s) and not is_mine(s):
@@ -646,9 +669,12 @@ func _pool_out(s: Dictionary, pool: String, id: String, left: int) -> int:
 
 ## Move `qty` of an item from the pack to the sale stock. "" when done, else why not.
 func list_item(s: Dictionary, id: String, qty: int, actor: PlayerState = null) -> String:
+	# MML-MP-02 (World.mirror): a guest's verb goes to the host, which checks the premises are the guest's (NetActions)
+	if w.mirrors():
+		return w.mirror("business.list_item", list_item.bind(s, id, qty), [s, id, qty])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, list_item.bind(s, id, qty))
-	if not is_mine(s):
+	if not may_run(s):
 		return "That is not your stall."
 	if not can_list(id) or qty <= 0:
 		return "That cannot be sold."
@@ -667,6 +693,9 @@ func list_item(s: Dictionary, id: String, qty: int, actor: PlayerState = null) -
 
 ## Take `qty` back to the pack (all or nothing); the price is forgotten with the last of it.
 func unlist(s: Dictionary, id: String, qty: int, actor: PlayerState = null) -> String:
+	# MML-MP-02 (World.mirror): a guest's verb goes to the host, which checks the premises are the guest's (NetActions)
+	if w.mirrors():
+		return w.mirror("business.unlist", unlist.bind(s, id, qty), [s, id, qty])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, unlist.bind(s, id, qty))
 	var have := int(s.stock.get(id, 0))
@@ -698,6 +727,9 @@ func set_price(s: Dictionary, id: String, price: int) -> String:
 ## Collect the till into the purse; the coins taken. A market stall's proceeds come only by closing it: its session is
 ## settled (5% to the manor) and the rest is the player's (Q13).
 func collect(s: Dictionary, actor: PlayerState = null) -> int:
+	# MML-MP-02 (World.mirror): a guest's verb goes to the host, which checks the premises are the guest's (NetActions)
+	if w.mirrors():
+		return w.mirror("business.collect", collect.bind(s), [s])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, collect.bind(s))
 	if stalls.is_market(s):
@@ -711,6 +743,9 @@ func collect(s: Dictionary, actor: PlayerState = null) -> int:
 ## ECON-P3: the owner's choice to move money between the purse and the till. "" when done, else why not. A market
 ## stall's open session proceeds are not taken out (Q13).
 func deposit(s: Dictionary, amount: int, actor: PlayerState = null) -> String:
+	# MML-MP-02 (World.mirror): a guest's verb goes to the host, which checks the premises are the guest's (NetActions)
+	if w.mirrors():
+		return w.mirror("business.deposit", deposit.bind(s, amount), [s, amount])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, deposit.bind(s, amount))
 	if amount <= 0 or w.player.coins < amount:
@@ -722,6 +757,9 @@ func deposit(s: Dictionary, amount: int, actor: PlayerState = null) -> String:
 
 
 func withdraw(s: Dictionary, amount: int, actor: PlayerState = null) -> String:
+	# MML-MP-02 (World.mirror): a guest's verb goes to the host, which checks the premises are the guest's (NetActions)
+	if w.mirrors():
+		return w.mirror("business.withdraw", withdraw.bind(s, amount), [s, amount])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, withdraw.bind(s, amount))
 	var avail := stalls.withdrawable(s) if stalls.is_market(s) else int(s.get("till", 0))
@@ -737,6 +775,9 @@ func withdraw(s: Dictionary, amount: int, actor: PlayerState = null) -> String:
 ## the till return to the player; what does not fit the pack lies at the stall as loot. No refund of rent
 ## paid. A closed shop leaves its counter and shelves standing. Returns a summary line.
 func close(s: Dictionary, because := "You closed your stall.", actor: PlayerState = null) -> String:
+	# MML-MP-02 (World.mirror): a guest's verb goes to the host, which checks the premises are the guest's (NetActions)
+	if w.mirrors():
+		return w.mirror("business.close", close.bind(s, because), [s])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, close.bind(s, because))
 	if Stalls.is_built(s):                # a built stall is the builder's: closing ends the session, the goods stay in it
@@ -819,6 +860,9 @@ func _charge(s: Dictionary, amount: int) -> bool:
 
 ## Pay what is owed now (the window's button): "" when done, else why not.
 func pay_arrears(s: Dictionary, actor: PlayerState = null) -> String:
+	# MML-MP-02 (World.mirror): a guest's verb goes to the host, which checks the premises are the guest's (NetActions)
+	if w.mirrors():
+		return w.mirror("business.pay_arrears", pay_arrears.bind(s), [s])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, pay_arrears.bind(s))
 	var owed := rent_of(s) * maxi(1, w.day() - int(s.get("paid_day", 0)))
@@ -936,7 +980,7 @@ func store_item(s: Dictionary, id: String, qty: int, actor: PlayerState = null) 
 		return w.mirror("business.store_item", store_item.bind(s, id, qty), [s, id, qty])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, store_item.bind(s, id, qty))
-	if not is_shop(s) or not is_mine(s):
+	if not is_shop(s) or not may_run(s):
 		return "There is no back room here."
 	if not can_list(id) or qty <= 0 or qty > listable(id):
 		return "You cannot store that."
@@ -951,6 +995,9 @@ func store_item(s: Dictionary, id: String, qty: int, actor: PlayerState = null) 
 
 ## Bring goods from the back room to the pack.
 func fetch(s: Dictionary, id: String, qty: int, actor: PlayerState = null) -> String:
+	# MML-MP-02 (World.mirror): a guest's verb goes to the host, which checks the premises are the guest's (NetActions)
+	if w.mirrors():
+		return w.mirror("business.fetch", fetch.bind(s, id, qty), [s, id, qty])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, fetch.bind(s, id, qty))
 	var have := int(s.get("store", {}).get(id, 0))
@@ -1034,7 +1081,7 @@ func hire(s: Dictionary, n: NPC, actor: PlayerState = null) -> String:
 		return w.mirror("business.hire", hire.bind(s, n), [s, n])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, hire.bind(s, n))
-	if not is_mine(s):
+	if not may_run(s):
 		return "That is not your stall."
 	if attendant_of(s) != null:
 		return "You have an attendant already."
@@ -1064,6 +1111,11 @@ func _pay_wage(s: Dictionary, n: NPC) -> void:
 
 ## Let the attendant go. They keep what they were paid.
 func dismiss(s: Dictionary, because := "You let your attendant go.") -> void:
+	# MML-MP-02 (World.mirror): a guest's verb goes to the host, which checks the premises are the guest's (NetActions); the host
+	# words the notice itself
+	if w.mirrors():
+		w.mirror("business.dismiss", dismiss.bind(s, because), [s])
+		return
 	var n := attendant_of(s)
 	s.attendant = -1
 	if n != null:

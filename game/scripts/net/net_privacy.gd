@@ -13,7 +13,7 @@ extends RefCounted
 ## cases open or closed (Justice), contracts (Contracts), stored goods in their chests, carts and homestead houses unless the MP-05 tier
 ## shares them (Chests, Carts, Homesteads), law lessons, the ties kept for their heir (tie_history), their prospecting samples
 ## and the assays only they know, what they know of prices (economy knowledge), their courier deliveries, booth deposits and
-## agreements; and the villagers' judgment store
+## agreements; a player household's pantry (B42-MP-PANTRY-PRIVACY, _households); and the villagers' judgment store
 ## (read on the host only). What stays: the public world, the recipient's own records whole, every record between villagers, and the
 ## other players' public look (NetSession.public_player) and their assets as the map shows them (buildings, carts, pens, plots).
 ## The player-to-player offers, sharing pairs and kept messages were filtered already (X20, MP-05); they are here too.
@@ -21,6 +21,12 @@ extends RefCounted
 ## another, as of villagers (the owner's rule), and the guest's conversations read it.
 
 const PLAYER := "player"
+## B42-MP-PANTRY-PRIVACY (owner decision 2026-11-14): "Household pantry information is private by default. Other players may access it
+## only through explicitly authorized sharing permissions." The MP-05 tier that shares a player household's pantry: tier 2 and above
+## (B42-Q-PANTRY-TIER, owner 2026-11-14: "Tier 2 and 3: moderate sharing also shows the pantry"); tier 1 (materials) does not.
+const PANTRY_TIER := 2
+## The fields of a player household read from what it holds: its pantry, and the economy figures worked out from it (days of food).
+const PANTRY_FIELDS := ["econ", "unsustainable_days"]
 
 
 ## Filter `d` for the guest whose reference is `ref` (World.player_ref). `w`: the host's world (players, sharing tiers, holders).
@@ -85,6 +91,8 @@ static func filter(d: Dictionary, ref: String, w: World = null) -> void:
 		d[EconomyFoundation.KEY] = ec
 	if d.get("couriers") is Dictionary:
 		d["couriers"] = _couriers(d.couriers, ref)
+	if d.get("households") is Array and w != null:
+		d["households"] = _households(d.households, ref, w)
 	d.erase("judgment")                                     # the villagers' judgment store is read on the host only
 	if d.get("law_lessons") is Dictionary:
 		var ll: Dictionary = d.law_lessons
@@ -102,6 +110,45 @@ static func filter(d: Dictionary, ref: String, w: World = null) -> void:
 			d.erase("tie_history")
 		else:
 			d["tie_history"] = keep
+
+
+## B42-MP-PANTRY-PRIVACY: the households (World.to_dict order, one per World.households index) as guest `ref` may see them. A player
+## household (a player couple's, Life.is_couple; a player's with a villager partner, Guardianship.player_household) keeps its pantry
+## and the figures read from it for its own players and for a player one of them shares with at PANTRY_TIER or above; for anyone else
+## it is sent without them (an empty pantry, "pantry_private"). A household of villagers only is sent as it is.
+static func _households(list: Array, ref: String, w: World) -> Array:
+	var out := []
+	for h in list.size():
+		var hh = list[h]
+		var players := household_players(w, h)
+		if not (hh is Dictionary) or players.is_empty() or players.has(ref) or players.any(func(x): return w.asset_share_tier(str(x), ref) >= PANTRY_TIER):
+			out.append(hh)
+			continue
+		var c: Dictionary = (hh as Dictionary).duplicate(false)
+		c["pantry"] = Inventory.new().to_dict()
+		for k in PANTRY_FIELDS:
+			c.erase(k)
+		c["pantry_private"] = true
+		out.append(c)
+	return out
+
+
+## B42-MP-PANTRY-PRIVACY: the references of the players household `h` is the household of: a couple's two (living or not), and any
+## living player whose household it is through a villager partner. [] for a household of villagers only.
+static func household_players(w: World, h: int) -> Array:
+	var out := []
+	if h < 0 or h >= w.households.size():
+		return out
+	var hh: Dictionary = w.households[h]
+	if Life.is_couple(hh):
+		for id in hh.couple:
+			var r := PLAYER if int(id) == Life.PLAYER_ID else "player:%d" % -int(id)
+			if not out.has(r):
+				out.append(r)
+	for p: PlayerState in w.player_list():
+		if Guardianship.player_household(w, p) == h and not out.has(w.player_ref(p)):
+			out.append(w.player_ref(p))
+	return out
 
 
 ## Whether reference `x` names a player other than the recipient `ref`.

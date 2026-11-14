@@ -242,6 +242,10 @@ func settle_text(s: Dictionary, r: Dictionary) -> String:
 
 ## CLOSE STALL: sales stop, the session is settled, the unsold goods stay in the stall. Returns the settlement.
 func close(s: Dictionary, why := "closed") -> Dictionary:
+	# MML-MP-02 (World.mirror): a guest's CLOSE STALL goes to the host, which checks the stall is the guest's (NetActions); the host
+	# words the settlement's reason itself
+	if w.mirrors():
+		return w.mirror("business.stalls.close", close.bind(s, why), [s])
 	if Business.is_pitch(s):
 		s.open = false
 	var r := settle(s, why)
@@ -251,7 +255,7 @@ func close(s: Dictionary, why := "closed") -> Dictionary:
 
 ## Why the stall cannot be opened by `ref` now, or "".
 func open_refusal(s: Dictionary, ref: String) -> String:
-	if s.is_empty() or is_merchant_stall(s) or not w.holds(ref, s):
+	if s.is_empty() or is_merchant_stall(s) or not (w.holds(ref, s) or biz.partner_runs(s, ref)):     # B42-Q-MP02-TIER3: or a tier-3 partner
 		return "It is not your stall."
 	if is_open(s):
 		return "It is open already."
@@ -264,6 +268,9 @@ func open_refusal(s: Dictionary, ref: String) -> String:
 
 ## OPEN STALL: the stall sells from now until it is closed or sold out. "" when done.
 func open(s: Dictionary, ref: String) -> String:
+	# MML-MP-02 (World.mirror): a guest's OPEN STALL goes to the host, which checks the stall and the reference are the guest's
+	if w.mirrors():
+		return w.mirror("business.stalls.open", open.bind(s, ref), [s, ref])
 	var why := open_refusal(s, ref)
 	if why != "":
 		return why

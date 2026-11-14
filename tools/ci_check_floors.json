@@ -321,6 +321,8 @@
  "tile_premake_test": 6,
  "demo_journey_test": 64,
  "mp_g4_loopback_test": 34,
+ "mp02_guest_stall_management_test": 92,
+ "mp_pantry_privacy_test": 26,
  "world_leak_cycle_test": 9,
  "demo_save_slots_test": 44,
  "creation_begin_click_test": 6,
