@@ -12048,6 +12048,42 @@
    "branch": "wip/b42-demo-frontend"
   },
   {
+   "id": "B42-EARMARK-SHORT",
+   "kind": "approved",
+   "title": "Cheese contract's earmarked milk fell from 2 to 1 (npc:39, seed 1, day 9): trace the actual item movement; correct or defective",
+   "description": "Cheese contract's earmarked milk fell from 2 to 1 (npc:39, seed 1, day 9): trace the actual item movement; correct or defective",
+   "source": "docs/audits/2026-11-14_B42_LEAD_LOG.md",
+   "owner_wording": "Do not treat reclassification as resolution of the inventory discrepancy.",
+   "approval": "owner, 2026-11-14",
+   "acceptance": [
+    "the missing milk traced per holder (spoilage, crafting, eating, transfers, reservations); classified correct or defective; recorder distinguishes confirmed violations, short earmarks, confirmed/suspected/unknown causes and shows shortage counts and quantities; any correction with a failing-first test, recorder-on/off identical, no item creation or loss"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/audits/2026-11-14_B42_LEAD_LOG.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Agent I (Build 42 flight recorder); branch: None -> wip/b42-recorder-reservation",
+     "why": "assigned to Agent I (owner follow-up directive 2026-11-14)"
+    }
+   ],
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "Agent I (Build 42 flight recorder)",
+   "branch": "wip/b42-recorder-reservation"
+  },
+  {
    "id": "B42-MP-PANTRY-PRIVACY",
    "kind": "approved",
    "title": "Multiplayer: household pantry information private by default; shared only by explicit permission",

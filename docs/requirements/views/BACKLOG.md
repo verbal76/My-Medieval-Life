@@ -81,7 +81,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | approved | OWNER APPROVED | NOT STARTED |
 | X20-TRADER-PAY-INV | Investigate why reopened settlement trader households fail to sustain themselves (insufficient sales, insufficient profit, the 85% reserve, household expenses, the profession-change decision), reconcile where the lower village coins reside, and later propose a sustainable trader compensation model from Living Economy results | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 
-## Approved, no build assigned (80)
+## Approved, no build assigned (81)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -134,6 +134,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B42-BEGIN-DOUBLE-CLICK | Character creation Begin button sometimes needs a second click | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B42-DEMO-SAVE-OVERWRITE | Demo New game overwrites the full game's save without warning (player-data protection) | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B42-DEMO-WINDOW-TITLE | Demo window title does not identify the demo | approved | OWNER APPROVED | IN DEVELOPMENT |
+| B42-EARMARK-SHORT | Cheese contract's earmarked milk fell from 2 to 1 (npc:39, seed 1, day 9): trace the actual item movement; correct or defective | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B42-MP-PANTRY-PRIVACY | Multiplayer: household pantry information private by default; shared only by explicit permission | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B42-REG08-SHORTFALL | Courier refund cap: record any unpaid shortfall visibly and auditably (REG-08) | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B42-RELEASE-EXACT-SHA | Release requires all mandatory tests to pass on the exact packaged commit | approved | OWNER APPROVED | INTEGRATED |

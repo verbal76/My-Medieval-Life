@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (868)
+## Approved requirement (869)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -185,6 +185,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B42-BEGIN-DOUBLE-CLICK | Character creation Begin button sometimes needs a second click | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B42-DEMO-SAVE-OVERWRITE | Demo New game overwrites the full game's save without warning (player-data protection) | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B42-DEMO-WINDOW-TITLE | Demo window title does not identify the demo | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| B42-EARMARK-SHORT | Cheese contract's earmarked milk fell from 2 to 1 (npc:39, seed 1, day 9): trace the actual item movement; correct or defective | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B42-MP-PANTRY-PRIVACY | Multiplayer: household pantry information private by default; shared only by explicit permission | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B42-REG08-SHORTFALL | Courier refund cap: record any unpaid shortfall visibly and auditably (REG-08) | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B42-RELEASE-EXACT-SHA | Release requires all mandatory tests to pass on the exact packaged commit | unassigned | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
