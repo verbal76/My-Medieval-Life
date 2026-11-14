@@ -1103,6 +1103,7 @@ func apply_window_title() -> void:
 
 
 func can_continue() -> bool:
+	finish_background_save()               # B42: an autosave still being written lands first
 	_demo_slot_ready()
 	return SaveStore.any_exists(save_path)
 
@@ -1223,6 +1224,7 @@ func _setup_input() -> void:
 ## A new world with the character from character creation (name, family, sex, look, sprite); with
 ## no spec (tests, screenshots) the default character.
 func new_game(spec := {}) -> void:
+	finish_background_save()               # B42: an autosave still being written lands first
 	if not spec.is_empty():
 		_demo_slot_ready()
 		_keep_previous_game()
@@ -1500,6 +1502,7 @@ func resume_after_origin() -> void:
 ## written over: it is moved aside unchanged first, then the backup is loaded if it can be, else a
 ## new game starts. If it cannot even be moved aside, saving stays off this session to protect it.
 func continue_game() -> void:
+	finish_background_save()               # B42: an autosave still being written lands first
 	_demo_slot_ready()
 	var r := SaveStore.inspect(save_path, World.SAVE_VERSION)
 	if r.state == "ok":
@@ -2072,9 +2075,26 @@ func _refresh_player_worn() -> void:
 		player_sprite.texture = sheet
 
 
+## B25-MOVE-STUTTER-INV (diagnostics only, off by default): when true, frame_prof holds this frame's microseconds per part of
+## _process (reset each frame); probes read it. Reads the clock only, so it changes no result.
+var frame_profiling := false
+var frame_prof := {}
+
+
+func _fp(key: String, t0: int) -> int:
+	var now := Time.get_ticks_usec()
+	frame_prof[key] = int(frame_prof.get(key, 0)) + now - t0
+	return now
+
+
 func _process(delta: float) -> void:
+	finish_background_save(false)          # B42: an hourly autosave written in the background: its outcome, once it is done
 	if world == null:
 		return
+	var tp := 0
+	if frame_profiling:
+		frame_prof = {}
+		tp = Time.get_ticks_usec()
 	if delta > HOST_STALL_SECONDS and net.is_host():
 		delta = 1.0 / 30.0                      # Batch D (MP-D6): a hosting app frozen (Android background, a stall): time stopped meanwhile
 	_refresh_player_worn()
@@ -2096,28 +2116,46 @@ func _process(delta: float) -> void:
 	if Demo.is_demo() and not guest_world and not _demo_step(delta):
 		return                              # DEMO-01: this world's demo time is used up (or the window is in the background): it waits
 	_report_view()                          # B25R1-019: the live range follows what this screen shows (zoom, window, camera)
+	if frame_profiling:
+		tp = _fp("pre (audio, view report)", tp)
 	if not guest_world and not paused and world.player.alive:
 		net.apply_requests()                # MP A2: the guests' requests, at this one fixed point of the host's frame
 		world.update(delta)
+		if frame_profiling:
+			tp = _fp("world.update", tp)
 		save_meta["play_seconds"] = float(save_meta.get("play_seconds", 0.0)) + delta
 		_player_step(delta)
+		if frame_profiling:
+			tp = _fp("player_step", tp)
 		_projectiles_step(delta)
 		_look_step(delta)
 		_aerial_step()
+		if frame_profiling:
+			tp = _fp("projectiles, look, aerial", tp)
 		var h := int(world.minutes / 60.0)
 		if h != autosave_hour:
 			autosave_hour = h
-			save_game(false)
+			save_game(false, true)              # B42: the text and the file are made on a background thread
+			if frame_profiling:
+				tp = _fp("autosave", tp)
 	if running and not world.player.alive and not ui.is_open("death"):
 		ui.show_death()
 	if running and not world.offers.is_empty():
 		_tell_offers()                       # MP-D8, MP-INTERACT-01: what another player asked or said, told once
 	_fx_step()
+	if frame_profiling:
+		tp = _fp("fx", tp)
 	_sync_sprites()
+	if frame_profiling:
+		tp = _fp("sync_sprites (incl. ow_view.follow)", tp)
 	_sync_levels(delta)
 	_sync_gather_mark()
 	_sync_outlines()
+	if frame_profiling:
+		tp = _fp("levels, marks, outlines", tp)
 	ui.update_hud()
+	if frame_profiling:
+		_fp("hud", tp)
 
 
 # ---------------------------------------------------------------- aerial maps (B25R1-025) -------
@@ -2333,12 +2371,19 @@ func _sync_sprites() -> void:
 		if n.alive and world.presence.keeps_live(n.pos, n.live):
 			var ns: ActorSprite = sprites.get(n.id)
 			people.append([n.pos, ns if ns != null and ns.visible else null])
+	var ts := Time.get_ticks_usec() if frame_profiling else 0
 	door_view.update(people, get_process_delta_time())
 	_sync_player_pose()
 	_sync_signs(p.pos)
 	canopy.update(p.pos, get_process_delta_time())
+	if frame_profiling:
+		ts = _fp("ss:doors, pose, signs, canopy", ts)
 	tree_view.update(p.pos, get_process_delta_time())
+	if frame_profiling:
+		ts = _fp("ss:tree_view", ts)
 	ow_view.follow(camera.get_screen_center_position() / T, p.pos, get_process_delta_time())
+	if frame_profiling:
+		ts = _fp("ss:ow_view.follow", ts)
 	var rf := RoofFade.probe(world, p.pos, inside_hold)         # which roof lifts (B8-018: roofs never return indoors)
 	inside_hold = rf.inside
 	roofs.follow(rf.inside, rf.inside_roof, rf.under, rf.under_roof, get_process_delta_time())
@@ -2744,6 +2789,7 @@ func _sync_loot() -> void:
 # ---------------------------------------------------------------- player ---------------------
 func _player_step(delta: float) -> void:
 	var p := world.player
+	var tq := Time.get_ticks_usec() if frame_profiling else 0
 	_swing_step(delta)
 	if not action.is_empty():
 		if ui.prompt_text != "":
@@ -2789,12 +2835,16 @@ func _player_step(delta: float) -> void:
 		reach_to = Vector2.INF
 		if cam_free:
 			recenter()                    # walking with keys or the stick brings the view back
+	if frame_profiling:
+		tq = _fp("ps:pre", tq)
 	_gather_step()
 	_chase_step()
 	_talk_step(delta)
 	_traveller_step()
 	_talk_player_step()
 	_reach_step()
+	if frame_profiling:
+		tq = _fp("ps:gather..reach", tq)
 	travel.step(self, v, delta)           # B25R1-006: auto-travel sets move_to along its route; any manual input suspends it
 	paving.step(self)                     # B25R1-011: a road cell walked up to in paving mode is worked on arrival
 	if v.length() > 0.1:
@@ -2802,6 +2852,8 @@ func _player_step(delta: float) -> void:
 	elif move_to != Vector2.INF:
 		v = _route_step(delta)
 	walking = v.length() > 0.1
+	if frame_profiling:
+		tq = _fp("ps:travel, paving, route", tq)
 	if v.length() > 0.1:
 		var speed := float(GameData.b("player_tiles_per_second")) * _sprint_step(delta) \
 				* (world.carts.pull_speed_for(world.carts.pulled_by(world.acting_ref())) if not world.carts.pulled_by(world.acting_ref()).is_empty() else 1.0)     # B14: a cart is slower going (MIN-F: a minecart on its rails less so)
@@ -2811,6 +2863,8 @@ func _player_step(delta: float) -> void:
 		# same distance, never through a wall. A normal frame (0.075 tiles at 60 fps) is one step, as before.
 		var parts := maxi(1, ceili(full.length() / MAX_STEP_TILES))
 		var step := full / parts
+		if frame_profiling:
+			tq = _fp("ps:speed", tq)
 		var before := p.pos
 		var moved_x := false
 		var moved_y := false
@@ -2824,6 +2878,8 @@ func _player_step(delta: float) -> void:
 		elif not moved_x and absf(v.x) > absf(v.y):
 			_slide_to_gap(Vector2(step.x, 0))
 		walk_stuck = walk_stuck + delta if p.pos.distance_to(before) < full.length() * 0.3 else 0.0
+		if frame_profiling:
+			tq = _fp("ps:try_move, slide", tq)
 		_through_portal(v)
 		player_sprite.face(v)
 		if not player_sprite.striking:     # GP-SWORD-VIS: a blow begun plays through while walking (the walk used to cut it off)
@@ -2837,7 +2893,11 @@ func _player_step(delta: float) -> void:
 		if action.is_empty() and player_sprite.anim in ["walk", "swing", "gather", "work"] and not player_sprite.striking:     # (a weapon's blow plays through)
 			_rest_anim()
 		_through_portal(Vector2.ZERO)        # MIN-A: a tapped adit, reached
+	if frame_profiling:
+		tq = _fp("ps:portal, sprite", tq)
 	_find_target()
+	if frame_profiling:
+		_fp("ps:find_target", tq)
 	if Input.is_action_just_pressed("interact"):
 		interact()
 	if Input.is_action_just_pressed("attack"):
@@ -3170,6 +3230,7 @@ func _find_target() -> void:
 	var p := world.player
 	var probe := p.pos + facing_vec() * World.TARGET_PROBE      # the reach is core's (DVW-A12 R15)
 	var near: Array = []        # [distance to the probe, order, target]
+	var tf := Time.get_ticks_usec() if frame_profiling else 0      # B42 (diagnostics only)
 	for n: NPC in world.present(p.pos, 2.5):
 		var d := n.pos.distance_to(probe)
 		if d < 1.5 and world.reaches(p.pos, n.pos):
@@ -3185,6 +3246,8 @@ func _find_target() -> void:
 					near.append([d, near.size(), {"kind": "info", "label": "%s eyes you warily" % n.name, "text": no}])
 			else:
 				near.append([d, near.size(), {"kind": "npc", "npc": n, "label": "Talk to %s" % _who(n)}])
+	if frame_profiling:
+		tf = _fp("ft:npcs present", tf)
 	var settle: Dictionary = world.map.overworld.site_at(Vector2i(p.pos.floor())) if world.map.overworld != null else {}
 	if not settle.is_empty():                        # REGION-NAV-01: a settlement's keepers at their doors (SettlementFolk)
 		for person in SettlementFolk.people(world, str(settle.id)):
@@ -3195,15 +3258,23 @@ func _find_target() -> void:
 			if d < 1.5:
 				near.append([d, near.size(), {"kind": "keeper", "person": person, "label": "Talk to %s (%s)" % [person.name,
 					"official" if str(person.role) == "official" else str(person.trade)]}])
+	if frame_profiling:
+		tf = _fp("ft:settlement folk", tf)
 	if countryside != null and world.player_level == 0:     # B25R1-002: a traveller on the road
 		for e: Dictionary in countryside.travellers_near(probe, 1.5, world.minutes):
 			if str(e.kind) != "wagon":
 				near.append([(e.pos as Vector2).distance_to(probe), near.size(), {"kind": "traveller", "t": e, "label": "Talk to the %s" % str(e.kind)}])
+	if frame_profiling:
+		tf = _fp("ft:travellers", tf)
 	if world.homesteads != null:                     # B25R1-010: a homestead's frame, chest and bed, and the claiming of open country
 		for ht: Dictionary in world.homesteads.player_targets(p, probe, facing_vec().y < -0.5):
 			near.append([float(ht.d), near.size(), ht])
+	if frame_profiling:
+		tf = _fp("ft:homesteads", tf)
 	for pt in _player_targets(probe):                # MP-INTERACT-01: another player in reach, among the people
 		near.append([pt[0], near.size(), pt[1]])
+	if frame_profiling:
+		tf = _fp("ft:players", tf)
 	for c in world.containers:
 		var at := Vector2(int(c.x) + 0.5, int(c.y) + 0.5)
 		if at.distance_to(p.pos) > World.CONTAINER_REACH:
@@ -3211,6 +3282,8 @@ func _find_target() -> void:
 		var d := at.distance_to(probe)
 		if d < 1.5 and world.reaches(p.pos, at):
 			near.append([d, near.size(), _container_target(c)])
+	if frame_profiling:
+		tf = _fp("ft:containers", tf)
 	for post in _shop_posts():
 		if not post.stall:
 			continue                       # GP-BUSINESS-DESK: a counter is a desk, offered only beside it and facing it (below)
@@ -3222,12 +3295,16 @@ func _find_target() -> void:
 				var sd := BusinessDesks.by_id(world, str(post.id))
 				near.append([d, near.size(), _desk_target(sd, _shop_target(post)) if not sd.is_empty() else _shop_target(post)])
 				break
+	if frame_profiling:
+		tf = _fp("ft:shop posts", tf)
 	for dk in BusinessDesks.faced_all(world, p.pos, facing_vec()):
 		if str(dk.kind) == "counter":
 			var cp := {"id": str(dk.post), "stall": false}
 			near.append([(Vector2(dk.at) + Vector2(0.5, 0.5)).distance_to(probe), near.size(), _desk_target(dk, _shop_target(cp))])
 		elif str(dk.kind) == "front" and not world.holds(world.acting_ref(), world.buildings[dk.building]):
 			near.append([(Vector2(dk.at) + Vector2(0.5, 0.5)).distance_to(probe), near.size(), _desk_target(dk, _front_target(dk))])
+	if frame_profiling:
+		tf = _fp("ft:desks", tf)
 	for i in world.loot.size():
 		if World.level_of(world.loot[i]) != 0:
 			continue                       # left below the surface (MIN-A)
@@ -3236,12 +3313,16 @@ func _find_target() -> void:
 			var from: String = world.loot[i].from
 			var what := _loot_text(world.loot[i])
 			near.append([minf(d, 1.4), near.size(), {"kind": "loot", "i": i, "label": ("Take %s from %s" % [what, from]) if from.begins_with("the ") and what != "" else ("Take what is left of %s" % from) if from.begins_with("the ") else ("Search %s's belongings" % from)}])
+	if frame_profiling:
+		tf = _fp("ft:loot", tf)
 	for a: Animal in world.fauna.near(probe, 1.2):
 		var d := a.pos.distance_to(probe)
 		if d < 1.5 and world.reaches(p.pos, a.pos):
 			var what := "%s (%s%s)" % [a.label().to_lower(), "young, " if not a.adult(world.minutes) else "", "male" if a.sex == "m" else "female"]
 			var mine: bool = not a.wild() and world.fauna.pens.has(a.area) and world.fauna.pens[a.area].get("player", false)
 			near.append([d, near.size(), {"kind": "animal", "animal": a, "label": ("A " if a.wild() else ("Your " if mine else "The keeper's ")) + what + (": attack to hunt it" if a.wild() else "")}])
+	if frame_profiling:
+		tf = _fp("ft:fauna", tf)
 	near.sort_custom(func(x, y): return x[0] < y[0] or (x[0] == y[0] and x[1] < y[1]))
 	var cands: Array = near.map(func(x): return x[2])
 	var c := Vector2i(floori(probe.x), floori(probe.y))
@@ -3293,6 +3374,8 @@ func _find_target() -> void:
 				break
 		if not front.is_empty():
 			break
+	if frame_profiling:
+		tf = _fp("ft:cells (farm, deposit, tree, plant, fields)", tf)
 	if not front.is_empty():
 		cands.append(front)
 		cands.append_array(farm_more)
@@ -3303,6 +3386,8 @@ func _find_target() -> void:
 	here.append_array(_pit_targets(cands))                # MIN-E: the player's own open pit and spoil heaps, or ground to stake one
 	here.append_array(_cart_targets(0))
 	here.append_array(_works_targets())                   # MIN-F: track in the mine's yard
+	if frame_profiling:
+		tf = _fp("ft:fit, prospect, pit, cart, works", tf)
 	for id in world.stations:
 		var st: Dictionary = world.stations[id]
 		if st.type in World.PLAYER_STATIONS and World.station_in_reach(st, p.pos, facing_vec()):     # GP-ANVIL: on its use cell, or beside it facing it
@@ -3334,6 +3419,8 @@ func _find_target() -> void:
 					if spare != null:
 						lab = "Buy a %s%s %s from the keeper (%d coins)" % ["young " if not spare.adult(world.minutes) else "", "female" if sx == "f" else "male", spare.label().to_lower(), world.farm.animal_price(spare)]
 					here.append({"kind": "pen_buy", "pen": pen, "sex": sx, "id": "buy_" + sx, "label": lab})
+	if frame_profiling:
+		tf = _fp("ft:stations, plots, pens", tf)
 	var gu = map.data.get("spawns", {}).get("grindstone_use")
 	if gu != null and world.player_level == 0 and (Vector2(int(gu[0]), int(gu[1])) + Vector2(0.5, 0.5)).distance_to(p.pos) < 1.3:
 		# GP-SHARPEN: the smithy's grinding wheel: each worn weapon carried, sharpened by the smith for a coin
@@ -3360,6 +3447,8 @@ func _find_target() -> void:
 		for o in CaravanFood.offers(world):
 			var no_food := CaravanFood.refusal(world, p, str(o.id))
 			here.append({"kind": "caravan_food", "item": str(o.id), "id": "food_" + str(o.id), "label": ("Buy %s from the caravan (%d coins, %d left)" if no_food == "" else "The caravan's %s (%d coins, %d left): " + no_food) % [GameData.item_name(str(o.id)).to_lower(), int(o.price), int(o.left)]})
+	if frame_profiling:
+		tf = _fp("ft:grindstone, courier, caravan", tf)
 	# a house the family holds but does not live in, or one the manor offers: its door
 	for id in world.buildings:
 		var b: Dictionary = world.buildings[id]
@@ -3408,6 +3497,8 @@ func _find_target() -> void:
 				elif at.distance_to(probe) < 0.9 and sp.kind == "chest":
 					here.append({"kind": "home", "label": "Your chest: store things, rest", "cell": Vector2i(int(sp.at[0]), int(sp.at[1]))})
 	# PL2-002: other chests in the building the player stands in (the family chest is handled above)
+	if frame_profiling:
+		tf = _fp("ft:buildings", tf)
 	var inside := world.place_of(p.pos)
 	if inside != "" and inside != p.home:
 		for cu in world.chests.units_in(inside):
@@ -3443,6 +3534,8 @@ func _find_target() -> void:
 	# beside it comes after it (Q / Tab, the D-pad or the prompt's Next reach them); Talk (T, Y, or tapping them) is for the
 	# nearest villager. With only people or animals in reach, Use talks to the nearest as before. Reach, ownership and the
 	# refusals are unchanged: this only orders what was already on offer.
+	if frame_profiling:
+		tf = _fp("ft:chests, furniture, stall, manor", tf)
 	talk_alt = {}
 	cands = use_order(cands)
 	if not cands.is_empty() and not str(cands[0].kind) in ["npc", "shop", "player"]:
@@ -3477,6 +3570,8 @@ func _find_target() -> void:
 		elif text != "" and cands.size() > 1:
 			text += "\n" + _next_hint(cands[(pick + 1) % cands.size()], pick)
 		_prompt(text, text != "" and cands.size() > 1)
+	if frame_profiling:
+		_fp("ft:order, prompt", tf)
 
 
 ## GP-ANDROID-USE-TALK-TARGETING: the order Use offers things in: every thing (a station, a chest, a counter, a seam...)
@@ -3499,6 +3594,8 @@ const CHARACTER_KINDS := ["npc", "animal", "player"]
 ## "Mining"...), and once the target's window has been opened (prompt_done) it stays down after the window closes, until
 ## that target is chosen again: another target taken (or none: walking away), Next / Q / Tab / the D-pad, or Use again.
 ## Standing beside a thing is not using it.
+
+
 func _prompt(text: String, more := false) -> void:
 	var k := _target_key(target) if not target.is_empty() else ""
 	if prompt_done != "" and k != prompt_done:
@@ -6229,7 +6326,18 @@ func _tap(screen_pos: Vector2) -> void:
 # ---------------------------------------------------------------- saving ---------------------
 ## Save safely (SaveStore): written aside, verified, then swapped in, the previous save kept as the
 ## backup. Returns whether it saved; a failure leaves the last save unchanged and says why.
-func save_game(show := true) -> bool:
+## B42 (B25-MOVE-STUTTER-INV): `background` (the hourly autosave only): the world's save is taken on this frame (to_dict, then a
+## deep copy, so nothing of the live world is read later), and its text and the file (SaveStore.write_text: the same atomic write,
+## backup and read-back) are made on a background thread; 50-300 ms on the main thread every game hour before. The outcome (a
+## failure's message, the recorder's note, the linked copy) follows when it is done (finish_background_save, every frame). Any
+## other save, a load or a check of the save slot finishes a background save first, so there is one writer and saves land in
+## order. The file is byte for byte the one save_game would write on this frame (autosave_async_test).
+var _save_thread: Thread
+var _save_job := {}
+
+
+func save_game(show := true, background := false) -> bool:
+	finish_background_save()
 	if guest_world:
 		return false                       # MP A2: the host keeps the world and every player's character
 	if world == null or (not world.player.alive and not net.has_guests()):
@@ -6243,14 +6351,38 @@ func save_game(show := true) -> bool:
 	for k in save_extra:
 		if not d.has(k):
 			d[k] = save_extra[k]
+	if background:
+		_save_job = {"d": d, "show": show}
+		_save_thread = Thread.new()
+		_save_thread.start(_write_save.bind(save_path, d.duplicate(true)))
+		return true
 	var r := SaveStore.write_text(save_path, JSON.stringify(d, "", true, true), true)          # full precision: times and positions reload exactly
+	return _save_written(r, d, show)
+
+
+static func _write_save(path: String, d: Dictionary) -> Dictionary:
+	return SaveStore.write_text(path, JSON.stringify(d, "", true, true), true)
+
+
+## B42: the background save's outcome, once its thread is done (`wait`: wait for it; else only if it has finished).
+func finish_background_save(wait := true) -> void:
+	if _save_thread == null or (not wait and _save_thread.is_alive()):
+		return
+	var r: Dictionary = _save_thread.wait_to_finish()
+	_save_thread = null
+	var job := _save_job
+	_save_job = {}
+	_save_written(r, job.d, bool(job.show))
+
+
+func _save_written(r: Dictionary, d: Dictionary, show: bool) -> bool:
 	if not r.ok:
 		if show or not save_failing:
 			ui.message("Could not save: %s. Your last save is unchanged." % r.reason, 8.0)
 		save_failing = true
 		return false
 	save_failing = false
-	if world.recorder != null:
+	if world != null and world.recorder != null:
 		world.recorder.saved(d)        # REC-19
 	_update_linked_copy()
 	if show:
@@ -6352,6 +6484,7 @@ func _save_meta() -> Dictionary:
 ## (replacing the one kept before) instead of letting the new game overwrite it; a save that cannot
 ## be read is moved aside unchanged, as when continuing.
 func _keep_previous_game() -> void:
+	finish_background_save()               # B42: an autosave still being written lands first
 	var prev := save_path.get_basename() + PREVIOUS_SUFFIX
 	var r := SaveStore.inspect(save_path, World.SAVE_VERSION)
 	if r.state != "ok" and r.state != "missing":
@@ -6394,6 +6527,7 @@ func _keep_cross_edition_previous(prev: String, src: String) -> bool:
 ## removed to make room for the next: it is moved aside as "save1.expired-<save_id>.json" (its stable world id, so it stays
 ## identifiable; a number added if that name is taken) and can be exported or imported as any save. True when it was moved.
 func _keep_expired_demo(prev: String) -> bool:
+	finish_background_save()               # B42: an autosave still being written lands first
 	if not Demo.is_demo():
 		return false
 	var r := SaveStore.inspect(prev, World.SAVE_VERSION)
@@ -6422,6 +6556,7 @@ func end_recording() -> void:
 
 
 func _exit_tree() -> void:
+	finish_background_save()               # B42: an autosave still being written lands before the game goes
 	AerialMap.drop()                       # B25R1-025: the settlements' worker thread is stopped and joined
 	end_recording()
 	if world != null:
@@ -6460,6 +6595,7 @@ func _demo_expire() -> void:
 
 ## DEMO-01: whether the world in the save slot has used up its demo time (the title marks it).
 func demo_save_expired() -> bool:
+	finish_background_save()               # B42: an autosave still being written lands first
 	if not Demo.is_demo():
 		return false
 	_demo_slot_ready()

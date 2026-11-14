@@ -172,14 +172,16 @@ var route_kind := {}                     # link index -> the route's kind ("main
 
 ## `generation`: the generation to lay the world out with (a save's own, World.load_dict: a generation 7 save keeps generation 7's
 ## nodes and routes; B25R2 generation 8 moves road nodes out of the water, _dry_node), clamped as load_dict clamps it.
-static func create(world_seed: int, m: VillageMap, generation := GEN_VERSION) -> Overworld:
+## `gates_given` (B42, the prefetch worker's private copy): the gates of the world being copied, used instead of the map's exits (which
+## read the map's live solid cells); with them, `m` is read for its size and stamps only.
+static func create(world_seed: int, m: VillageMap, generation := GEN_VERSION, gates_given: Array = []) -> Overworld:
 	var o := Overworld.new()
 	o.seed = world_seed
 	o.gen = 3 if generation < 4 else mini(generation, GEN_VERSION)
 	water_cfg()                                   # B25R1-Q3: the water's tuning (game/data/water.json)
 	o.village = Rect2i(0, 0, m.w, m.h)
 	o.tiles = JSON.parse_string(FileAccess.get_file_as_string("res://data/overworld_tiles.json"))
-	for e in m.exits():
+	for e in (gates_given if not gates_given.is_empty() else m.exits()):
 		o.gates.append({"out": e.out, "dir": e.dir})
 	o._setup_gates()
 	o.stamps = (m.data.stamps as Dictionary).duplicate()   # (a copy: the sites add their civic stamps, the village's stay as they are)
@@ -3164,6 +3166,23 @@ func get_chunk(cc: Vector2i) -> Chunk:
 			_evict()
 	ch.last_use = _use
 	return ch
+
+
+## B42 (B25-MOVE-STUTTER-INV): a chunk generated elsewhere (OverworldView's prefetch worker: a private Overworld of the same
+## seed, map and generation) taken into the cache as get_chunk would have made it, with the rim steps its generation recorded
+## (`works_cells`: cell -> way). False, and nothing changes, when the chunk was made here meanwhile.
+func adopt_chunk(cc: Vector2i, ch: Chunk, works_cells: Dictionary) -> bool:
+	if cache.has(cc):
+		return false
+	generated += 1
+	for c: Vector2i in works_cells:
+		fixed_works[c] = works_cells[c]
+	_use += 1
+	ch.last_use = _use
+	cache[cc] = ch
+	if cache.size() > MAX_CACHED:
+		_evict()
+	return true
 
 
 func _evict() -> void:

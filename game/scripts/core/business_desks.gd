@@ -20,14 +20,18 @@ const COUNTER_TYPES := ["tavern_counter", "armory_counter", "sawmill_counter"]
 
 ## Every desk: {id, kind ("counter" | "stall" | "front" | "shop"), post (the station or stall id the shop rules use, or the
 ## building id), at (the desk's cell), use (where its keeper stands), building, name}. In a fixed order.
-static func all(w: World) -> Array:
+## B42 (B25-MOVE-STUTTER-INV): with `near`, only the desks whose cell's centre is within `reach` of it (the same desks, in the
+## same order, as the whole list filtered so), each skipped before its name is made: faced_all runs every frame.
+static func all(w: World, near := Vector2.INF, reach := 0.0) -> Array:
 	var out := []
+	var any := near == Vector2.INF
 	for t in COUNTER_TYPES:
 		for id in w.stations_of(t):
-			out.append(_counter(w, str(id)))
+			if any or _in_reach(w.stations[str(id)].at, near, reach):
+				out.append(_counter(w, str(id)))
 	for id in w.business.sorted_ids():
 		var s: Dictionary = w.stalls[id]
-		if s.has("x") and (w.tenant_of(s) != "" or Stalls.is_built(s)):
+		if s.has("x") and (any or _in_reach([s.x, s.y], near, reach)) and (w.tenant_of(s) != "" or Stalls.is_built(s)):
 			out.append({"id": str(id), "kind": "stall", "post": str(id), "at": Vector2i(int(s.x), int(s.y)),
 				"use": Vector2i(int(s.use[0]), int(s.use[1])) if s.has("use") else Vector2i(int(s.x), int(s.y) + 1), "building": "", "name": stall_name(w, s)})
 	var ids: Array = w.buildings.keys()
@@ -36,14 +40,21 @@ static func all(w: World) -> Array:
 		var b: Dictionary = w.buildings[bid]
 		if b.has("front"):
 			var f: Dictionary = b.front
-			out.append({"id": "front:" + str(bid), "kind": "front", "post": str(bid), "at": Vector2i(int(f.x), int(f.y)),
-				"use": Vector2i(int(f.use[0]), int(f.use[1])), "building": str(bid), "name": front_name(w, b)})
+			if any or _in_reach([f.x, f.y], near, reach):
+				out.append({"id": "front:" + str(bid), "kind": "front", "post": str(bid), "at": Vector2i(int(f.x), int(f.y)),
+					"use": Vector2i(int(f.use[0]), int(f.use[1])), "building": str(bid), "name": front_name(w, b)})
 		elif b.has("shop") and not bool(b.shop.get("front", false)):
 			var e: Dictionary = w.fitting.entry(b, "counter")
 			if not e.is_empty():
-				out.append({"id": "shop:" + str(bid), "kind": "shop", "post": str(bid), "at": Vector2i(int(e.at[0]), int(e.at[1])) if e.has("at") else Vector2i(int(e.use[0]), int(e.use[1])),
-					"use": Vector2i(int(e.use[0]), int(e.use[1])), "building": str(bid), "name": "%s's shop" % w.ref_name(w.holder_of(b), true)})
+				var at := Vector2i(int(e.at[0]), int(e.at[1])) if e.has("at") else Vector2i(int(e.use[0]), int(e.use[1]))
+				if any or _in_reach([at.x, at.y], near, reach):
+					out.append({"id": "shop:" + str(bid), "kind": "shop", "post": str(bid), "at": at,
+						"use": Vector2i(int(e.use[0]), int(e.use[1])), "building": str(bid), "name": "%s's shop" % w.ref_name(w.holder_of(b), true)})
 	return out
+
+
+static func _in_reach(at, near: Vector2, reach: float) -> bool:
+	return (Vector2(int(at[0]), int(at[1])) + Vector2(0.5, 0.5)).distance_to(near) <= reach
 
 
 static func _counter(w: World, id: String) -> Dictionary:
@@ -102,7 +113,7 @@ static func of_business(w: World, ref: String) -> Dictionary:
 static func faced_all(w: World, pos: Vector2, facing: Vector2) -> Array:
 	var out := []
 	var probe := pos + facing.normalized() * World.TARGET_PROBE if facing != Vector2.ZERO else pos
-	for d in all(w):
+	for d in all(w, pos, World.STATION_BESIDE):        # (only a desk this close is ever offered: the last test below)
 		if str(d.kind) == "stall":
 			continue
 		var at: Vector2i = d.at

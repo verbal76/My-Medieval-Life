@@ -43,6 +43,8 @@ var _flat := {}                       # B25R1-Q8: the flat grass tile values (ov
 
 
 func setup(src: MapView, o: Overworld, load_radius: int) -> void:
+	_pf_stop()                                    # B42: a worker laid out for another world stops first
+	_pf_map = src.map
 	overworld = o
 	radius = load_radius
 	tileset = src.tileset
@@ -65,11 +67,25 @@ func setup(src: MapView, o: Overworld, load_radius: int) -> void:
 	canopy = CanopyFade.new()
 	add_child(canopy)
 	canopy.setup(self, pairs)
+	if async_prefetch:
+		_pf_start()                               # B42: the prefetch worker lays out its own Overworld meanwhile
 
 
 ## Keep the chunks round `center` (tiles) drawn, building at most `budget` this call (a negative
 ## budget builds them all: a first view, a teleport), and fade canopies over `feet`.
+## B25-MOVE-STUTTER-INV (diagnostics only, off by default): microseconds per part of follow, summed until a probe clears it.
+var profiling := false
+var prof := {}
+
+
+func _pf(key: String, t0: int) -> int:
+	var now := Time.get_ticks_usec()
+	prof[key] = int(prof.get(key, 0)) + now - t0
+	return now
+
+
 func follow(center: Vector2, feet: Vector2, delta: float, budget := BUILD_PER_FRAME) -> void:
+	var tq := Time.get_ticks_usec() if profiling else 0
 	var cc := Overworld.chunk_of(Vector2i(floori(center.x), floori(center.y)))
 	if cc != _center:
 		_center = cc
@@ -86,18 +102,28 @@ func follow(center: Vector2, feet: Vector2, delta: float, budget := BUILD_PER_FR
 		for c: Vector2i in chunks.keys():
 			if maxi(absi(c.x - cc.x), absi(c.y - cc.y)) > radius + 1:
 				_free(c)
+		if profiling:
+			tq = _pf("ow:recentre+free", tq)
 	var n := 0
 	while not _pending.is_empty() and (budget < 0 or n < budget):
 		var c: Vector2i = _pending.pop_front()
 		if not chunks.has(c):
 			_build(c)
 			n += 1
+	if profiling:
+		tq = _pf("ow:build", tq)
 	if n == 0 and budget >= 0:
 		_prefetch(cc, center)
+		if profiling:
+			tq = _pf("ow:prefetch", tq)
 	if budget < 0 and tree_sink != null:
 		tree_sink.flush()
 	_road_step()
+	if profiling:
+		tq = _pf("ow:road_step", tq)
 	_live_step()
+	if profiling:
+		tq = _pf("ow:live_step", tq)
 	if overworld.works_version != _works_seen:
 		_works_seen = overworld.works_version
 		for c: Vector2i in chunks:
@@ -105,12 +131,18 @@ func follow(center: Vector2, feet: Vector2, delta: float, budget := BUILD_PER_FR
 	if overworld.homes_version != _homes_seen:
 		_homes_seen = overworld.homes_version
 		_draw_homes()
+	if profiling:
+		tq = _pf("ow:works+homes", tq)
 	site_roof_step(feet, delta)
 	for id in _home_roofs:
 		var inside := Rect2((_home_roofs[id][1] as Rect2i)).has_point(feet)
 		for l: TileMapLayer in _home_roofs[id][0]:
 			l.modulate.a = 0.3 if inside else 1.0
+	if profiling:
+		tq = _pf("ow:roofs", tq)
 	canopy.update(feet, delta)
+	if profiling:
+		_pf("ow:canopy", tq)
 
 
 var _last_center := Vector2.INF                # B25R2: where the view's centre was, for the direction of travel (_prefetch)
@@ -119,11 +151,37 @@ var _last_center := Vector2.INF                # B25R2: where the view's centre 
 ## B25R2: with nothing to build this frame, generate the data (Overworld.get_chunk, kept in its cache) of one chunk of the ring
 ## just outside the drawn window, the one nearest the point the view is heading for: the costly part of a chunk is then done
 ## before the border is crossed, and building it is only drawing. Never more than one a frame.
+## B42 (B25-MOVE-STUTTER-INV, owner 2026-11-14: "advance, briefly freeze, advance again" on the trails south): that one
+## chunk's generation was 26-140 ms on the main thread, on several frames in a row at every chunk crossing (152 of the 215
+## frames over 50 ms on the southern walk). It is now generated on a background thread (async_prefetch), by a private
+## Overworld laid out from the same seed, map and generation, and taken into the world's cache here (Overworld.adopt_chunk).
+## A chunk is a function of the seed, the map and the generation alone (the working state of the chunk being generated is
+## the instance's own), so it is the chunk get_chunk would make: chunk_prefetch_test compares every field. A chunk needed
+## before the worker has it is made on the main thread as before, and the worker's copy is dropped.
+var async_prefetch := true
+var prefetch_adopted := 0                      # chunks the worker made that were taken into the cache (tests, probes)
+var _pf_thread: Thread
+var _pf_sem: Semaphore
+var _pf_mutex := Mutex.new()
+var _pf_want := Vector2i.ZERO                  # the chunk the worker was asked for (one at a time)
+var _pf_busy := false                          # asked and not yet handed back (main thread only)
+var _pf_out: Array = []                        # [chunk coordinates, Chunk, its fixed_works cells], under _pf_mutex
+var _pf_quit := false
+var _pf_map: VillageMap                        # the village map the world was laid out with (the worker lays out its own)
+
+
 func _prefetch(cc: Vector2i, center: Vector2) -> void:
+	if async_prefetch:
+		var tc := Time.get_ticks_usec() if profiling else 0
+		_pf_collect()
+		if profiling:
+			_pf("ow:prefetch(collect)", tc)
 	var heading := Vector2.ZERO if _last_center == Vector2.INF else (center - _last_center)
 	_last_center = center
 	if heading.length() < 0.01:
 		return                                     # standing still: nothing ahead to prepare
+	if async_prefetch and _pf_busy:
+		return                                     # one at a time: the worker is on one
 	var ahead := center + heading.normalized() * float(Overworld.CHUNK * (radius + 1))
 	var best := Vector2i(1 << 30, 0)
 	var bd := INF
@@ -138,8 +196,93 @@ func _prefetch(cc: Vector2i, center: Vector2) -> void:
 			if d < bd:
 				bd = d
 				best = c
-	if bd < INF:
+	if bd == INF:
+		return
+	if not async_prefetch or _pf_map == null:
 		overworld.get_chunk(best)
+		return
+	if _pf_thread == null:
+		_pf_start()
+	_pf_mutex.lock()
+	_pf_want = best
+	_pf_mutex.unlock()
+	_pf_busy = true
+	_pf_sem.post()
+
+
+## Start the worker (from setup, while the world is loading, so the copy of the stamps is not made on a frame of play).
+func _pf_start() -> void:
+	if _pf_thread != null or _pf_map == null or overworld == null:
+		return
+	_pf_sem = Semaphore.new()
+	_pf_quit = false
+	# the worker reads none of the live world: a copy of what Overworld.create reads (the map's size and stamps; the gates
+	# as this world has them, not the map's exits, which read its live solid cells)
+	var snap := VillageMap.new()
+	snap.w = _pf_map.w
+	snap.h = _pf_map.h
+	snap.data = {"stamps": (_pf_map.data.stamps as Dictionary).duplicate(true)}
+	var gates: Array = []
+	for g in overworld.gates:
+		gates.append({"out": g.out, "dir": g.dir})
+	_pf_thread = Thread.new()
+	_pf_thread.start(_pf_work.bind(overworld.seed, snap, overworld.gen, gates), Thread.PRIORITY_LOW)
+
+
+## The worker: a private Overworld (Overworld.create, about 1.5 s, once), then each chunk asked for, generated and handed
+## back with the generator's rim steps in it (fixed_works, which _generate records as it goes).
+func _pf_work(seed_v: int, vmap: VillageMap, gen: int, gates: Array) -> void:
+	var o := Overworld.create(seed_v, vmap, gen, gates)
+	while true:
+		_pf_sem.wait()
+		_pf_mutex.lock()
+		var quit := _pf_quit
+		var cc := _pf_want
+		_pf_mutex.unlock()
+		if quit:
+			return
+		var ch := o._generate(cc.x, cc.y)
+		var fw := {}
+		for y in Overworld.CHUNK:
+			for x in Overworld.CHUNK:
+				var c := Vector2i(cc.x * Overworld.CHUNK + x, cc.y * Overworld.CHUNK + y)
+				if o.fixed_works.has(c):
+					fw[c] = o.fixed_works[c]
+		_pf_mutex.lock()
+		_pf_out.append([cc, ch, fw])
+		_pf_mutex.unlock()
+
+
+## Take what the worker has finished into the world's cache (cheap: a dictionary insert).
+func _pf_collect() -> void:
+	if _pf_thread == null:
+		return
+	_pf_mutex.lock()
+	var got := _pf_out
+	_pf_out = []
+	_pf_mutex.unlock()
+	for e in got:
+		_pf_busy = false
+		if overworld.adopt_chunk(e[0], e[1], e[2]):
+			prefetch_adopted += 1
+
+
+## Stop the worker (the view is leaving, or drawing another world): it finishes the chunk it is on, if any.
+func _pf_stop() -> void:
+	if _pf_thread == null:
+		return
+	_pf_mutex.lock()
+	_pf_quit = true
+	_pf_mutex.unlock()
+	_pf_sem.post()
+	_pf_thread.wait_to_finish()
+	_pf_thread = null
+	_pf_out = []
+	_pf_busy = false
+
+
+func _exit_tree() -> void:
+	_pf_stop()
 
 
 ## B14-07: the steps, stairs and walkways through a cliff's rim in a loaded chunk, each a 16 px tile over its cell, under

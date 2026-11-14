@@ -130,6 +130,7 @@ var regions: Regions                # SET-C-FIVE (Expansion 18): the five off-ma
 var quests: Quests                 # side quests on offer (scripts/core/quests.gd)
 var manor_work: ManorWork          # the reeve's jobs: the manor's goods carried and used (scripts/core/manor_work.gd)
 var log_lines: Array = []
+var slow_npcs: Array = []          # B25-MOVE-STUTTER-INV: [minutes, id, role, ms, step before, step after, travelling] (profiling only)
 var profiling := false             # PERF-02: when true, prof collects microseconds per subsystem (diagnostics; changes nothing)
 var prof := {}                     # subsystem -> {us, n}
 var stats := {}                    # running ledger (food made, eaten, exported, meals missed ...) for diagnostics; not saved
@@ -441,7 +442,11 @@ func _tick(dt: float) -> void:
 			continue
 		n.trail.resize(0)
 		n.trail.append(n.pos)
+		var tn := Time.get_ticks_usec() if profiling else 0
+		var step0: String = str(n.plan[0].get("kind", n.plan[0].get("do", "?"))) if profiling and not n.plan.is_empty() and n.plan[0] is Dictionary else ""
 		_update_npc(n, dt)
+		if profiling and Time.get_ticks_usec() - tn > 30000:      # B25-MOVE-STUTTER-INV: one villager's tick over 30 ms (diagnostics)
+			slow_npcs.append([minutes, n.id, n.role, (Time.get_ticks_usec() - tn) / 1000.0, step0, str(n.plan[0]).left(160) if not n.plan.is_empty() else "(no plan)", not n.journey.is_empty()])
 		n.trail.append(n.pos)
 	if profiling:
 		t = _prof("villagers (all)", t)
@@ -488,46 +493,90 @@ func famine() -> bool:
 
 
 func _on_hour(h: int) -> void:
+	var tq := Time.get_ticks_usec() if profiling else 0     # B25-MOVE-STUTTER-INV: each hourly part (diagnostics)
 	if recorder != null:
 		recorder.hour()                # REC-19: write the buffer, audit the coins, take the hourly samples
+	if profiling:
+		tq = _prof("hour: recorder", tq)
 	if regions != null:
 		var tr := Time.get_ticks_usec() if profiling else 0
 		regions.step_hour(day(), h)   # SET-C-SIM: the settlements take their day's step one after another through the morning
 		if profiling:
 			_prof("neighbouring settlements (a step an hour, mornings)", tr)
+	if profiling:
+		tq = _prof("hour: regions", tq)
 	if couriers != null:
 		couriers.step()               # REG-COURIER-01: couriers leave on their routes, arrive, hand over and come home
+	if profiling:
+		tq = _prof("hour: couriers", tq)
 	_grow_trees()
+	if profiling:
+		tq = _prof("hour: grow trees", tq)
 	if wilds != null:
 		wilds.hour()                   # B25R1-014: countryside animals near the claims become real; a camp's defence recorded
+	if profiling:
+		tq = _prof("hour: wilds", tq)
 	farm.hour()                        # the player's crops (PL2-015)
+	if profiling:
+		tq = _prof("hour: farm", tq)
 	farm_plots.hour()                  # the households' farmland crops (FARM-03)
+	if profiling:
+		tq = _prof("hour: farm plots", tq)
 	if h == 17:
 		feast.plan_day()               # DVW-B3-FEAST: today's wedding and seasonal feasts are chosen, the guests asked
 	elif h == 20:
 		feast.resolve()                # DVW-B3-FEAST: at the tavern the host pays the keeper and those who came eat and drink
+	if profiling:
+		tq = _prof("hour: feast (17 plan, 20 resolve)", tq)
 	if h == 16:
 		chapel.evening()               # DVW-B3-CHAPEL: the weekly offerings and the clergy's wages, before the manor's evening business
+	if profiling:
+		tq = _prof("hour: chapel evening (16)", tq)
 	_update_food_days()
+	if profiling:
+		tq = _prof("hour: food days", tq)
 	serve_tables()
+	if profiling:
+		tq = _prof("hour: serve tables", tq)
 	business.hour()                    # villagers walk to the player's open stall (PL1-10)
+	if profiling:
+		tq = _prof("hour: business", tq)
 	carts.hour()                       # B14: the attendant unloads the player's cart at a cart stop
+	if profiling:
+		tq = _prof("hour: carts", tq)
 	relations.hour(h)                  # shared hours build friendships and romances (CRT-08)
+	if profiling:
+		tq = _prof("hour: relations", tq)
 	for f in fields:                   # a crop is ripe when it has grown, not at the next sunrise
 		grow_field(f)
+	if profiling:
+		tq = _prof("hour: fields", tq)
 	if h == 6:
 		_new_day()
+	if profiling:
+		tq = _prof("hour: new day (6)", tq)
 	if h == 17 and last_reeve_day != day():
 		last_reeve_day = day()
 		brain.reeve_day()
+	if profiling:
+		tq = _prof("hour: reeve day (17)", tq)
 	if h == 18 and last_payday != day():
 		last_payday = day()
 		brain.pay_guards()
+	if profiling:
+		tq = _prof("hour: pay guards (18)", tq)
 	if h == 12 and day() % int(GameData.b("caravan_every_days")) == 1:
 		brain.caravan()
+	if profiling:
+		tq = _prof("hour: caravan (12)", tq)
 	if judgment != null:
 		judgment.dawn_hour()           # PROSPECTIVE (PROS-19): a slice of the day's judgment update (JudgmentStore)
 		JudgmentLive.tell_family_tick(self)     # X19-STORY-LIFE: parents tell a new adult the family stories, at home
+
+
+
+	if profiling:
+		tq = _prof("hour: judgment", tq)
 
 
 func _new_day() -> void:
@@ -636,30 +685,47 @@ func _update_npc(n: NPC, dt: float) -> void:
 		return
 	if n.depth != 0 and (underground == null or underground.is_solid(n.depth, n.cell())):
 		n.depth = 0                    # MIN-A: set down off its level's floor by a rule that knows no levels (a door): the surface
+	var tv := Time.get_ticks_usec() if profiling else 0     # B25-MOVE-STUTTER-INV: the branches below, each its own part (diagnostics)
 	if n.target != -1:
 		brain.fight(n, dt)
+		if profiling:
+			_prof("villagers: fight", tv)
 		return
 	if not n.pursuit.is_empty():
 		brain.pursue(n)                # A2: a guard on a case looks for the offender (responding, searching); sight brings back the chase
+		if profiling:
+			tv = _prof("villagers: pursue", tv)
 		if n.target != -1:
 			return
 	if not n.journey.is_empty():
 		if Journeys.night_and_food(self, n):            # REGION-NAV-01: a traveller rests by the road at night, eats from their pack
+			if profiling:
+				_prof("villagers: journey", tv)
 			return
 		if n.plan.is_empty() and Journeys.resume(self, n):
 			_run_plan(n, dt, gm)
+			if profiling:
+				_prof("villagers: journey", tv)
 			return
+		if profiling:
+			tv = _prof("villagers: journey", tv)
 	if life.drives(n):                               # B25R1-014: a runaway on the way to the bandits' camp
 		if n.plan.is_empty():
 			life.plan(n)
 		_run_plan(n, dt, gm)
+		if profiling:
+			_prof("villagers: runaway (life)", tv)
 		return
 	if homesteads.drives(n):                         # B25R1-010: a homesteader's day is laid out by Homesteads, never the village brain
 		homesteads.tick(n)
 		if n.plan.is_empty():
 			homesteads.plan(n)
 		_run_plan(n, dt, gm)
+		if profiling:
+			_prof("villagers: homestead", tv)
 		return
+	if profiling:
+		_prof("villagers: hunger, checks", tv)
 	if n.plan.is_empty():
 		var t := Time.get_ticks_usec() if profiling else 0
 		brain.decide(n)
