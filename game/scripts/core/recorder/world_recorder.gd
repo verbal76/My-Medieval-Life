@@ -1670,7 +1670,13 @@ func _day_summaries() -> void:
 	end(wd)
 	if w.economy != null:
 		var ec = w.economy
-		var em := begin("economy", "model", "summary", "economy_model", "world", {"detail": "LE-01 (observing only)"})
+		# B42 (recorder reservation timing): this summary is taken at the day's first hour, before World._new_day's
+		# EconomyFoundation.dawn (06:00) reconciles stale offers (EconClaims.reconcile_all: an ask whose goods were eaten or
+		# used, a bid whose coins were spent, cut to what is held; econ_claims.gd). An unbacked claim covered by its owner's
+		# own offers is such a stale offer: recorded here as the observation "stale_offers", never as a violation; any other
+		# unbacked claim (a contract earmark, any non-offer hold) is still a violation here, and economy_after_dawn() checks
+		# every reservation again once the reconcile has run.
+		var em := begin("economy", "model", "summary", "economy_model", "world", {"detail": "LE-01 (live since B25-LE-ACTIVATE-D1)"})
 		factor(em, "model", "events", ec.events.size(), "count", "economy_model")
 		factor(em, "model", "events_ordered", str(ec.events.ordered()), "flag", "economy_model")
 		factor(em, "model", "knowledge", ec.knowledge.size(), "count", "economy_model")
@@ -1678,14 +1684,54 @@ func _day_summaries() -> void:
 		factor(em, "model", "needs_dirty", ec.needs.dirty.size(), "count", "economy_model")
 		factor(em, "model", "offers", ec.offers.records.size(), "count", "economy_model")
 		factor(em, "model", "reservations", ec.reservations.records.size(), "count", "economy_model")
-		factor(em, "model", "unbacked", ec.reservations.unbacked().size(), "count", "economy_model")
+		var split := unbacked_split(ec)
+		factor(em, "model", "unbacked", split.stale.size() + split.bad.size(), "count", "economy_model")
+		factor(em, "model", "stale_offers", split.stale.size(), "count", "economy_model")
+		if not split.stale.is_empty():
+			factor(em, "model", "stale_offer_claims", _claims_text(split.stale), "text", "economy_model")
 		factor(em, "model", "contract_links", ec.contract_links.links.size(), "count", "economy_model")
-		end(em, "ok" if ec.reservations.unbacked().is_empty() and ec.events.ordered() else "failed", "", "")
-		if not ec.reservations.unbacked().is_empty():
-			alert("violation", "economy.unbacked_reservation", "world", "unbacked=%d" % ec.reservations.unbacked().size(), em)
+		end(em, "ok" if split.bad.is_empty() and ec.events.ordered() else "failed", "", "")
+		if not split.bad.is_empty():
+			alert("violation", "economy.unbacked_reservation", "world", "unbacked=%d; %s" % [split.bad.size(), _claims_text(split.bad)], em)
 	_economy_day(d)                              # REC-DIAG: food, households' resources, tills with their owners
 	_settlement_day(d)                           # REC-DIAG: the off-map settlements' conditions
 	_b25_day(d)                                  # B25R1-016: population by stage and occupation, clans, wilderness settlements
+
+
+## B42 (recorder reservation timing): EconReservations.unbacked() split into {stale, bad}. A claim is stale when the owner's own
+## held offer reservations (purpose "offer:<id>") of that item cover its shortfall: the stale offers EconClaims.reconcile cuts at
+## dawn and before any validation. Everything else is bad. Reads only.
+static func unbacked_split(ec) -> Dictionary:
+	var stale := []
+	var bad := []
+	for u in ec.reservations.unbacked():
+		var offered := 0
+		for r in ec.reservations.held_of(str(u.owner)):
+			if str(r.item) == str(u.item) and str(r.purpose).begins_with("offer:"):
+				offered += int(r.qty)
+		if offered >= int(u.short):
+			stale.append(u)
+		else:
+			bad.append(u)
+	return {"stale": stale, "bad": bad}
+
+
+## "owner:item short N" for each unbacked claim, in unbacked()'s order (sorted by owner, item).
+static func _claims_text(list: Array) -> String:
+	return ", ".join(list.map(func(u): return "%s:%s short %d" % [str(u.owner), str(u.item), int(u.short)]))
+
+
+## B42 (recorder reservation timing): called by World._new_day right after EconomyFoundation.dawn, once the stale offers have
+## been reconciled. Every reservation still unbacked here is a violation, whatever its purpose. Reads only.
+func economy_after_dawn(d: int) -> void:
+	if stopped or finished or w.economy == null:
+		return
+	var ub: Array = w.economy.reservations.unbacked()
+	var ev := begin("economy", "model", "summary", "economy_dawn_reconcile", "world", {"detail": "day=%d unbacked after the dawn reconcile" % d})
+	factor(ev, "model", "unbacked_after_reconcile", ub.size(), "count", "economy_model")
+	end(ev, "ok" if ub.is_empty() else "failed", "", "")
+	if not ub.is_empty():
+		alert("violation", "economy.unbacked_reservation", "world", "unbacked=%d after the dawn reconcile; %s" % [ub.size(), _claims_text(ub)], ev)
 
 
 ## {key: change} of the numeric entries of `now` against `seen` (then updated), sorted keys.

@@ -613,6 +613,8 @@ func _new_day() -> void:
 		note("%d households had no firewood last night." % cold)
 	if economy != null:
 		economy.dawn(d)                # EXPANSION 20 LE-01: the model's expiries and refreshes (records only; null while disabled)
+		if recorder != null:
+			recorder.economy_after_dawn(d)     # B42: the recorder's unbacked-reservation check, once the stale offers are reconciled
 
 
 func _update_npc(n: NPC, dt: float) -> void:
