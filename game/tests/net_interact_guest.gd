@@ -190,7 +190,7 @@ func _status() -> void:
 		toasts.append(main.ui.toast.text)
 	var d := {"seq": last_seq, "toasts": toasts.slice(-20), "welcomed": main.guest_world, "pid": main.net.my_pid, "refusal": main.net.refusal,
 		"reconnecting": main.net.reconnecting, "reconnects": main.net.reconnects, "connected": main.net.connected(), "cmp": cmp,
-		"world": main.world != null, "running": main.running, "syncs": main.net.syncs, "last_mark": last_mark, "silent_losses": main.net.host_silent_losses, "watch": watch.log, "watch_gaps": watch.gaps, "now": Time.get_ticks_msec(), "my_id": main.net.my_id}
+		"world": main.world != null, "running": main.running, "syncs": main.net.syncs, "last_mark": last_mark, "silent_losses": main.net.host_silent_losses, "watch": watch.log, "firsts": watch.firsts, "watch_gaps": watch.gaps, "now": Time.get_ticks_msec(), "my_id": main.net.my_id}
 	if main.guest_world:
 		var w: World = main.world
 		var ui: GameUI = main.ui

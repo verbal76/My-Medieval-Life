@@ -10,6 +10,10 @@ var _last := -1
 var _was := false
 var _heard_age := -1
 var _losses := 0
+var firsts: Array = []     # each time the guest began watching the host (after building the world): [msec, ms until the host's
+                           # first heartbeat was heard (or "lost" with the age when it gave up), the longest frame of the 15 s before]
+var _first_t := -1         # watching began, waiting for the first heartbeat
+var _peak := 0
 
 
 func step(main) -> void:
@@ -29,4 +33,26 @@ func step(main) -> void:
 		log = log.slice(-12)
 	_was = rec
 	_losses = net.host_silent_losses
-	_heard_age = now - net.host_heard if net.host_heard >= 0 else -1
+	var age := now - net.host_heard if net.host_heard >= 0 else -1
+	if _heard_age < 0 and age >= 0:
+		_first_t = now                               # watching began (zz_playing sent)
+		_peak = age
+	elif _first_t >= 0:
+		if age < 0:
+			firsts.append([_first_t, "lost at %d" % _peak, _longest(_first_t)])
+			_first_t = -1
+		elif age < _peak:
+			firsts.append([_first_t, _peak, _longest(_first_t)])     # the first heartbeat reset the age
+			_first_t = -1
+		else:
+			_peak = age
+	firsts = firsts.slice(-12)
+	_heard_age = age
+
+
+func _longest(t: int) -> int:
+	var m := 0
+	for g in gaps:
+		if int(g[0]) <= t + 50 and int(g[0]) >= t - 15000:
+			m = maxi(m, int(g[1]))
+	return m

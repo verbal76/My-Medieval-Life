@@ -316,11 +316,13 @@ func consistent(label: String, guests: Array) -> void:
 		check(int(c.get("seq", -1)) == int(gseq[t]) and bool(c.get("mark_seen", false)) and (c.get("bad", ["no answer"]) as Array).is_empty(),
 			"%s: %s's copy is the host's world %s" % [label, {"g2": "Cara", "g3": "Dan"}[t], c.get("bad", ["no answer"]) if bool(c.get("mark_seen", false)) else ["the marked sync never came"]])
 	var nowa := Time.get_ticks_msec()
-	var wl := {"ann": [watch.log.map(func(x): return [nowa - int(x[0])] + x.slice(1)), watch.gaps.map(func(x): return [nowa - int(x[0]), x[1]])]}
+	var wl := {"ann": [watch.log.map(func(x): return [nowa - int(x[0])] + x.slice(1)), watch.gaps.map(func(x): return [nowa - int(x[0]), x[1]]),
+		watch.firsts.map(func(x): return [nowa - int(x[0]), x[1], x[2]])]}
 	for t in guests:
 		var g := gs(t)
 		wl[t] = [(g.get("watch", []) as Array).map(func(x): return [int(g.get("now", 0)) - int(x[0])] + (x as Array).slice(1)),
-			(g.get("watch_gaps", []) as Array).map(func(x): return [int(g.get("now", 0)) - int(x[0]), x[1]])]
+			(g.get("watch_gaps", []) as Array).map(func(x): return [int(g.get("now", 0)) - int(x[0]), x[1]]),
+			(g.get("firsts", []) as Array).map(func(x): return [int(g.get("now", 0)) - int(x[0]), x[1], x[2]])]
 	print("diag %s: reconnections (ms ago, cause, frame ms, ms since the host was heard, connected, silent losses, frame) and long frames (ms ago, ms): %s" % [label, wl])
 	print("diag %s: connections lost during the comparison (Ann's reconnects and host-silent losses, each guest's, the host's watchdog drops): %s -> %s" % [label, lost0, _losses(guests)])
 	await command({"cmd": "thaw"})
