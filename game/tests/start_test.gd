@@ -1591,7 +1591,8 @@ func _resources_tests() -> void:
 
 
 func _clear_saves() -> void:
-	var dir := TEST_SAVE.get_base_dir()
+	main.finish_background_save()          # B42: an autosave still being written (Main.save_game background) lands before the files go,
+	var dir := TEST_SAVE.get_base_dir()    # or it would write the save back over the file a test then puts there
 	DirAccess.make_dir_recursive_absolute(dir)
 	for f in DirAccess.get_files_at(dir):
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(dir.path_join(f)))
@@ -1675,7 +1676,8 @@ func _save_safety_tests() -> void:
 	check(main.save_game(false) and kept.size() == 1 and _raw(kept[0]) == damaged, "saving the new game never touches the kept file")
 	main.autosave_hour = -5
 	main._process(0.01)
-	check(_raw(kept[0]) == damaged, "nor does an autosave")
+	main.finish_background_save()          # B42: the hourly autosave is written on a background thread: check once it has landed
+	check(_raw(kept[0]) == damaged and FileAccess.file_exists(TEST_SAVE), "nor does an autosave")
 	# 2. a save from a newer version: kept, and the message names the versions
 	_clear_saves()
 	var newer := "{\"save_version\": %d, \"format\": \"mml-save/%d\"}" % [World.SAVE_VERSION + 1, World.SAVE_VERSION + 1]
