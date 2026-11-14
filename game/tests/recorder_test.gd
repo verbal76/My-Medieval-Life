@@ -48,6 +48,7 @@ func _init() -> void:
 	test_rec_diag()
 	test_coverage_file()
 	test_b42_unbacked_after_dawn()
+	test_b42_earmark_short()
 	print("%d checks, %d failures" % [checks, failures])
 	_remove(tmp_root)
 	quit(1 if failures > 0 else 0)
@@ -1392,5 +1393,64 @@ func test_b42_unbacked_after_dawn() -> void:
 		"B42: an unbacked reservation that survives the dawn reconcile is still a violation (%s)" % JSON.stringify(v))
 	check(v.any(func(a): return str(a.severity) == "violation" and not "after the dawn reconcile" in str(a.values) and "plank" in str(a.values)),
 		"B42: a non-offer claim unbacked at the day summary is a violation there too (as strict as before)")
+	w.dispose()
+	EconomyFoundation.set_override({})
+
+
+## B42 option (a) (lead, 2026-11-14): a contract-input earmark short after the dawn reconcile is the observation earmark_short
+## (EconClaims.reconcile cuts only offers, by design), with its likely cause; an offer unbacked at that check is a violation.
+func test_b42_earmark_short() -> void:
+	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/economy.json"))
+	cfg.enabled = true
+	cfg.market.drive = true
+	EconomyFoundation.set_override(cfg)
+	var w := identity_world()
+	var rec := WorldRecorder.attach(w, {"root": sub("b42_earmark")})
+	var car: NPC = null
+	var lab: NPC = null
+	for n in w.npcs:
+		if n.alive and n.role == "adult" and n.household >= 0:
+			if car == null and n.job == "carpenter":
+				car = n
+			elif lab == null and n.job == "laborer":
+				lab = n
+	var r := ""
+	var item := ""
+	for rid in GameData.recipes:
+		var rc: Dictionary = GameData.recipes[rid]
+		if w.brain._can_make(car, rid) and (rc["in"] as Dictionary).has("log") and (rc["in"] as Dictionary).size() == 1:
+			r = rid
+			item = str((rc.out as Dictionary).keys()[0])
+			break
+	var per_log := int(GameData.recipes[r]["in"].log)
+	car.inv.remove("log", car.inv.count("log"))
+	car.inv.add("log", per_log)
+	lab.coins = 500
+	var c: Dictionary = w.contracts._new_record(World.npc_ref(lab.id), World.npc_ref(car.id), item, int(GameData.recipes[r].out[item]), 3, 4, [])
+	c.route = "craft"
+	c.recipe = r
+	check(r != "" and w.contracts._open(c) and w.economy.reservations.reserved(World.npc_ref(car.id), "log") == per_log,
+		"B42: precondition, a craft contract earmarks its input (%s, %d logs)" % [r, per_log])
+	# one earmarked log lost to an outflow nobody can refuse, booked as the world books spoilage
+	car.inv.remove("log", 1)
+	w.stat("spoiled_log", 1.0)
+	var d1 := w.day() + 1
+	run_until(w, d1, 7)
+	var v := unbacked_alerts(rec).filter(func(a): return ("npc:%d:log" % car.id) in str(a.values) or World.npc_ref(car.id) + ":log" in str(a.values))
+	check(v.is_empty(), "B42: a spoiled earmarked unit is not a violation (%s)" % JSON.stringify(v))
+	var es := rows(rec, "factor").filter(func(f): return str(f.factor) == "earmark_short_claims" and (World.npc_ref(car.id) + ":log") in str(f.value))
+	check(not es.is_empty() and "likely spoilage" in str(es[-1].value), "B42: it is the earmark_short observation, with its likely cause (%s)" % (str(es[-1].value) if not es.is_empty() else "none"))
+	# an offer unbacked at the after-dawn check is still a violation (here made unbacked after the reconcile, then checked)
+	var m: NPC = null
+	for n in w.npcs:
+		if n.alive and n.role == "adult" and n != car and n != lab and n.job in ["farmer", "miner", "guard"]:
+			m = n
+			break
+	m.inv.add("feather", 2)
+	var oid := int(w.economy.offers.post(EconOffers.ASK, World.npc_ref(m.id), "feather", 2, 3, w.day() + 20, "", "test").id)
+	m.inv.remove("feather", 2)
+	rec.economy_after_dawn(w.day())
+	var vo := unbacked_alerts(rec).filter(func(a): return (World.npc_ref(m.id) + ":feather") in str(a.values) and "after the dawn reconcile" in str(a.values))
+	check(oid >= 0 and not vo.is_empty(), "B42: an offer still unbacked at the after-dawn check is a violation")
 	w.dispose()
 	EconomyFoundation.set_override({})
