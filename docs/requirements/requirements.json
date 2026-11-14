@@ -12196,6 +12196,34 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "B42-Q-RELEASE-TESTS",
+   "kind": "decision",
+   "title": "Release gate: start a missing full test run, cancellation on concurrent runs, evidence retention",
+   "description": "Release gate: start a missing full test run, cancellation on concurrent runs, evidence retention",
+   "source": "docs/audits/2026-11-14_B42_LEAD_LOG.md",
+   "owner_wording": null,
+   "owner_answer": "1. APPROVED: If no valid, complete, successful full test run exists for the exact release commit, automatically start one and wait for completion. Never publish if it fails, is cancelled, or is incomplete. 2. MODIFIED: Do not cancel an existing full test run simply because a release requests verification. If a run for the exact commit is already underway, wait for and reuse it. If another commit is running, queue the release verification or otherwise isolate its concurrency so neither run cancels the other. Avoid duplicate runs and unnecessary CI expenditure. 3. APPROVED: Keep the 30-day test evidence retention period. If required evidence has expired, rerun verification before release. Implement these rules with focused tests of the release gate, including successful, failed, cancelled, missing, expired, and concurrent test-run cases. Do not publish a release during verification. Keep the exact-commit requirement mandatory.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/audits/2026-11-14_B42_LEAD_LOG.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answer 2026-11-14 (Build 42 lead session)"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B42-REG08-SHORTFALL",
    "kind": "approved",
    "title": "Courier refund cap: record any unpaid shortfall visibly and auditably (REG-08)",
@@ -12247,7 +12275,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "INTEGRATED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -12266,6 +12294,11 @@
      "date": "2026-11-14",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> test_release_gates 41 OK; test_android_export 5 OK; test_commit: None -> ecc1d3e; commits + 7fcc47e; integrated_in + wip/b42-integration ecc1d3e",
      "why": "Agent N wip/b42-release-gates 7fcc47e (7f22fc0, 9887236): implemented and unit-tested (test_release_gates 41 OK, test_android_export 5 OK, full Python 237 OK); merged into wip/b42-integration ecc1d3e. Root cause of debuggable: --export-debug kept since c13c54b through 8f38920/ca27195; now --export-release + apksigner + check_android_apk.py gate. End-to-end proof needs the next authorized packaging run"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: INTEGRATED -> IN DEVELOPMENT",
+     "why": "owner decision B42-Q-RELEASE-TESTS: concurrency must not cancel another run; follow-up implementation required"
     }
    ],
    "lifecycle": "ACTIVE",

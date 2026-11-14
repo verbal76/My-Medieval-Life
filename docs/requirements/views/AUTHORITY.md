@@ -17,7 +17,7 @@ Before any significant change, find its record here and follow `Governing record
 
 | Lifecycle | Records |
 |---|---|
-| ACTIVE | 916 |
+| ACTIVE | 917 |
 | SUPERSEDED | 43 |
 | COMPLETED | 246 |
 | REJECTED | 3 |
@@ -144,6 +144,7 @@ Before any significant change, find its record here and follow `Governing record
 | B42-Q-JOB02 | decision | Approve the job-board offered-pay rules (J2-Q1..Q7 as built) and switch them on only after a four-seed with/wi |  |
 | B42-Q-POP-LEVERS | decision | Change population growth levers (birth rate, hunger arrivals, 2% young homesteading, deposit sizes) for Build  |  |
 | B42-Q-REG08-CAP | decision | Accept the MML-REG-08 expired-delivery refund capped at what the payer's heir holds (never creating coins)? |  |
+| B42-Q-RELEASE-TESTS | decision | Release gate: start a missing full test run, cancellation on concurrent runs, evidence retention |  |
 | BANDIT-Q | decision | Should outlaws ever return once the band is wiped out? |  |
 | BARBER-Q | decision | Barber: staffing, place, price and what counts as a haircut |  |
 | BRANCH-POL-Q1 | decision | Records line and code line: keep wip/requirements-control (records, lead-written) separate from wip/expansion2 |  |
