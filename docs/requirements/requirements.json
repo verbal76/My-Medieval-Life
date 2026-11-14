@@ -8497,13 +8497,20 @@
      "date": "2026-11-13",
      "change": "commits + 12cf1a4",
      "why": "worker findings (docs/audits/2026-11-13_MOVEMENT_FREEZE_INVESTIGATION.md on wip/b25-move-stutter-inv 12cf1a4): main-thread stalls, not render-only, not rubber-banding. (1) fixed 0.5 s world tick since e66ca18 (2026-11-03): one frame in 30 does all villagers/animals, p99 36-40 ms; (2) village field tiles made in play rebuild the TileSet, 113-222 ms (ed221df covered only overworld tiles; probe premake removed all >100 ms frames); (3) hourly autosave on main thread 50-85 ms, 94-149 ms frames; (4) chunk prefetch 26-35 ms x3-5 frames per crossing (82cb449 spread, not removed); (5) rare tick spikes: long path search 345-409 ms, first tick 0.8-0.9 s (D3), dawn 0.6-1.2 s, reeve_day 30-130 ms. The two ~230 ms spikes = first tick and 17:00 reeve_day, never explained before. Catch-up confirmed (unclamped delta). Six ranked fixes proposed, none implemented; awaiting owner. Not measured: real PC/phone/GPU"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "assigned_worker: movement-stutter investigation worker (lead session) -> unassigned (lead; ownership proposed 2026-11-14); commits + 8c78e24; commits + ab68133",
+     "why": "lead audit 2026-11-14 (owner directive): investigation worker finished 2026-11-13 (12cf1a4); fixes for cause 2 (field tiles, ab68133) and wall tunnelling (8c78e24) in Build 41 0bbee94 and wip/b42-integration with CI tests; causes 1, 3, 4, 5 not fixed; not measured on real hardware; no agent currently assigned"
     }
    ],
    "lifecycle": "ACTIVE",
-   "assigned_worker": "movement-stutter investigation worker (lead session)",
+   "assigned_worker": "unassigned (lead; ownership proposed 2026-11-14)",
    "branch": "wip/b25-move-stutter-inv",
    "commits": [
-    "12cf1a4"
+    "12cf1a4",
+    "8c78e24",
+    "ab68133"
    ]
   },
   {
@@ -11879,6 +11886,186 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "B42-ANDROID-DEBUGGABLE",
+   "kind": "approved",
+   "title": "Android packages exported with debugging enabled; separate test and production configurations; release gate",
+   "description": "Android packages exported with debugging enabled; separate test and production configurations; release gate",
+   "source": "docs/directives/2026-11-14_b42_owner_decisions_open_issue_accountability.md",
+   "owner_wording": "Establish separate development/test and production-release configurations... Add a release gate that detects an incorrectly configured Android production build.",
+   "approval": "owner, 2026-11-14",
+   "acceptance": [
+    "production APKs not debuggable, same ids and signing continuity; a gate fails a misconfigured production build; no key rotation, no publishing"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-14_b42_owner_decisions_open_issue_accountability.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Agent N (Build 42 release engineering); branch: None -> wip/b42-release-gates",
+     "why": "assigned 2026-11-14 (owner accountability directive)"
+    }
+   ],
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "Agent N (Build 42 release engineering)",
+   "branch": "wip/b42-release-gates"
+  },
+  {
+   "id": "B42-BEGIN-DOUBLE-CLICK",
+   "kind": "approved",
+   "title": "Character creation Begin button sometimes needs a second click",
+   "description": "Character creation Begin button sometimes needs a second click",
+   "source": "docs/directives/2026-11-14_b42_owner_decisions_open_issue_accountability.md",
+   "owner_wording": "Reproduce the behavior, determine the actual cause, correct it, and add focused regression coverage. Do not dismiss it as intermittent without investigation.",
+   "approval": "owner, 2026-11-14",
+   "acceptance": [
+    "reproduced, cause identified, one click begins in every focus state, focused test"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-14_b42_owner_decisions_open_issue_accountability.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Agent O (Build 42 demo and front end); branch: None -> wip/b42-demo-frontend",
+     "why": "assigned 2026-11-14 (owner accountability directive)"
+    }
+   ],
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "Agent O (Build 42 demo and front end)",
+   "branch": "wip/b42-demo-frontend"
+  },
+  {
+   "id": "B42-DEMO-SAVE-OVERWRITE",
+   "kind": "approved",
+   "title": "Demo New game overwrites the full game's save without warning (player-data protection)",
+   "description": "Demo New game overwrites the full game's save without warning (player-data protection)",
+   "source": "docs/directives/2026-11-14_b42_owner_decisions_open_issue_accountability.md",
+   "owner_wording": "Investigate the shared save-directory design and all affected save/load paths... prevents unintended overwrites while preserving legitimate save compatibility and any intended demo-to-full-game progression.",
+   "approval": "owner, 2026-11-14",
+   "acceptance": [
+    "no demo or full-game action overwrites the other's world without explicit consent; regression tests for coexistence, new games, Continue, migration, existing saves; no player data deleted in testing"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-14_b42_owner_decisions_open_issue_accountability.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Agent O (Build 42 demo and front end); branch: None -> wip/b42-demo-frontend",
+     "why": "assigned 2026-11-14 (owner accountability directive)"
+    }
+   ],
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "Agent O (Build 42 demo and front end)",
+   "branch": "wip/b42-demo-frontend"
+  },
+  {
+   "id": "B42-DEMO-WINDOW-TITLE",
+   "kind": "approved",
+   "title": "Demo window title does not identify the demo",
+   "description": "Demo window title does not identify the demo",
+   "source": "docs/directives/2026-11-14_b42_owner_decisions_open_issue_accountability.md",
+   "owner_wording": "Correct the title where appropriate and verify that full-game and demo identities remain distinct.",
+   "approval": "owner, 2026-11-14",
+   "acceptance": [
+    "demo window/taskbar title identifies the demo; full game unchanged; verified"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-14_b42_owner_decisions_open_issue_accountability.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Agent O (Build 42 demo and front end); branch: None -> wip/b42-demo-frontend",
+     "why": "assigned 2026-11-14 (owner accountability directive)"
+    }
+   ],
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "Agent O (Build 42 demo and front end)",
+   "branch": "wip/b42-demo-frontend"
+  },
+  {
+   "id": "B42-MP-PANTRY-PRIVACY",
+   "kind": "approved",
+   "title": "Multiplayer: household pantry information private by default; shared only by explicit permission",
+   "description": "Multiplayer: household pantry information private by default; shared only by explicit permission",
+   "source": "docs/directives/2026-11-14_b42_owner_decisions_open_issue_accountability.md",
+   "owner_wording": "Household pantry information is private by default. Other players may access it only through explicitly authorized sharing permissions.",
+   "approval": "owner, 2026-11-14",
+   "acceptance": [
+    "pantry contents absent from other players' welcome and syncs unless an authorized sharing permission exists; own household keeps access; verified across sessions, reconnect and save/load"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-14_b42_owner_decisions_open_issue_accountability.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Agent G (Build 42 multiplayer); branch: None -> wip/b42-mp-stalls",
+     "why": "assigned 2026-11-14 (owner accountability directive)"
+    }
+   ],
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "Agent G (Build 42 multiplayer)",
+   "branch": "wip/b42-mp-stalls"
+  },
+  {
    "id": "B42-Q-EMIG-WORK",
    "kind": "decision",
    "title": "Should leaving for work be judged per person (no job and no earnings for about a week) instead of per household?",
@@ -11989,6 +12176,78 @@
     }
    ],
    "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B42-REG08-SHORTFALL",
+   "kind": "approved",
+   "title": "Courier refund cap: record any unpaid shortfall visibly and auditably (REG-08)",
+   "description": "Courier refund cap: record any unpaid shortfall visibly and auditably (REG-08)",
+   "source": "docs/directives/2026-11-14_b42_owner_decisions_open_issue_accountability.md",
+   "owner_wording": "Record any unpaid shortfall so it remains visible and auditable.",
+   "approval": "owner, 2026-11-14",
+   "acceptance": [
+    "an expired delivery whose refund is capped records the unpaid shortfall (event/stat, save-safe) and creates no coin"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-14_b42_owner_decisions_open_issue_accountability.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Agent F (Build 42 regional travel); branch: None -> wip/b42-reg-travel",
+     "why": "assigned 2026-11-14 (owner accountability directive)"
+    }
+   ],
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "Agent F (Build 42 regional travel)",
+   "branch": "wip/b42-reg-travel"
+  },
+  {
+   "id": "B42-RELEASE-EXACT-SHA",
+   "kind": "approved",
+   "title": "Release requires all mandatory tests to pass on the exact packaged commit",
+   "description": "Release requires all mandatory tests to pass on the exact packaged commit",
+   "source": "docs/directives/2026-11-14_b42_owner_decisions_open_issue_accountability.md",
+   "owner_wording": "Require all mandatory release tests to pass against the exact commit SHA used to produce the release packages. Failed, skipped, missing, or incomplete required tests must block release.",
+   "approval": "owner, 2026-11-14",
+   "acceptance": [
+    "release.yml blocks unless a complete green Tests run (and the other mandatory checks) exists for the packaged SHA; reuses a valid result for that SHA; tested against failed, skipped, missing and incomplete cases"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-14_b42_owner_decisions_open_issue_accountability.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Agent N (Build 42 release engineering); branch: None -> wip/b42-release-gates",
+     "why": "assigned 2026-11-14 (owner accountability directive)"
+    }
+   ],
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "Agent N (Build 42 release engineering)",
+   "branch": "wip/b42-release-gates"
   },
   {
    "id": "B7-001",

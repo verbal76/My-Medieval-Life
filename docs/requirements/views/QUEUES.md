@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (34)
+## Workers and task branches (41)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -18,7 +18,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25-FINISH-01 | 20 | IN DEVELOPMENT | lead session | wip/region-nav |
 | B25-HH-BIZFOOD-D1 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-audit-sim4 |
 | B25-INV02-SPOIL-D1 | unassigned | IMPLEMENTED ON TASK BRANCH | worker agent (PAR-AGENTS-01) | wip/b25-inv02-proposal |
-| B25-MOVE-STUTTER-INV | unassigned | IN DEVELOPMENT | movement-stutter investigation worker (lead session) | wip/b25-move-stutter-inv |
+| B25-MOVE-STUTTER-INV | unassigned | IN DEVELOPMENT | unassigned (lead; ownership proposed 2026-11-14) | wip/b25-move-stutter-inv |
 | B25-ND15-TOL-01 | unassigned | IMPLEMENTED ON TASK BRANCH | none | wip/b25-nd15-tolerance |
 | B25-ND16-PREC-01 | unassigned | IMPLEMENTED ON TASK BRANCH | none | wip/b25-nd16-precision |
 | B25-ND29-BAND-CAMPFIRE | unassigned | IN DEVELOPMENT | lead | wip/b25-nd29-band-campfire |
@@ -28,6 +28,13 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25R1-023 | 20 | IN DEVELOPMENT | b25r1-grassmap worker | wip/b25r1-grassmap |
 | B25R1-024 | 20 | IN DEVELOPMENT | b25r1-grassmap worker | wip/b25r1-grassmap |
 | B25R2-HOSTMENU | 20+ | IMPLEMENTED ON TASK BRANCH | none | wip/b25r2-rev2 |
+| B42-ANDROID-DEBUGGABLE | unassigned | IN DEVELOPMENT | Agent N (Build 42 release engineering) | wip/b42-release-gates |
+| B42-BEGIN-DOUBLE-CLICK | unassigned | IN DEVELOPMENT | Agent O (Build 42 demo and front end) | wip/b42-demo-frontend |
+| B42-DEMO-SAVE-OVERWRITE | unassigned | IN DEVELOPMENT | Agent O (Build 42 demo and front end) | wip/b42-demo-frontend |
+| B42-DEMO-WINDOW-TITLE | unassigned | IN DEVELOPMENT | Agent O (Build 42 demo and front end) | wip/b42-demo-frontend |
+| B42-MP-PANTRY-PRIVACY | unassigned | IN DEVELOPMENT | Agent G (Build 42 multiplayer) | wip/b42-mp-stalls |
+| B42-REG08-SHORTFALL | unassigned | IN DEVELOPMENT | Agent F (Build 42 regional travel) | wip/b42-reg-travel |
+| B42-RELEASE-EXACT-SHA | unassigned | IN DEVELOPMENT | Agent N (Build 42 release engineering) | wip/b42-release-gates |
 | DOC-RECON-01 | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |

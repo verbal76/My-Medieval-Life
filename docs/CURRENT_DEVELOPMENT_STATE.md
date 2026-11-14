@@ -29,6 +29,8 @@
 > demo smoke pass (exit 0, no script errors, no leaks), packages private CI artifacts until 2026-12-13; checklist
 > `docs/release/EXTRA_LIFE_B40_HARDWARE_PLAYTEST.md`. Branches kept out of Build 40: B25-DEMO-KEPT-WORLDS `wip/b25-demo-kept-worlds`
 > `111cb27`; B25-ANIMAL-BOAR-LIVESTOCK `wip/b25-animal-boar-livestock` (worker; owner decisions 2026-11-13, self-defence); B25-MOVE-STUTTER-INV `wip/b25-move-stutter-inv` (movement-stutter investigation worker, from a5a0b7c, investigation only: whole-game micro-freezes while walking, owner clarification 2026-11-13); wildlife taming audit (read-only, no branch); NAME-01 Forge My Life rename `wip/name-01-forge-my-life` (NAME-01 workstreams A-D, lead session); B25-ND29-BAND-CAMPFIRE `wip/b25-nd29-band-campfire`
+> Build 42 (owner 2026-11-14 accountability directive): B42-REG08-SHORTFALL (Agent F, wip/b42-reg-travel); B42-MP-PANTRY-PRIVACY (Agent G, wip/b42-mp-stalls); B42-RELEASE-EXACT-SHA and B42-ANDROID-DEBUGGABLE (Agent N, wip/b42-release-gates); B42-DEMO-SAVE-OVERWRITE, B42-DEMO-WINDOW-TITLE, B42-BEGIN-DOUBLE-CLICK (Agent O, wip/b42-demo-frontend). Integration line wip/b42-integration; lead log docs/audits/2026-11-14_B42_LEAD_LOG.md.
+
 > (worker, homesteaders and player gathering); INV-02 counters `wip/b25-inv02-android` `2d6a3aa`.
 
 > **Checkpoint 2026-11-12 21:00 EST (owner directives of the evening: chain 12 direction, baseline/economic investigation, Build 25
