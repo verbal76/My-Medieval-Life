@@ -1,0 +1,42 @@
+{
+ "format": "mml-release-requirements/1",
+ "_why": "B42-RELEASE-EXACT-SHA and B42-ANDROID-DEBUGGABLE (owner directive 2026-11-14, docs/directives/2026-11-14_b42_owner_decisions_open_issue_accountability.md items 3 and 5): the ONE definition of what must pass, on the exact commit that is packaged, before .github/workflows/release.yml makes a release. Read by tools/release_evidence.py (the release job's checks) and tools/check_android_apk.py (the Android production gate); tests/test_release_gates.py checks release.yml against it. Removing a requirement, or adding an exception, needs the owner's approval recorded in the same commit. A failed, skipped, cancelled, missing or incomplete requirement blocks the release; there is no bypass input.",
+ "release_jobs": {
+  "_why": "release.yml jobs the release job needs; each must conclude 'success'. sim-gate alone may be 'skipped', and only for the owner-approved private reuse of an earlier passing gate (input reuse_gate_run), which the release job then checks against the diff since that gate's commit (existing SIM-GATE-01 semantics, unchanged).",
+  "tests-evidence": {"must": "success", "what": "a complete, fully green Tests (tests.yml) run on exactly this commit: found and reused, awaited, or started once (tools/release_evidence.py)"},
+  "sim-gate": {"must": "success", "may_skip_when": "reuse_gate_run (private only, owner-approved)", "what": "SIM-GATE-01 village simulation suite with the flight recorder (sim-gate.yml)"},
+  "package": {"must": "success", "what": "six packages from this commit; the Android cells pass tools/check_android_apk.py; the Linux cells launch headless with no script error or leak"},
+  "smoke-windows": {"must": "success", "what": "the full and demo Windows packages start headless and quit with no script error or leak"}
+ },
+ "tests": {
+  "workflow": "tests.yml",
+  "_why": "A full Tests run (not a targeted 'only'/'group' run) on the exact commit. Its jobs (latest attempt) all 'success'; its consolidated validation (tools/ci_consolidate.py, artifact ci-validation-<run>-<attempt>) 'pass' for this commit; every shard's report (artifact ci-report-<run>-<attempt>-shard<N>, latest attempt each) TESTED on this commit, every suite passed, every game suite at or above its floor; shard 0 ran the groups below and each python check below. The number of shards comes from tests.yml at this commit (its plan job's full list).",
+  "required_jobs": ["plan", "report"],
+  "shard_job": "^test \\(shard (\\d+) of (\\d+)\\)$",
+  "full_run_groups": ["python", "game", "sim"],
+  "floors": "tools/ci_check_floors.json",
+  "python_checks": [
+   {"command_contains": "tools/check_unittest_skips.py", "when_file_exists": "tools/check_unittest_skips.py", "else_contains": "unittest discover -s tests"},
+   {"command_contains": "tools/check_interactions.py"},
+   {"command_contains": "tools/check_requirements.py"},
+   {"command_contains": "tools/check_resources.py"},
+   {"command_contains": "tools/build_weapons.py"},
+   {"command_contains": "tools/check_materials.py"}
+  ],
+  "environment_record": {"when_file_exists": "tools/check_test_env.py", "artifact_file": "test-env.json", "shard": 0, "verdict": "fit"},
+  "max_wait_minutes": 110,
+  "poll_seconds": 60
+ },
+ "android": {
+  "_why": "The production Android package (B42-ANDROID-DEBUGGABLE): exported with --export-release (Godot's release template), never --export-debug; signed with the owner's permanent release identity (docs/release/ANDROID_SIGNING.md; the certificate's public SHA-256 recorded from Builds 21, 24, 34 and 41); the package ids unchanged; versionCode equal to the build number and versionName 0.1.<n>-test.",
+  "editions": {
+   "full": {"package": "com.hotatticgames.mymedievallife.dev"},
+   "demo": {"package": "com.hotatticgames.mymedievallife.dev.demo"}
+  },
+  "certificate_sha256": "31704b8025a4585cf4119e268ee6c8b30d5a39d1c62cdc00eecf0b7e76cb80e6",
+  "debuggable": false,
+  "test_only": false,
+  "version_name": "0.1.{n}-test",
+  "signature_schemes_any": ["v2", "v3"]
+ }
+}

@@ -1,0 +1,3440 @@
+{
+"_source": "recorded from the GitHub API for commit b3c9eb593fe1a7d055e982f945b033a37a07fe95 (tools/release_evidence.py's calls), trimmed to the fields it reads",
+"artifacts": {
+"43321399738": [
+{
+"expired": false,
+"id": 13995010331,
+"name": "ci-validation-43321399738-1"
+},
+{
+"expired": false,
+"id": 13994780654,
+"name": "ci-report-43321399738-1-shard0"
+},
+{
+"expired": false,
+"id": 13994706683,
+"name": "ci-report-43321399738-1-shard2"
+},
+{
+"expired": false,
+"id": 13994175431,
+"name": "ci-report-43321399738-1-shard7"
+},
+{
+"expired": false,
+"id": 13994091828,
+"name": "ci-report-43321399738-1-shard6"
+},
+{
+"expired": false,
+"id": 13993637357,
+"name": "ci-report-43321399738-1-shard1"
+},
+{
+"expired": false,
+"id": 13993496569,
+"name": "ci-report-43321399738-1-shard5"
+},
+{
+"expired": false,
+"id": 13993480715,
+"name": "ci-report-43321399738-1-shard9"
+},
+{
+"expired": false,
+"id": 13993206540,
+"name": "ci-report-43321399738-1-shard10"
+},
+{
+"expired": false,
+"id": 13993121297,
+"name": "ci-report-43321399738-1-shard3"
+},
+{
+"expired": false,
+"id": 13992989142,
+"name": "ci-report-43321399738-1-shard8"
+},
+{
+"expired": false,
+"id": 13992617831,
+"name": "ci-report-43321399738-1-shard4"
+},
+{
+"expired": false,
+"id": 13992268685,
+"name": "ci-report-43321399738-1-shard11"
+}
+]
+},
+"files": {
+"13992268685": {
+"ci-report.json": {
+"format": "mml-ci-report/1",
+"groups": {
+"game": {
+"attempted": 26,
+"failed": 0,
+"passed": 26
+}
+},
+"identification": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"run_attempt": "1",
+"run_id": "43321399738",
+"trigger": "workflow_dispatch",
+"workflow": "Tests"
+},
+"missing_evidence": [],
+"outcome": "TESTED",
+"steps": {
+"game": "success",
+"import": "success"
+},
+"suites": [
+{
+"checks": 5,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/biz04_venture_till_migration_test.gd",
+"group": "game",
+"name": "biz04_venture_till_migration_test",
+"status": "passed"
+},
+{
+"checks": 6,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/trd02_merchant_net_earnings_test.gd",
+"group": "game",
+"name": "trd02_merchant_net_earnings_test",
+"status": "passed"
+},
+{
+"checks": 40,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/road_wear_test.gd",
+"group": "game",
+"name": "road_wear_test",
+"status": "passed"
+},
+{
+"checks": 8,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/region_sim_test.gd",
+"group": "game",
+"name": "region_sim_test",
+"status": "passed"
+},
+{
+"checks": 14,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/life02_employee_death_test.gd",
+"group": "game",
+"name": "life02_employee_death_test",
+"status": "passed"
+},
+{
+"checks": 98,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/credit_test.gd",
+"group": "game",
+"name": "credit_test",
+"status": "passed"
+},
+{
+"checks": 36,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/wear_transfer_test.gd",
+"group": "game",
+"name": "wear_transfer_test",
+"status": "passed"
+},
+{
+"checks": 7,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/biz07_hand_employed_by_player_test.gd",
+"group": "game",
+"name": "biz07_hand_employed_by_player_test",
+"status": "passed"
+},
+{
+"checks": 7,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/meal_deal_price_test.gd",
+"group": "game",
+"name": "meal_deal_price_test",
+"status": "passed"
+},
+{
+"checks": 8,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/prop05_guest_sale_test.gd",
+"group": "game",
+"name": "prop05_guest_sale_test",
+"status": "passed"
+},
+{
+"checks": 110,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/polish_p2_test.gd",
+"group": "game",
+"name": "polish_p2_test",
+"status": "passed"
+},
+{
+"checks": 264,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/armour_worn_test.gd",
+"group": "game",
+"name": "armour_worn_test",
+"status": "passed"
+},
+{
+"checks": 19,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/lockpick_test.gd",
+"group": "game",
+"name": "lockpick_test",
+"status": "passed"
+},
+{
+"checks": 37,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/health_jobs_test.gd",
+"group": "game",
+"name": "health_jobs_test",
+"status": "passed"
+},
+{
+"checks": 40,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/home_ref_test.gd",
+"group": "game",
+"name": "home_ref_test",
+"status": "passed"
+},
+{
+"checks": 33,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/justice_test.gd",
+"group": "game",
+"name": "justice_test",
+"status": "passed"
+},
+{
+"checks": 26,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/succession_test.gd",
+"group": "game",
+"name": "succession_test",
+"status": "passed"
+},
+{
+"checks": 25,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/farm_place_test.gd",
+"group": "game",
+"name": "farm_place_test",
+"status": "passed"
+},
+{
+"checks": 73,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/prospecting_test.gd",
+"group": "game",
+"name": "prospecting_test",
+"status": "passed"
+},
+{
+"checks": 60,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/openpit_test.gd",
+"group": "game",
+"name": "openpit_test",
+"status": "passed"
+},
+{
+"checks": 122,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/judgment_x19_test.gd",
+"group": "game",
+"name": "judgment_x19_test",
+"status": "passed"
+},
+{
+"checks": 8,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/bridge_validity_test.gd",
+"group": "game",
+"name": "bridge_validity_test",
+"status": "passed"
+},
+{
+"checks": 59,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/pad_reach_test.gd",
+"group": "game",
+"name": "pad_reach_test",
+"status": "passed"
+},
+{
+"checks": 71,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/career_ambition_test.gd",
+"group": "game",
+"name": "career_ambition_test",
+"status": "passed"
+},
+{
+"checks": 68,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/net_interact_test.gd",
+"group": "game",
+"name": "net_interact_test",
+"status": "passed"
+},
+{
+"checks": 30,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/mp06_away_reach_test.gd",
+"group": "game",
+"name": "mp06_away_reach_test",
+"status": "passed"
+}
+],
+"totals": {
+"attempted": 26,
+"cancelled": 0,
+"failed": 0,
+"passed": 26,
+"seconds": 1931.7,
+"skipped": 0
+}
+},
+"shard.json": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"estimate_seconds": 2464,
+"format": "mml-ci-shard/1",
+"list_count": 311,
+"list_sha256": "9c821684841206bc32c0cd42cace0b1ca59b794dd65b67736f83bd0e7b2b424d",
+"shard": 11,
+"shards": 12,
+"unknown": [
+"biz04_venture_till_migration_test",
+"trd02_merchant_net_earnings_test",
+"life02_employee_death_test",
+"biz07_hand_employed_by_player_test",
+"meal_deal_price_test",
+"prop05_guest_sale_test",
+"mp06_away_reach_test"
+]
+}
+},
+"13992617831": {
+"ci-report.json": {
+"format": "mml-ci-report/1",
+"groups": {
+"game": {
+"attempted": 26,
+"failed": 0,
+"passed": 26
+}
+},
+"identification": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"run_attempt": "1",
+"run_id": "43321399738",
+"trigger": "workflow_dispatch",
+"workflow": "Tests"
+},
+"missing_evidence": [],
+"outcome": "TESTED",
+"steps": {
+"game": "success",
+"import": "success"
+},
+"suites": [
+{
+"checks": 9,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/npc04_evening_company_away_test.gd",
+"group": "game",
+"name": "npc04_evening_company_away_test",
+"status": "passed"
+},
+{
+"checks": 51,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/inv02_spoilage_test.gd",
+"group": "game",
+"name": "inv02_spoilage_test",
+"status": "passed"
+},
+{
+"checks": 25,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/settlement_crafter_test.gd",
+"group": "game",
+"name": "settlement_crafter_test",
+"status": "passed"
+},
+{
+"checks": 71,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/region_travel_test.gd",
+"group": "game",
+"name": "region_travel_test",
+"status": "passed"
+},
+{
+"checks": 14,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/road_types_test.gd",
+"group": "game",
+"name": "road_types_test",
+"status": "passed"
+},
+{
+"checks": 72,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/wilds_test.gd",
+"group": "game",
+"name": "wilds_test",
+"status": "passed"
+},
+{
+"checks": 339,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/world_test.gd",
+"group": "game",
+"name": "world_test",
+"status": "passed"
+},
+{
+"checks": 136,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/aging_test.gd",
+"group": "game",
+"name": "aging_test",
+"status": "passed"
+},
+{
+"checks": 26,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/early_game_test.gd",
+"group": "game",
+"name": "early_game_test",
+"status": "passed"
+},
+{
+"checks": 61,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/prop06_estate_transaction_test.gd",
+"group": "game",
+"name": "prop06_estate_transaction_test",
+"status": "passed"
+},
+{
+"checks": 61,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/business_works_test.gd",
+"group": "game",
+"name": "business_works_test",
+"status": "passed"
+},
+{
+"checks": 89,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/economy_foundation_test.gd",
+"group": "game",
+"name": "economy_foundation_test",
+"status": "passed"
+},
+{
+"checks": 5,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/save_continuity_test.gd",
+"group": "game",
+"name": "save_continuity_test",
+"status": "passed"
+},
+{
+"checks": 15,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/reg06_household_change_live_test.gd",
+"group": "game",
+"name": "reg06_household_change_live_test",
+"status": "passed"
+},
+{
+"checks": 10,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/contract_funds_test.gd",
+"group": "game",
+"name": "contract_funds_test",
+"status": "passed"
+},
+{
+"checks": 326,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/multiplayer_c_test.gd",
+"group": "game",
+"name": "multiplayer_c_test",
+"status": "passed"
+},
+{
+"checks": 4,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/mine_frame_test.gd",
+"group": "game",
+"name": "mine_frame_test",
+"status": "passed"
+},
+{
+"checks": 14,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/joystick_test.gd",
+"group": "game",
+"name": "joystick_test",
+"status": "passed"
+},
+{
+"checks": 48,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/regional_food_test.gd",
+"group": "game",
+"name": "regional_food_test",
+"status": "passed"
+},
+{
+"checks": 15,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/life04_remarriage_test.gd",
+"group": "game",
+"name": "life04_remarriage_test",
+"status": "passed"
+},
+{
+"checks": 43,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/reserve_test.gd",
+"group": "game",
+"name": "reserve_test",
+"status": "passed"
+},
+{
+"checks": 19,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/contract_50ore_test.gd",
+"group": "game",
+"name": "contract_50ore_test",
+"status": "passed"
+},
+{
+"checks": 20,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/crafts_test.gd",
+"group": "game",
+"name": "crafts_test",
+"status": "passed"
+},
+{
+"checks": 180,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/judgment_live_test.gd",
+"group": "game",
+"name": "judgment_live_test",
+"status": "passed"
+},
+{
+"checks": 15,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/judgment_incident_test.gd",
+"group": "game",
+"name": "judgment_incident_test",
+"status": "passed"
+},
+{
+"checks": 75,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/mp03_household_tables_test.gd",
+"group": "game",
+"name": "mp03_household_tables_test",
+"status": "passed"
+}
+],
+"totals": {
+"attempted": 26,
+"cancelled": 0,
+"failed": 0,
+"passed": 26,
+"seconds": 2301.4,
+"skipped": 0
+}
+},
+"shard.json": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"estimate_seconds": 2464,
+"format": "mml-ci-shard/1",
+"list_count": 311,
+"list_sha256": "9c821684841206bc32c0cd42cace0b1ca59b794dd65b67736f83bd0e7b2b424d",
+"shard": 4,
+"shards": 12,
+"unknown": [
+"npc04_evening_company_away_test",
+"inv02_spoilage_test",
+"prop06_estate_transaction_test",
+"reg06_household_change_live_test",
+"contract_funds_test",
+"life04_remarriage_test",
+"mp03_household_tables_test"
+]
+}
+},
+"13992989142": {
+"ci-report.json": {
+"format": "mml-ci-report/1",
+"groups": {
+"game": {
+"attempted": 27,
+"failed": 0,
+"passed": 27
+}
+},
+"identification": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"run_attempt": "1",
+"run_id": "43321399738",
+"trigger": "workflow_dispatch",
+"workflow": "Tests"
+},
+"missing_evidence": [],
+"outcome": "TESTED",
+"steps": {
+"game": "success",
+"import": "success"
+},
+"suites": [
+{
+"checks": 8,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/life05_bandit_heir_test.gd",
+"group": "game",
+"name": "life05_bandit_heir_test",
+"status": "passed"
+},
+{
+"checks": 3,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/npc05_noted_growth_test.gd",
+"group": "game",
+"name": "npc05_noted_growth_test",
+"status": "passed"
+},
+{
+"checks": 49,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/furniture_test.gd",
+"group": "game",
+"name": "furniture_test",
+"status": "passed"
+},
+{
+"checks": 37,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/journey_site_path_test.gd",
+"group": "game",
+"name": "journey_site_path_test",
+"status": "passed"
+},
+{
+"checks": 171,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/audio_test.gd",
+"group": "game",
+"name": "audio_test",
+"status": "passed"
+},
+{
+"checks": 72,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/chests_test.gd",
+"group": "game",
+"name": "chests_test",
+"status": "passed"
+},
+{
+"checks": 123,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/property_test.gd",
+"group": "game",
+"name": "property_test",
+"status": "passed"
+},
+{
+"checks": 33,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/competition_test.gd",
+"group": "game",
+"name": "competition_test",
+"status": "passed"
+},
+{
+"checks": 102,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/le02_market_test.gd",
+"group": "game",
+"name": "le02_market_test",
+"status": "passed"
+},
+{
+"checks": 32,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/le07_gates_test.gd",
+"group": "game",
+"name": "le07_gates_test",
+"status": "passed"
+},
+{
+"checks": 37,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/feast_test.gd",
+"group": "game",
+"name": "feast_test",
+"status": "passed"
+},
+{
+"checks": 109,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/migration_test.gd",
+"group": "game",
+"name": "migration_test",
+"status": "passed"
+},
+{
+"checks": 8,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/emigration_marriage_test.gd",
+"group": "game",
+"name": "emigration_marriage_test",
+"status": "passed"
+},
+{
+"checks": 13,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/sav04_reload_determinism_test.gd",
+"group": "game",
+"name": "sav04_reload_determinism_test",
+"status": "passed"
+},
+{
+"checks": 32,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/multiplayer_b_test.gd",
+"group": "game",
+"name": "multiplayer_b_test",
+"status": "passed"
+},
+{
+"checks": 7,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/inv03_foreign_player_chests_test.gd",
+"group": "game",
+"name": "inv03_foreign_player_chests_test",
+"status": "passed"
+},
+{
+"checks": 69,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/net_ui_test.gd",
+"group": "game",
+"name": "net_ui_test",
+"status": "passed"
+},
+{
+"checks": 7,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/gift_quantity_test.gd",
+"group": "game",
+"name": "gift_quantity_test",
+"status": "passed"
+},
+{
+"checks": 61,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/gear_catalogue_test.gd",
+"group": "game",
+"name": "gear_catalogue_test",
+"status": "passed"
+},
+{
+"checks": 117,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/housing_test.gd",
+"group": "game",
+"name": "housing_test",
+"status": "passed"
+},
+{
+"checks": 39,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/quarry_test.gd",
+"group": "game",
+"name": "quarry_test",
+"status": "passed"
+},
+{
+"checks": 49,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/fl_houses_test.gd",
+"group": "game",
+"name": "fl_houses_test",
+"status": "passed"
+},
+{
+"checks": 4,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/workplace_reach_test.gd",
+"group": "game",
+"name": "workplace_reach_test",
+"status": "passed"
+},
+{
+"checks": 17,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/table_preview_test.gd",
+"group": "game",
+"name": "table_preview_test",
+"status": "passed"
+},
+{
+"checks": 86,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/settle_food_test.gd",
+"group": "game",
+"name": "settle_food_test",
+"status": "passed"
+},
+{
+"checks": 74,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/consign_test.gd",
+"group": "game",
+"name": "consign_test",
+"status": "passed"
+},
+{
+"checks": 86,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/judgment_calibration_test.gd",
+"group": "game",
+"name": "judgment_calibration_test",
+"status": "passed"
+}
+],
+"totals": {
+"attempted": 27,
+"cancelled": 0,
+"failed": 0,
+"passed": 27,
+"seconds": 3175.5,
+"skipped": 0
+}
+},
+"shard.json": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"estimate_seconds": 2463,
+"format": "mml-ci-shard/1",
+"list_count": 311,
+"list_sha256": "9c821684841206bc32c0cd42cace0b1ca59b794dd65b67736f83bd0e7b2b424d",
+"shard": 8,
+"shards": 12,
+"unknown": [
+"life05_bandit_heir_test",
+"npc05_noted_growth_test",
+"journey_site_path_test",
+"emigration_marriage_test",
+"sav04_reload_determinism_test",
+"inv03_foreign_player_chests_test",
+"workplace_reach_test"
+]
+}
+},
+"13993121297": {
+"ci-report.json": {
+"format": "mml-ci-report/1",
+"groups": {
+"game": {
+"attempted": 26,
+"failed": 0,
+"passed": 26
+}
+},
+"identification": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"run_attempt": "1",
+"run_id": "43321399738",
+"trigger": "workflow_dispatch",
+"workflow": "Tests"
+},
+"missing_evidence": [],
+"outcome": "TESTED",
+"steps": {
+"game": "success",
+"import": "success"
+},
+"suites": [
+{
+"checks": 8,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/jus02_join_band_cleanup_test.gd",
+"group": "game",
+"name": "jus02_join_band_cleanup_test",
+"status": "passed"
+},
+{
+"checks": 8,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/reg01_journey_reload_route_test.gd",
+"group": "game",
+"name": "reg01_journey_reload_route_test",
+"status": "passed"
+},
+{
+"checks": 440,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/overworld_test.gd",
+"group": "game",
+"name": "overworld_test",
+"status": "passed"
+},
+{
+"checks": 23,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/region_trade_test.gd",
+"group": "game",
+"name": "region_trade_test",
+"status": "passed"
+},
+{
+"checks": 62,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/demo_journey_test.gd",
+"group": "game",
+"name": "demo_journey_test",
+"status": "passed"
+},
+{
+"checks": 45,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/tree_test.gd",
+"group": "game",
+"name": "tree_test",
+"status": "passed"
+},
+{
+"checks": 160,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/business_test.gd",
+"group": "game",
+"name": "business_test",
+"status": "passed"
+},
+{
+"checks": 175,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/chapel_test.gd",
+"group": "game",
+"name": "chapel_test",
+"status": "passed"
+},
+{
+"checks": 38,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/le03_economy_test.gd",
+"group": "game",
+"name": "le03_economy_test",
+"status": "passed"
+},
+{
+"checks": 31,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/le05_paid_repair_test.gd",
+"group": "game",
+"name": "le05_paid_repair_test",
+"status": "passed"
+},
+{
+"checks": 10,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/le05_construction_hire_test.gd",
+"group": "game",
+"name": "le05_construction_hire_test",
+"status": "passed"
+},
+{
+"checks": 5,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/reg02_journey_migration_test.gd",
+"group": "game",
+"name": "reg02_journey_migration_test",
+"status": "passed"
+},
+{
+"checks": 11,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/self_trade_payer_test.gd",
+"group": "game",
+"name": "self_trade_payer_test",
+"status": "passed"
+},
+{
+"checks": 11,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/mp01_guest_stall_attendance_test.gd",
+"group": "game",
+"name": "mp01_guest_stall_attendance_test",
+"status": "passed"
+},
+{
+"checks": 11,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/net_cave_test.gd",
+"group": "game",
+"name": "net_cave_test",
+"status": "passed"
+},
+{
+"checks": 59,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/refuge_test.gd",
+"group": "game",
+"name": "refuge_test",
+"status": "passed"
+},
+{
+"checks": 35,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/pursuit_test.gd",
+"group": "game",
+"name": "pursuit_test",
+"status": "passed"
+},
+{
+"checks": 51,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/family_test.gd",
+"group": "game",
+"name": "family_test",
+"status": "passed"
+},
+{
+"checks": 51,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/od16_test.gd",
+"group": "game",
+"name": "od16_test",
+"status": "passed"
+},
+{
+"checks": 104,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/farm_plots_test.gd",
+"group": "game",
+"name": "farm_plots_test",
+"status": "passed"
+},
+{
+"checks": 19,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/herd_test.gd",
+"group": "game",
+"name": "herd_test",
+"status": "passed"
+},
+{
+"checks": 54,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/settlement_life_test.gd",
+"group": "game",
+"name": "settlement_life_test",
+"status": "passed"
+},
+{
+"checks": 71,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/regional_test.gd",
+"group": "game",
+"name": "regional_test",
+"status": "passed"
+},
+{
+"checks": 13,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/low_grass_test.gd",
+"group": "game",
+"name": "low_grass_test",
+"status": "passed"
+},
+{
+"checks": 67,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/judgment_soak_test.gd",
+"group": "game",
+"name": "judgment_soak_test",
+"status": "passed"
+},
+{
+"checks": 24,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/mp05_mutual_asset_share_test.gd",
+"group": "game",
+"name": "mp05_mutual_asset_share_test",
+"status": "passed"
+}
+],
+"totals": {
+"attempted": 26,
+"cancelled": 0,
+"failed": 0,
+"passed": 26,
+"seconds": 1682.6,
+"skipped": 0
+}
+},
+"shard.json": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"estimate_seconds": 2463,
+"format": "mml-ci-shard/1",
+"list_count": 311,
+"list_sha256": "9c821684841206bc32c0cd42cace0b1ca59b794dd65b67736f83bd0e7b2b424d",
+"shard": 3,
+"shards": 12,
+"unknown": [
+"jus02_join_band_cleanup_test",
+"reg01_journey_reload_route_test",
+"demo_journey_test",
+"reg02_journey_migration_test",
+"self_trade_payer_test",
+"mp01_guest_stall_attendance_test",
+"mp05_mutual_asset_share_test"
+]
+}
+},
+"13993206540": {
+"ci-report.json": {
+"format": "mml-ci-report/1",
+"groups": {
+"game": {
+"attempted": 26,
+"failed": 0,
+"passed": 26
+}
+},
+"identification": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"run_attempt": "1",
+"run_id": "43321399738",
+"trigger": "workflow_dispatch",
+"workflow": "Tests"
+},
+"missing_evidence": [],
+"outcome": "TESTED",
+"steps": {
+"game": "success",
+"import": "success"
+},
+"suites": [
+{
+"checks": 9,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/emp04_skilled_place_split_test.gd",
+"group": "game",
+"name": "emp04_skilled_place_split_test",
+"status": "passed"
+},
+{
+"checks": 12,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/inv05_rubble_refund_test.gd",
+"group": "game",
+"name": "inv05_rubble_refund_test",
+"status": "passed"
+},
+{
+"checks": 18,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/atlas_test.gd",
+"group": "game",
+"name": "atlas_test",
+"status": "passed"
+},
+{
+"checks": 11,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/region_demand_test.gd",
+"group": "game",
+"name": "region_demand_test",
+"status": "passed"
+},
+{
+"checks": 144,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/wiki_test.gd",
+"group": "game",
+"name": "wiki_test",
+"status": "passed"
+},
+{
+"checks": 88,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/inventory18_test.gd",
+"group": "game",
+"name": "inventory18_test",
+"status": "passed"
+},
+{
+"checks": 5,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/prop03_eviction_site_test.gd",
+"group": "game",
+"name": "prop03_eviction_site_test",
+"status": "passed"
+},
+{
+"checks": 56,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/le05_repair_test.gd",
+"group": "game",
+"name": "le05_repair_test",
+"status": "passed"
+},
+{
+"checks": 4,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/npc03_field_takeover_bookkeeping_test.gd",
+"group": "game",
+"name": "npc03_field_takeover_bookkeeping_test",
+"status": "passed"
+},
+{
+"checks": 11,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/smith_forge_purchase_test.gd",
+"group": "game",
+"name": "smith_forge_purchase_test",
+"status": "passed"
+},
+{
+"checks": 95,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/x20_android_ui_test.gd",
+"group": "game",
+"name": "x20_android_ui_test",
+"status": "passed"
+},
+{
+"checks": 32,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/settlement_development_test.gd",
+"group": "game",
+"name": "settlement_development_test",
+"status": "passed"
+},
+{
+"checks": 6,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/jus04_witness_knowledge_test.gd",
+"group": "game",
+"name": "jus04_witness_knowledge_test",
+"status": "passed"
+},
+{
+"checks": 84,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/dialogue_perspective_test.gd",
+"group": "game",
+"name": "dialogue_perspective_test",
+"status": "passed"
+},
+{
+"checks": 8,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/conservation_test.gd",
+"group": "game",
+"name": "conservation_test",
+"status": "passed"
+},
+{
+"checks": 55,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/parity_test.gd",
+"group": "game",
+"name": "parity_test",
+"status": "passed"
+},
+{
+"checks": 35,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/terrain_test.gd",
+"group": "game",
+"name": "terrain_test",
+"status": "passed"
+},
+{
+"checks": 51,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/services_test.gd",
+"group": "game",
+"name": "services_test",
+"status": "passed"
+},
+{
+"checks": 90,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/underground_struct_test.gd",
+"group": "game",
+"name": "underground_struct_test",
+"status": "passed"
+},
+{
+"checks": 104,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/family_first_test.gd",
+"group": "game",
+"name": "family_first_test",
+"status": "passed"
+},
+{
+"checks": 79,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/experience_test.gd",
+"group": "game",
+"name": "experience_test",
+"status": "passed"
+},
+{
+"checks": 26,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/courier_desk_test.gd",
+"group": "game",
+"name": "courier_desk_test",
+"status": "passed"
+},
+{
+"checks": 54,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/skilled_employment_test.gd",
+"group": "game",
+"name": "skilled_employment_test",
+"status": "passed"
+},
+{
+"checks": 17,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/bandit_ai_test.gd",
+"group": "game",
+"name": "bandit_ai_test",
+"status": "passed"
+},
+{
+"checks": 89,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/player_family_test.gd",
+"group": "game",
+"name": "player_family_test",
+"status": "passed"
+},
+{
+"checks": 4,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/emp03_seeker_count_test.gd",
+"group": "game",
+"name": "emp03_seeker_count_test",
+"status": "passed"
+}
+],
+"totals": {
+"attempted": 26,
+"cancelled": 0,
+"failed": 0,
+"passed": 26,
+"seconds": 2126.7,
+"skipped": 0
+}
+},
+"shard.json": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"estimate_seconds": 2464,
+"format": "mml-ci-shard/1",
+"list_count": 311,
+"list_sha256": "9c821684841206bc32c0cd42cace0b1ca59b794dd65b67736f83bd0e7b2b424d",
+"shard": 10,
+"shards": 12,
+"unknown": [
+"emp04_skilled_place_split_test",
+"inv05_rubble_refund_test",
+"prop03_eviction_site_test",
+"npc03_field_takeover_bookkeeping_test",
+"smith_forge_purchase_test",
+"jus04_witness_knowledge_test",
+"emp03_seeker_count_test"
+]
+}
+},
+"13993480715": {
+"ci-report.json": {
+"format": "mml-ci-report/1",
+"groups": {
+"game": {
+"attempted": 28,
+"failed": 0,
+"passed": 28
+}
+},
+"identification": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"run_attempt": "1",
+"run_id": "43321399738",
+"trigger": "workflow_dispatch",
+"workflow": "Tests"
+},
+"missing_evidence": [],
+"outcome": "TESTED",
+"steps": {
+"game": "success",
+"import": "success"
+},
+"suites": [
+{
+"checks": 12,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/biz03_payroll_priority_test.gd",
+"group": "game",
+"name": "biz03_payroll_priority_test",
+"status": "passed"
+},
+{
+"checks": 47,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/biz01_found_atomic_test.gd",
+"group": "game",
+"name": "biz01_found_atomic_test",
+"status": "passed"
+},
+{
+"checks": 19,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/journey_s3_test.gd",
+"group": "game",
+"name": "journey_s3_test",
+"status": "passed"
+},
+{
+"checks": 29,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/envoy_test.gd",
+"group": "game",
+"name": "envoy_test",
+"status": "passed"
+},
+{
+"checks": 35,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/demo_test.gd",
+"group": "game",
+"name": "demo_test",
+"status": "passed"
+},
+{
+"checks": 10,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/life01_retirement_payroll_test.gd",
+"group": "game",
+"name": "life01_retirement_payroll_test",
+"status": "passed"
+},
+{
+"checks": 105,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/stone_test.gd",
+"group": "game",
+"name": "stone_test",
+"status": "passed"
+},
+{
+"checks": 38,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/countryside_test.gd",
+"group": "game",
+"name": "countryside_test",
+"status": "passed"
+},
+{
+"checks": 37,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/le05_route_risk_test.gd",
+"group": "game",
+"name": "le05_route_risk_test",
+"status": "passed"
+},
+{
+"checks": 20,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/b25_leak2_departure_test.gd",
+"group": "game",
+"name": "b25_leak2_departure_test",
+"status": "passed"
+},
+{
+"checks": 12,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/reg02_departure_debts_test.gd",
+"group": "game",
+"name": "reg02_departure_debts_test",
+"status": "passed"
+},
+{
+"checks": 22,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/hh_business_food_test.gd",
+"group": "game",
+"name": "hh_business_food_test",
+"status": "passed"
+},
+{
+"checks": 7,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/prop01_cancel_site_test.gd",
+"group": "game",
+"name": "prop01_cancel_site_test",
+"status": "passed"
+},
+{
+"checks": 48,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/message_journal_test.gd",
+"group": "game",
+"name": "message_journal_test",
+"status": "passed"
+},
+{
+"checks": 24,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/outlaw_return_test.gd",
+"group": "game",
+"name": "outlaw_return_test",
+"status": "passed"
+},
+{
+"checks": 102,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/party_test.gd",
+"group": "game",
+"name": "party_test",
+"status": "passed"
+},
+{
+"checks": 23,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/tailor_barber_test.gd",
+"group": "game",
+"name": "tailor_barber_test",
+"status": "passed"
+},
+{
+"checks": 80,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/relations_test.gd",
+"group": "game",
+"name": "relations_test",
+"status": "passed"
+},
+{
+"checks": 154,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/contracts_test.gd",
+"group": "game",
+"name": "contracts_test",
+"status": "passed"
+},
+{
+"checks": 217,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/judgment_test.gd",
+"group": "game",
+"name": "judgment_test",
+"status": "passed"
+},
+{
+"checks": 91,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/judgment_personality_test.gd",
+"group": "game",
+"name": "judgment_personality_test",
+"status": "passed"
+},
+{
+"checks": 98,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/judgment_bonds_test.gd",
+"group": "game",
+"name": "judgment_bonds_test",
+"status": "passed"
+},
+{
+"checks": 29,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/judgment_decay_demo.gd",
+"group": "game",
+"name": "judgment_decay_demo",
+"status": "passed"
+},
+{
+"checks": 5,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/recorder_neutrality_test.gd",
+"group": "game",
+"name": "recorder_neutrality_test",
+"status": "passed"
+},
+{
+"checks": 28,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/land_clearing_test.gd",
+"group": "game",
+"name": "land_clearing_test",
+"status": "passed"
+},
+{
+"checks": 17,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/sim_f3_test.gd",
+"group": "game",
+"name": "sim_f3_test",
+"status": "passed"
+},
+{
+"checks": 112,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/mp_interact_ui_test.gd",
+"group": "game",
+"name": "mp_interact_ui_test",
+"status": "passed"
+},
+{
+"checks": 53,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/mp05_forged_client_test.gd",
+"group": "game",
+"name": "mp05_forged_client_test",
+"status": "passed"
+}
+],
+"totals": {
+"attempted": 28,
+"cancelled": 0,
+"failed": 0,
+"passed": 28,
+"seconds": 1789.3,
+"skipped": 0
+}
+},
+"shard.json": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"estimate_seconds": 2463,
+"format": "mml-ci-shard/1",
+"list_count": 311,
+"list_sha256": "9c821684841206bc32c0cd42cace0b1ca59b794dd65b67736f83bd0e7b2b424d",
+"shard": 9,
+"shards": 12,
+"unknown": [
+"biz03_payroll_priority_test",
+"biz01_found_atomic_test",
+"life01_retirement_payroll_test",
+"reg02_departure_debts_test",
+"hh_business_food_test",
+"prop01_cancel_site_test",
+"mp05_forged_client_test"
+]
+}
+},
+"13993496569": {
+"ci-report.json": {
+"format": "mml-ci-report/1",
+"groups": {
+"game": {
+"attempted": 26,
+"failed": 0,
+"passed": 26
+}
+},
+"identification": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"run_attempt": "1",
+"run_id": "43321399738",
+"trigger": "workflow_dispatch",
+"workflow": "Tests"
+},
+"missing_evidence": [],
+"outcome": "TESTED",
+"steps": {
+"game": "success",
+"import": "success"
+},
+"suites": [
+{
+"checks": 16,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/owner_features_integration_test.gd",
+"group": "game",
+"name": "owner_features_integration_test",
+"status": "passed"
+},
+{
+"checks": 6,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/trd03_player_chest_claims_test.gd",
+"group": "game",
+"name": "trd03_player_chest_claims_test",
+"status": "passed"
+},
+{
+"checks": 91,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/player_journey_test.gd",
+"group": "game",
+"name": "player_journey_test",
+"status": "passed"
+},
+{
+"checks": 8,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/loot_recover_test.gd",
+"group": "game",
+"name": "loot_recover_test",
+"status": "passed"
+},
+{
+"checks": 60,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/player_homestead_test.gd",
+"group": "game",
+"name": "player_homestead_test",
+"status": "passed"
+},
+{
+"checks": 36,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/skills_test.gd",
+"group": "game",
+"name": "skills_test",
+"status": "passed"
+},
+{
+"checks": 5,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/sav01_famine_reload_test.gd",
+"group": "game",
+"name": "sav01_famine_reload_test",
+"status": "passed"
+},
+{
+"checks": 6,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/sav03_reservations_reload_test.gd",
+"group": "game",
+"name": "sav03_reservations_reload_test",
+"status": "passed"
+},
+{
+"checks": 6,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/mp04_cart_gateway_test.gd",
+"group": "game",
+"name": "mp04_cart_gateway_test",
+"status": "passed"
+},
+{
+"checks": 74,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/hamlet_test.gd",
+"group": "game",
+"name": "hamlet_test",
+"status": "passed"
+},
+{
+"checks": 124,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/home_test.gd",
+"group": "game",
+"name": "home_test",
+"status": "passed"
+},
+{
+"checks": 60,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/manhunt_test.gd",
+"group": "game",
+"name": "manhunt_test",
+"status": "passed"
+},
+{
+"checks": 21,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/save_transfer_test.gd",
+"group": "game",
+"name": "save_transfer_test",
+"status": "passed"
+},
+{
+"checks": 28,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/recf1_test.gd",
+"group": "game",
+"name": "recf1_test",
+"status": "passed"
+},
+{
+"checks": 18,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/farm_shared_save_test.gd",
+"group": "game",
+"name": "farm_shared_save_test",
+"status": "passed"
+},
+{
+"checks": 113,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/underground_ext_test.gd",
+"group": "game",
+"name": "underground_ext_test",
+"status": "passed"
+},
+{
+"checks": 10,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/live_export_test.gd",
+"group": "game",
+"name": "live_export_test",
+"status": "passed"
+},
+{
+"checks": 72,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/capability_test.gd",
+"group": "game",
+"name": "capability_test",
+"status": "passed"
+},
+{
+"checks": 12,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/profile_test.gd",
+"group": "game",
+"name": "profile_test",
+"status": "passed"
+},
+{
+"checks": 52,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/civic_records_test.gd",
+"group": "game",
+"name": "civic_records_test",
+"status": "passed"
+},
+{
+"checks": 21,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/travel_river_test.gd",
+"group": "game",
+"name": "travel_river_test",
+"status": "passed"
+},
+{
+"checks": 15,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/plan_continuity_test.gd",
+"group": "game",
+"name": "plan_continuity_test",
+"status": "passed"
+},
+{
+"checks": 22,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/stall_rent_pitch_test.gd",
+"group": "game",
+"name": "stall_rent_pitch_test",
+"status": "passed"
+},
+{
+"checks": 165,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/business_ownership_test.gd",
+"group": "game",
+"name": "business_ownership_test",
+"status": "passed"
+},
+{
+"checks": 11,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/elder_provision_test.gd",
+"group": "game",
+"name": "elder_provision_test",
+"status": "passed"
+},
+{
+"checks": 55,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/net_fault_test.gd",
+"group": "game",
+"name": "net_fault_test",
+"status": "passed"
+}
+],
+"totals": {
+"attempted": 26,
+"cancelled": 0,
+"failed": 0,
+"passed": 26,
+"seconds": 2145.3,
+"skipped": 0
+}
+},
+"shard.json": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"estimate_seconds": 2462,
+"format": "mml-ci-shard/1",
+"list_count": 311,
+"list_sha256": "9c821684841206bc32c0cd42cace0b1ca59b794dd65b67736f83bd0e7b2b424d",
+"shard": 5,
+"shards": 12,
+"unknown": [
+"owner_features_integration_test",
+"trd03_player_chest_claims_test",
+"player_journey_test",
+"sav01_famine_reload_test",
+"sav03_reservations_reload_test",
+"mp04_cart_gateway_test",
+"plan_continuity_test"
+]
+}
+},
+"13993637357": {
+"ci-report.json": {
+"format": "mml-ci-report/1",
+"groups": {
+"game": {
+"attempted": 23,
+"failed": 0,
+"passed": 23
+}
+},
+"identification": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"run_attempt": "1",
+"run_id": "43321399738",
+"trigger": "workflow_dispatch",
+"workflow": "Tests"
+},
+"missing_evidence": [],
+"outcome": "TESTED",
+"steps": {
+"game": "success",
+"import": "success"
+},
+"suites": [
+{
+"checks": 3608,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/run_tests.gd",
+"group": "game",
+"name": "run_tests",
+"status": "passed"
+},
+{
+"checks": 9,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/biz05_hand_not_hired_test.gd",
+"group": "game",
+"name": "biz05_hand_not_hired_test",
+"status": "passed"
+},
+{
+"checks": 9,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/inv04_stash_handover_test.gd",
+"group": "game",
+"name": "inv04_stash_handover_test",
+"status": "passed"
+},
+{
+"checks": 34,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/char_create_test.gd",
+"group": "game",
+"name": "char_create_test",
+"status": "passed"
+},
+{
+"checks": 14,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/journey_test.gd",
+"group": "game",
+"name": "journey_test",
+"status": "passed"
+},
+{
+"checks": 20,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/intel_test.gd",
+"group": "game",
+"name": "intel_test",
+"status": "passed"
+},
+{
+"checks": 5,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/prop04_guest_house_name_test.gd",
+"group": "game",
+"name": "prop04_guest_house_name_test",
+"status": "passed"
+},
+{
+"checks": 56,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/horse_test.gd",
+"group": "game",
+"name": "horse_test",
+"status": "passed"
+},
+{
+"checks": 9,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/reg08_stranded_route_job_test.gd",
+"group": "game",
+"name": "reg08_stranded_route_job_test",
+"status": "passed"
+},
+{
+"checks": 7,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/clan_child_pantry_test.gd",
+"group": "game",
+"name": "clan_child_pantry_test",
+"status": "passed"
+},
+{
+"checks": 43,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/net_c_test.gd",
+"group": "game",
+"name": "net_c_test",
+"status": "passed"
+},
+{
+"checks": 25,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/station_tap_test.gd",
+"group": "game",
+"name": "station_tap_test",
+"status": "passed"
+},
+{
+"checks": 16,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/campfire_test.gd",
+"group": "game",
+"name": "campfire_test",
+"status": "passed"
+},
+{
+"checks": 120,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/regions_test.gd",
+"group": "game",
+"name": "regions_test",
+"status": "passed"
+},
+{
+"checks": 6,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/jus01_dead_guard_pursuit_test.gd",
+"group": "game",
+"name": "jus01_dead_guard_pursuit_test",
+"status": "passed"
+},
+{
+"checks": 53,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/b25_recorder_test.gd",
+"group": "game",
+"name": "b25_recorder_test",
+"status": "passed"
+},
+{
+"checks": 89,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/settlement_test.gd",
+"group": "game",
+"name": "settlement_test",
+"status": "passed"
+},
+{
+"checks": 24,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/field_work_test.gd",
+"group": "game",
+"name": "field_work_test",
+"status": "passed"
+},
+{
+"checks": 44,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/juice_test.gd",
+"group": "game",
+"name": "juice_test",
+"status": "passed"
+},
+{
+"checks": 77,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/business_founding_test.gd",
+"group": "game",
+"name": "business_founding_test",
+"status": "passed"
+},
+{
+"checks": 29,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/history_test.gd",
+"group": "game",
+"name": "history_test",
+"status": "passed"
+},
+{
+"checks": 35,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/mp03_forged_store_test.gd",
+"group": "game",
+"name": "mp03_forged_store_test",
+"status": "passed"
+},
+{
+"checks": 20,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/net_recorder_quit_test.gd",
+"group": "game",
+"name": "net_recorder_quit_test",
+"status": "passed"
+}
+],
+"totals": {
+"attempted": 23,
+"cancelled": 0,
+"failed": 0,
+"passed": 23,
+"seconds": 2630.8,
+"skipped": 0
+}
+},
+"shard.json": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"estimate_seconds": 2464,
+"format": "mml-ci-shard/1",
+"list_count": 311,
+"list_sha256": "9c821684841206bc32c0cd42cace0b1ca59b794dd65b67736f83bd0e7b2b424d",
+"shard": 1,
+"shards": 12,
+"unknown": [
+"biz05_hand_not_hired_test",
+"inv04_stash_handover_test",
+"prop04_guest_house_name_test",
+"reg08_stranded_route_job_test",
+"clan_child_pantry_test",
+"jus01_dead_guard_pursuit_test",
+"mp03_forged_store_test"
+]
+}
+},
+"13994091828": {
+"ci-report.json": {
+"format": "mml-ci-report/1",
+"groups": {
+"game": {
+"attempted": 26,
+"failed": 0,
+"passed": 26
+}
+},
+"identification": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"run_attempt": "1",
+"run_id": "43321399738",
+"trigger": "workflow_dispatch",
+"workflow": "Tests"
+},
+"missing_evidence": [],
+"outcome": "TESTED",
+"steps": {
+"game": "success",
+"import": "success"
+},
+"suites": [
+{
+"checks": 523,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/start_test.gd",
+"group": "game",
+"name": "start_test",
+"status": "passed"
+},
+{
+"checks": 5,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/biz08_venture_hands_load_test.gd",
+"group": "game",
+"name": "biz08_venture_hands_load_test",
+"status": "passed"
+},
+{
+"checks": 8,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/trd01_guest_stall_settle_test.gd",
+"group": "game",
+"name": "trd01_guest_stall_settle_test",
+"status": "passed"
+},
+{
+"checks": 36,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/character_look_test.gd",
+"group": "game",
+"name": "character_look_test",
+"status": "passed"
+},
+{
+"checks": 37,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/presence_test.gd",
+"group": "game",
+"name": "presence_test",
+"status": "passed"
+},
+{
+"checks": 9,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/life03_sage_succession_test.gd",
+"group": "game",
+"name": "life03_sage_succession_test",
+"status": "passed"
+},
+{
+"checks": 62,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/parity_mining_test.gd",
+"group": "game",
+"name": "parity_mining_test",
+"status": "passed"
+},
+{
+"checks": 51,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/equip_test.gd",
+"group": "game",
+"name": "equip_test",
+"status": "passed"
+},
+{
+"checks": 71,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/till_ownership_test.gd",
+"group": "game",
+"name": "till_ownership_test",
+"status": "passed"
+},
+{
+"checks": 4,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/emp06_unemployed_day_labour_test.gd",
+"group": "game",
+"name": "emp06_unemployed_day_labour_test",
+"status": "passed"
+},
+{
+"checks": 5,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/hh_member_ids_load_test.gd",
+"group": "game",
+"name": "hh_member_ids_load_test",
+"status": "passed"
+},
+{
+"checks": 100,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/identity_test.gd",
+"group": "game",
+"name": "identity_test",
+"status": "passed"
+},
+{
+"checks": 13,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/prop02_fitting_owner_test.gd",
+"group": "game",
+"name": "prop02_fitting_owner_test",
+"status": "passed"
+},
+{
+"checks": 126,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/net_econ_integrity_test.gd",
+"group": "game",
+"name": "net_econ_integrity_test",
+"status": "passed"
+},
+{
+"checks": 15,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/market_shelf_test.gd",
+"group": "game",
+"name": "market_shelf_test",
+"status": "passed"
+},
+{
+"checks": 8,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/harvest_setting_test.gd",
+"group": "game",
+"name": "harvest_setting_test",
+"status": "passed"
+},
+{
+"checks": 11,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/sharpen_test.gd",
+"group": "game",
+"name": "sharpen_test",
+"status": "passed"
+},
+{
+"checks": 41,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/combat_test.gd",
+"group": "game",
+"name": "combat_test",
+"status": "passed"
+},
+{
+"checks": 14,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/ecology_test.gd",
+"group": "game",
+"name": "ecology_test",
+"status": "passed"
+},
+{
+"checks": 20,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/judgment_guard_save_test.gd",
+"group": "game",
+"name": "judgment_guard_save_test",
+"status": "passed"
+},
+{
+"checks": 21,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/contract_sign_test.gd",
+"group": "game",
+"name": "contract_sign_test",
+"status": "passed"
+},
+{
+"checks": 15,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/save_exact_test.gd",
+"group": "game",
+"name": "save_exact_test",
+"status": "passed"
+},
+{
+"checks": 25,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/econ_p2p3_test.gd",
+"group": "game",
+"name": "econ_p2p3_test",
+"status": "passed"
+},
+{
+"checks": 112,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/settle_review_test.gd",
+"group": "game",
+"name": "settle_review_test",
+"status": "passed"
+},
+{
+"checks": 159,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/aspiration_test.gd",
+"group": "game",
+"name": "aspiration_test",
+"status": "passed"
+},
+{
+"checks": 42,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/mp06_guest_trust_test.gd",
+"group": "game",
+"name": "mp06_guest_trust_test",
+"status": "passed"
+}
+],
+"totals": {
+"attempted": 26,
+"cancelled": 0,
+"failed": 0,
+"passed": 26,
+"seconds": 3010.3,
+"skipped": 0
+}
+},
+"shard.json": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"estimate_seconds": 2464,
+"format": "mml-ci-shard/1",
+"list_count": 311,
+"list_sha256": "9c821684841206bc32c0cd42cace0b1ca59b794dd65b67736f83bd0e7b2b424d",
+"shard": 6,
+"shards": 12,
+"unknown": [
+"biz08_venture_hands_load_test",
+"trd01_guest_stall_settle_test",
+"life03_sage_succession_test",
+"emp06_unemployed_day_labour_test",
+"hh_member_ids_load_test",
+"prop02_fitting_owner_test",
+"mp06_guest_trust_test"
+]
+}
+},
+"13994175431": {
+"ci-report.json": {
+"format": "mml-ci-report/1",
+"groups": {
+"game": {
+"attempted": 26,
+"failed": 0,
+"passed": 26
+}
+},
+"identification": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"run_attempt": "1",
+"run_id": "43321399738",
+"trigger": "workflow_dispatch",
+"workflow": "Tests"
+},
+"missing_evidence": [],
+"outcome": "TESTED",
+"steps": {
+"game": "success",
+"import": "success"
+},
+"suites": [
+{
+"checks": 13,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/biz06_venture_close_till_test.gd",
+"group": "game",
+"name": "biz06_venture_close_till_test",
+"status": "passed"
+},
+{
+"checks": 6,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/inv01_stash_census_test.gd",
+"group": "game",
+"name": "inv01_stash_census_test",
+"status": "passed"
+},
+{
+"checks": 992,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/region_geography_test.gd",
+"group": "game",
+"name": "region_geography_test",
+"status": "passed"
+},
+{
+"checks": 19,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/homestead_presence_test.gd",
+"group": "game",
+"name": "homestead_presence_test",
+"status": "passed"
+},
+{
+"checks": 27,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/life_decisions_test.gd",
+"group": "game",
+"name": "life_decisions_test",
+"status": "passed"
+},
+{
+"checks": 19,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/gamepad_map_test.gd",
+"group": "game",
+"name": "gamepad_map_test",
+"status": "passed"
+},
+{
+"checks": 48,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/seed_traveler_test.gd",
+"group": "game",
+"name": "seed_traveler_test",
+"status": "passed"
+},
+{
+"checks": 10,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/prop06_migration_property_test.gd",
+"group": "game",
+"name": "prop06_migration_property_test",
+"status": "passed"
+},
+{
+"checks": 6,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/nd23_band_no_relief_test.gd",
+"group": "game",
+"name": "nd23_band_no_relief_test",
+"status": "passed"
+},
+{
+"checks": 14,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/meal_claims_test.gd",
+"group": "game",
+"name": "meal_claims_test",
+"status": "passed"
+},
+{
+"checks": 45,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/net_batch_b_test.gd",
+"group": "game",
+"name": "net_batch_b_test",
+"status": "passed"
+},
+{
+"checks": 61,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/wildlife_test.gd",
+"group": "game",
+"name": "wildlife_test",
+"status": "passed"
+},
+{
+"checks": 8,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/npc02_gift_claims_test.gd",
+"group": "game",
+"name": "npc02_gift_claims_test",
+"status": "passed"
+},
+{
+"checks": 36,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/exploit_test.gd",
+"group": "game",
+"name": "exploit_test",
+"status": "passed"
+},
+{
+"checks": 104,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/stalls_test.gd",
+"group": "game",
+"name": "stalls_test",
+"status": "passed"
+},
+{
+"checks": 37,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/decay_test.gd",
+"group": "game",
+"name": "decay_test",
+"status": "passed"
+},
+{
+"checks": 45,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/courier_test.gd",
+"group": "game",
+"name": "courier_test",
+"status": "passed"
+},
+{
+"checks": 79,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/aerial_map_test.gd",
+"group": "game",
+"name": "aerial_map_test",
+"status": "passed"
+},
+{
+"checks": 1,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/travel_perf_test.gd",
+"group": "game",
+"name": "travel_perf_test",
+"status": "passed"
+},
+{
+"checks": 33,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/desk_test.gd",
+"group": "game",
+"name": "desk_test",
+"status": "passed"
+},
+{
+"checks": 23,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/market_spacing_test.gd",
+"group": "game",
+"name": "market_spacing_test",
+"status": "passed"
+},
+{
+"checks": 92,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/services_d2_test.gd",
+"group": "game",
+"name": "services_d2_test",
+"status": "passed"
+},
+{
+"checks": 104,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/materials_b25_test.gd",
+"group": "game",
+"name": "materials_b25_test",
+"status": "passed"
+},
+{
+"checks": 22,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/net_family_test.gd",
+"group": "game",
+"name": "net_family_test",
+"status": "passed"
+},
+{
+"checks": 67,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/mp03_public_tables_test.gd",
+"group": "game",
+"name": "mp03_public_tables_test",
+"status": "passed"
+},
+{
+"checks": 148,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/net_mp4_test.gd",
+"group": "game",
+"name": "net_mp4_test",
+"status": "passed"
+}
+],
+"totals": {
+"attempted": 26,
+"cancelled": 0,
+"failed": 0,
+"passed": 26,
+"seconds": 2529.4,
+"skipped": 0
+}
+},
+"shard.json": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"estimate_seconds": 2464,
+"format": "mml-ci-shard/1",
+"list_count": 311,
+"list_sha256": "9c821684841206bc32c0cd42cace0b1ca59b794dd65b67736f83bd0e7b2b424d",
+"shard": 7,
+"shards": 12,
+"unknown": [
+"biz06_venture_close_till_test",
+"inv01_stash_census_test",
+"prop06_migration_property_test",
+"nd23_band_no_relief_test",
+"meal_claims_test",
+"npc02_gift_claims_test",
+"mp03_public_tables_test"
+]
+}
+},
+"13994706683": {
+"ci-report.json": {
+"format": "mml-ci-report/1",
+"groups": {
+"game": {
+"attempted": 26,
+"failed": 0,
+"passed": 26
+}
+},
+"identification": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"run_attempt": "1",
+"run_id": "43321399738",
+"trigger": "workflow_dispatch",
+"workflow": "Tests"
+},
+"missing_evidence": [],
+"outcome": "TESTED",
+"steps": {
+"game": "success",
+"import": "success"
+},
+"suites": [
+{
+"checks": 5,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/brushoff_empty_plan_test.gd",
+"group": "game",
+"name": "brushoff_empty_plan_test",
+"status": "passed"
+},
+{
+"checks": 6,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/emp05_fields_present_test.gd",
+"group": "game",
+"name": "emp05_fields_present_test",
+"status": "passed"
+},
+{
+"checks": 6,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/sav02_day_state_test.gd",
+"group": "game",
+"name": "sav02_day_state_test",
+"status": "passed"
+},
+{
+"checks": 36,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/settlement_folk_test.gd",
+"group": "game",
+"name": "settlement_folk_test",
+"status": "passed"
+},
+{
+"checks": 67,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/water_test.gd",
+"group": "game",
+"name": "water_test",
+"status": "passed"
+},
+{
+"checks": 49,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/homestead_test.gd",
+"group": "game",
+"name": "homestead_test",
+"status": "passed"
+},
+{
+"checks": 28,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/job_board_test.gd",
+"group": "game",
+"name": "job_board_test",
+"status": "passed"
+},
+{
+"checks": 148,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/courier_live_test.gd",
+"group": "game",
+"name": "courier_live_test",
+"status": "passed"
+},
+{
+"checks": 79,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/le03_transactions_test.gd",
+"group": "game",
+"name": "le03_transactions_test",
+"status": "passed"
+},
+{
+"checks": 22,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/le06_save_test.gd",
+"group": "game",
+"name": "le06_save_test",
+"status": "passed"
+},
+{
+"checks": 5,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/save_tolerance_test.gd",
+"group": "game",
+"name": "save_tolerance_test",
+"status": "passed"
+},
+{
+"checks": 142,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/luxury_test.gd",
+"group": "game",
+"name": "luxury_test",
+"status": "passed"
+},
+{
+"checks": 10,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/npc01_path_backoff_test.gd",
+"group": "game",
+"name": "npc01_path_backoff_test",
+"status": "passed"
+},
+{
+"checks": 14,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/homestead_food_held_test.gd",
+"group": "game",
+"name": "homestead_food_held_test",
+"status": "passed"
+},
+{
+"checks": 69,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/multiplayer_a1_test.gd",
+"group": "game",
+"name": "multiplayer_a1_test",
+"status": "passed"
+},
+{
+"checks": 45,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/net_g1_test.gd",
+"group": "game",
+"name": "net_g1_test",
+"status": "passed"
+},
+{
+"checks": 33,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/pad_shortcuts_test.gd",
+"group": "game",
+"name": "pad_shortcuts_test",
+"status": "passed"
+},
+{
+"checks": 34,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/tax_test.gd",
+"group": "game",
+"name": "tax_test",
+"status": "passed"
+},
+{
+"checks": 96,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/trade_skills_test.gd",
+"group": "game",
+"name": "trade_skills_test",
+"status": "passed"
+},
+{
+"checks": 224,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/farming_test.gd",
+"group": "game",
+"name": "farming_test",
+"status": "passed"
+},
+{
+"checks": 9,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/judgment_perf.gd -- --sizes 100 --days 10",
+"group": "game",
+"name": "judgment_perf",
+"status": "passed"
+},
+{
+"checks": 11,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/recorder_detail_test.gd",
+"group": "game",
+"name": "recorder_detail_test",
+"status": "passed"
+},
+{
+"checks": 43,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/sword_visual_test.gd",
+"group": "game",
+"name": "sword_visual_test",
+"status": "passed"
+},
+{
+"checks": 40,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/capability_progress_test.gd",
+"group": "game",
+"name": "capability_progress_test",
+"status": "passed"
+},
+{
+"checks": 33,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/sim_f2_test.gd",
+"group": "game",
+"name": "sim_f2_test",
+"status": "passed"
+},
+{
+"checks": 11,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/net_liveness_test.gd",
+"group": "game",
+"name": "net_liveness_test",
+"status": "passed"
+}
+],
+"totals": {
+"attempted": 26,
+"cancelled": 0,
+"failed": 0,
+"passed": 26,
+"seconds": 3226.0,
+"skipped": 0
+}
+},
+"shard.json": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"estimate_seconds": 2521,
+"format": "mml-ci-shard/1",
+"list_count": 311,
+"list_sha256": "9c821684841206bc32c0cd42cace0b1ca59b794dd65b67736f83bd0e7b2b424d",
+"shard": 2,
+"shards": 12,
+"unknown": [
+"brushoff_empty_plan_test",
+"emp05_fields_present_test",
+"sav02_day_state_test",
+"save_tolerance_test",
+"npc01_path_backoff_test",
+"homestead_food_held_test",
+"recorder_detail_test",
+"net_liveness_test"
+]
+}
+},
+"13994780654": {
+"ci-report.json": {
+"format": "mml-ci-report/1",
+"groups": {
+"game": {
+"attempted": 25,
+"failed": 0,
+"passed": 25
+},
+"python": {
+"attempted": 6,
+"failed": 0,
+"passed": 6
+},
+"sim": {
+"attempted": 1,
+"failed": 0,
+"passed": 1
+}
+},
+"identification": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"run_attempt": "1",
+"run_id": "43321399738",
+"trigger": "workflow_dispatch",
+"workflow": "Tests"
+},
+"missing_evidence": [],
+"outcome": "TESTED",
+"steps": {
+"game": "success",
+"import": "success",
+"python": "success",
+"sim": "success"
+},
+"suites": [
+{
+"checks": 196,
+"command": "python3 -m unittest discover -s tests",
+"group": "python",
+"name": "unittest discover",
+"status": "passed"
+},
+{
+"checks": null,
+"command": "python3 tools/check_interactions.py",
+"group": "python",
+"name": "check_interactions",
+"status": "passed"
+},
+{
+"checks": null,
+"command": "python3 tools/check_requirements.py --against 'HEAD~1'",
+"group": "python",
+"name": "check_requirements",
+"status": "passed"
+},
+{
+"checks": null,
+"command": "python3 tools/check_resources.py",
+"group": "python",
+"name": "check_resources",
+"status": "passed"
+},
+{
+"checks": null,
+"command": "python3 tools/build_weapons.py",
+"group": "python",
+"name": "build_weapons",
+"status": "passed"
+},
+{
+"checks": null,
+"command": "python3 tools/check_materials.py",
+"group": "python",
+"name": "check_materials",
+"status": "passed"
+},
+{
+"checks": 10,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/trd04_stranded_shipment_test.gd",
+"group": "game",
+"name": "trd04_stranded_shipment_test",
+"status": "passed"
+},
+{
+"checks": 6,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/sav03_counter_reload_test.gd",
+"group": "game",
+"name": "sav03_counter_reload_test",
+"status": "passed"
+},
+{
+"checks": 40,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/play_test.gd",
+"group": "game",
+"name": "play_test",
+"status": "passed"
+},
+{
+"checks": 23,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/outside_interact_test.gd",
+"group": "game",
+"name": "outside_interact_test",
+"status": "passed"
+},
+{
+"checks": 9,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/emp01_apprentice_employed_test.gd",
+"group": "game",
+"name": "emp01_apprentice_employed_test",
+"status": "passed"
+},
+{
+"checks": 26,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/crop_share_test.gd",
+"group": "game",
+"name": "crop_share_test",
+"status": "passed"
+},
+{
+"checks": 37,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/business_money_test.gd",
+"group": "game",
+"name": "business_money_test",
+"status": "passed"
+},
+{
+"checks": 112,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/economy_model_test.gd",
+"group": "game",
+"name": "economy_model_test",
+"status": "passed"
+},
+{
+"checks": 81,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/le03_claims_test.gd",
+"group": "game",
+"name": "le03_claims_test",
+"status": "passed"
+},
+{
+"checks": 68,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/le04_test.gd",
+"group": "game",
+"name": "le04_test",
+"status": "passed"
+},
+{
+"checks": 11,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/le05_test.gd",
+"group": "game",
+"name": "le05_test",
+"status": "passed"
+},
+{
+"checks": 53,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/le05_rental_test.gd",
+"group": "game",
+"name": "le05_rental_test",
+"status": "passed"
+},
+{
+"checks": 7,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/reg03_courier_sender_dies_test.gd",
+"group": "game",
+"name": "reg03_courier_sender_dies_test",
+"status": "passed"
+},
+{
+"checks": 37,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/hh_phantom_repair_test.gd",
+"group": "game",
+"name": "hh_phantom_repair_test",
+"status": "passed"
+},
+{
+"checks": 14,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/net_fauna_test.gd",
+"group": "game",
+"name": "net_fauna_test",
+"status": "passed"
+},
+{
+"checks": 16,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/wanted_indicator_test.gd",
+"group": "game",
+"name": "wanted_indicator_test",
+"status": "passed"
+},
+{
+"checks": 11,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/stall_putup_test.gd",
+"group": "game",
+"name": "stall_putup_test",
+"status": "passed"
+},
+{
+"checks": 9,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/jus03_old_age_justice_test.gd",
+"group": "game",
+"name": "jus03_old_age_justice_test",
+"status": "passed"
+},
+{
+"checks": 23,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/treasury_test.gd",
+"group": "game",
+"name": "treasury_test",
+"status": "passed"
+},
+{
+"checks": 95,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/underground_test.gd",
+"group": "game",
+"name": "underground_test",
+"status": "passed"
+},
+{
+"checks": 66,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/discovery_test.gd",
+"group": "game",
+"name": "discovery_test",
+"status": "passed"
+},
+{
+"checks": 214,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/recorder_test.gd",
+"group": "game",
+"name": "recorder_test",
+"status": "passed"
+},
+{
+"checks": 30,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/interdependency_test.gd",
+"group": "game",
+"name": "interdependency_test",
+"status": "passed"
+},
+{
+"checks": 49,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/mp07_private_records_test.gd",
+"group": "game",
+"name": "mp07_private_records_test",
+"status": "passed"
+},
+{
+"checks": 28,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/net_soak_test.gd",
+"group": "game",
+"name": "net_soak_test",
+"status": "passed"
+},
+{
+"checks": null,
+"command": "/home/runner/godot-bin/godot --headless --path game --script res://tests/economy_sim.gd -- --days 10 --seed 1 --every 5 --out /home/runner/work/My-Medieval-Life/My-Medieval-Life/ci-out/sim.json",
+"group": "sim",
+"name": "economy_sim",
+"status": "passed"
+}
+],
+"totals": {
+"attempted": 32,
+"cancelled": 0,
+"failed": 0,
+"passed": 32,
+"seconds": 3087.3,
+"skipped": 0
+}
+},
+"shard.json": {
+"commit": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"estimate_seconds": 2464,
+"format": "mml-ci-shard/1",
+"list_count": 311,
+"list_sha256": "9c821684841206bc32c0cd42cace0b1ca59b794dd65b67736f83bd0e7b2b424d",
+"shard": 0,
+"shards": 12,
+"unknown": [
+"trd04_stranded_shipment_test",
+"sav03_counter_reload_test",
+"emp01_apprentice_employed_test",
+"reg03_courier_sender_dies_test",
+"hh_phantom_repair_test",
+"jus03_old_age_justice_test",
+"mp07_private_records_test"
+]
+}
+},
+"13995010331": {
+"validation.json": {
+"format": "mml-ci-validation/1",
+"generated": "2026-11-12T23:30:53Z",
+"problems": [],
+"required": [
+"tests"
+],
+"result": "pass",
+"runner_minutes": 503.85,
+"sha": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"sources": {
+"tests": {
+"failed": [],
+"groups": {
+"economy and conservation": {
+"failed": 0,
+"passed": 67,
+"suites": 67
+},
+"homesteading, construction and outlaws": {
+"failed": 0,
+"passed": 18,
+"suites": 18
+},
+"interface, people, judgment and other systems": {
+"failed": 0,
+"passed": 139,
+"suites": 139
+},
+"presence, crowds and animals": {
+"failed": 0,
+"passed": 5,
+"suites": 5
+},
+"save, load, migration and determinism": {
+"failed": 0,
+"passed": 38,
+"suites": 38
+},
+"water, hamlets and settlements": {
+"failed": 0,
+"passed": 14,
+"suites": 14
+},
+"world, maps and navigation": {
+"failed": 0,
+"passed": 30,
+"suites": 30
+}
+},
+"jobs": 13,
+"present": true,
+"problems": [],
+"required": true,
+"result": "pass",
+"runner_minutes": 503.85,
+"shards": 12,
+"sim_10_day": {
+"currency_leak": 0,
+"days_reached": 10,
+"item_leaks": {}
+},
+"suites": 318,
+"wall_minutes": 54.55
+}
+},
+"wall_minutes": 54.55
+}
+}
+},
+"jobs": {
+"43321399738": [
+{
+"conclusion": "success",
+"name": "plan",
+"run_attempt": 1,
+"status": "completed"
+},
+{
+"conclusion": "success",
+"name": "test (shard 10 of 12)",
+"run_attempt": 1,
+"status": "completed"
+},
+{
+"conclusion": "success",
+"name": "test (shard 5 of 12)",
+"run_attempt": 1,
+"status": "completed"
+},
+{
+"conclusion": "success",
+"name": "test (shard 0 of 12)",
+"run_attempt": 1,
+"status": "completed"
+},
+{
+"conclusion": "success",
+"name": "test (shard 6 of 12)",
+"run_attempt": 1,
+"status": "completed"
+},
+{
+"conclusion": "success",
+"name": "test (shard 8 of 12)",
+"run_attempt": 1,
+"status": "completed"
+},
+{
+"conclusion": "success",
+"name": "test (shard 9 of 12)",
+"run_attempt": 1,
+"status": "completed"
+},
+{
+"conclusion": "success",
+"name": "test (shard 11 of 12)",
+"run_attempt": 1,
+"status": "completed"
+},
+{
+"conclusion": "success",
+"name": "test (shard 7 of 12)",
+"run_attempt": 1,
+"status": "completed"
+},
+{
+"conclusion": "success",
+"name": "test (shard 1 of 12)",
+"run_attempt": 1,
+"status": "completed"
+},
+{
+"conclusion": "success",
+"name": "test (shard 4 of 12)",
+"run_attempt": 1,
+"status": "completed"
+},
+{
+"conclusion": "success",
+"name": "test (shard 2 of 12)",
+"run_attempt": 1,
+"status": "completed"
+},
+{
+"conclusion": "success",
+"name": "test (shard 3 of 12)",
+"run_attempt": 1,
+"status": "completed"
+},
+{
+"conclusion": "success",
+"name": "report",
+"run_attempt": 1,
+"status": "completed"
+}
+]
+},
+"runs": [
+{
+"conclusion": "success",
+"created_at": "2026-11-12T22:36:03Z",
+"event": "workflow_dispatch",
+"head_branch": "wip/b25r2-chain12",
+"head_sha": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"html_url": "https://github.com/verbal76/My-Medieval-Life/actions/runs/43321399738",
+"id": 43321399738,
+"name": "Tests",
+"path": ".github/workflows/tests.yml",
+"run_attempt": 1,
+"status": "completed"
+}
+],
+"sha": "b3c9eb593fe1a7d055e982f945b033a37a07fe95",
+"tree": {
+"files": [],
+"floors": {
+"aerial_map_test": 79,
+"aging_test": 136,
+"armour_worn_test": 264,
+"aspiration_test": 159,
+"atlas_test": 18,
+"audio_test": 171,
+"b25_leak2_departure_test": 20,
+"b25_recorder_test": 53,
+"bandit_ai_test": 17,
+"biz01_found_atomic_test": 47,
+"biz03_payroll_priority_test": 12,
+"biz04_venture_till_migration_test": 5,
+"biz05_hand_not_hired_test": 9,
+"biz06_venture_close_till_test": 13,
+"biz07_hand_employed_by_player_test": 7,
+"biz08_venture_hands_load_test": 5,
+"bridge_validity_test": 8,
+"brushoff_empty_plan_test": 5,
+"business_founding_test": 77,
+"business_money_test": 37,
+"business_ownership_test": 165,
+"business_test": 160,
+"business_works_test": 61,
+"campfire_test": 16,
+"capability_progress_test": 40,
+"capability_test": 72,
+"career_ambition_test": 71,
+"chapel_test": 175,
+"char_create_test": 34,
+"character_look_test": 36,
+"chests_test": 72,
+"civic_records_test": 52,
+"clan_child_pantry_test": 7,
+"combat_test": 41,
+"competition_test": 33,
+"conservation_test": 8,
+"consign_test": 74,
+"contract_50ore_test": 19,
+"contract_funds_test": 10,
+"contract_sign_test": 21,
+"contracts_test": 154,
+"countryside_test": 38,
+"courier_desk_test": 26,
+"courier_live_test": 148,
+"courier_test": 45,
+"crafts_test": 20,
+"credit_test": 98,
+"crop_share_test": 26,
+"decay_test": 37,
+"demo_journey_test": 60,
+"demo_test": 35,
+"desk_test": 33,
+"dialogue_perspective_test": 84,
+"discovery_test": 66,
+"early_game_test": 26,
+"ecology_test": 14,
+"econ_p2p3_test": 25,
+"economy_foundation_test": 89,
+"economy_model_test": 112,
+"elder_provision_test": 11,
+"emigration_marriage_test": 8,
+"emp01_apprentice_employed_test": 9,
+"emp03_seeker_count_test": 4,
+"emp04_skilled_place_split_test": 9,
+"emp05_fields_present_test": 6,
+"emp06_unemployed_day_labour_test": 4,
+"envoy_test": 29,
+"equip_test": 51,
+"experience_test": 79,
+"exploit_test": 36,
+"family_first_test": 104,
+"family_test": 51,
+"farm_place_test": 25,
+"farm_plots_test": 104,
+"farm_shared_save_test": 18,
+"farming_test": 224,
+"feast_test": 37,
+"field_work_test": 24,
+"fl_houses_test": 49,
+"furniture_test": 49,
+"gamepad_map_test": 19,
+"gear_catalogue_test": 61,
+"gift_quantity_test": 7,
+"hamlet_test": 74,
+"harvest_setting_test": 8,
+"health_jobs_test": 37,
+"herd_test": 19,
+"hh_business_food_test": 22,
+"hh_member_ids_load_test": 5,
+"hh_phantom_repair_test": 37,
+"history_test": 29,
+"home_ref_test": 40,
+"home_test": 124,
+"homestead_food_held_test": 14,
+"homestead_presence_test": 19,
+"homestead_test": 49,
+"horse_test": 56,
+"housing_test": 117,
+"identity_test": 100,
+"intel_test": 20,
+"interdependency_test": 30,
+"inv01_stash_census_test": 6,
+"inv02_spoilage_test": 51,
+"inv03_foreign_player_chests_test": 7,
+"inv04_stash_handover_test": 9,
+"inv05_rubble_refund_test": 12,
+"inventory18_test": 88,
+"job_board_test": 28,
+"journey_s3_test": 19,
+"journey_site_path_test": 37,
+"journey_test": 14,
+"joystick_test": 14,
+"judgment_bonds_test": 98,
+"judgment_calibration_test": 86,
+"judgment_decay_demo": 29,
+"judgment_guard_save_test": 20,
+"judgment_incident_test": 15,
+"judgment_live_test": 180,
+"judgment_perf": 9,
+"judgment_personality_test": 91,
+"judgment_soak_test": 67,
+"judgment_test": 217,
+"judgment_x19_test": 122,
+"juice_test": 44,
+"jus01_dead_guard_pursuit_test": 6,
+"jus02_join_band_cleanup_test": 8,
+"jus03_old_age_justice_test": 9,
+"jus04_witness_knowledge_test": 6,
+"justice_test": 33,
+"land_clearing_test": 28,
+"le02_market_test": 102,
+"le03_claims_test": 81,
+"le03_economy_test": 38,
+"le03_transactions_test": 79,
+"le04_test": 68,
+"le05_construction_hire_test": 10,
+"le05_paid_repair_test": 31,
+"le05_rental_test": 53,
+"le05_repair_test": 56,
+"le05_route_risk_test": 37,
+"le05_test": 11,
+"le06_save_test": 22,
+"le07_gates_test": 32,
+"life01_retirement_payroll_test": 10,
+"life02_employee_death_test": 14,
+"life03_sage_succession_test": 9,
+"life04_remarriage_test": 15,
+"life05_bandit_heir_test": 8,
+"life_decisions_test": 27,
+"live_export_test": 10,
+"lockpick_test": 19,
+"loot_recover_test": 8,
+"low_grass_test": 13,
+"luxury_test": 142,
+"manhunt_test": 60,
+"market_shelf_test": 15,
+"market_spacing_test": 23,
+"materials_b25_test": 104,
+"meal_claims_test": 14,
+"meal_deal_price_test": 7,
+"message_journal_test": 48,
+"migration_test": 109,
+"mine_frame_test": 4,
+"mp01_guest_stall_attendance_test": 11,
+"mp03_forged_store_test": 35,
+"mp03_household_tables_test": 75,
+"mp03_public_tables_test": 67,
+"mp04_cart_gateway_test": 6,
+"mp05_forged_client_test": 53,
+"mp05_mutual_asset_share_test": 24,
+"mp06_away_reach_test": 30,
+"mp06_guest_trust_test": 42,
+"mp07_private_records_test": 49,
+"mp_interact_ui_test": 112,
+"multiplayer_a1_test": 69,
+"multiplayer_b_test": 32,
+"multiplayer_c_test": 326,
+"nd23_band_no_relief_test": 6,
+"net_batch_b_test": 45,
+"net_c_test": 43,
+"net_cave_test": 11,
+"net_econ_integrity_test": 126,
+"net_family_test": 22,
+"net_fault_test": 55,
+"net_fauna_test": 14,
+"net_g1_test": 45,
+"net_interact_test": 68,
+"net_liveness_test": 11,
+"net_mp4_test": 148,
+"net_recorder_quit_test": 20,
+"net_soak_test": 28,
+"net_ui_test": 69,
+"npc01_path_backoff_test": 10,
+"npc02_gift_claims_test": 8,
+"npc03_field_takeover_bookkeeping_test": 4,
+"npc04_evening_company_away_test": 9,
+"npc05_noted_growth_test": 3,
+"od16_test": 51,
+"openpit_test": 60,
+"outlaw_return_test": 24,
+"outside_interact_test": 23,
+"overworld_test": 440,
+"owner_features_integration_test": 16,
+"pad_reach_test": 59,
+"pad_shortcuts_test": 33,
+"parity_mining_test": 62,
+"parity_test": 55,
+"party_test": 102,
+"plan_continuity_test": 15,
+"play_test": 40,
+"player_family_test": 89,
+"player_homestead_test": 60,
+"player_journey_test": 80,
+"polish_p2_test": 110,
+"presence_test": 37,
+"profile_test": 12,
+"prop01_cancel_site_test": 7,
+"prop02_fitting_owner_test": 13,
+"prop03_eviction_site_test": 5,
+"prop04_guest_house_name_test": 5,
+"prop05_guest_sale_test": 8,
+"prop06_estate_transaction_test": 61,
+"prop06_migration_property_test": 10,
+"property_test": 123,
+"prospecting_test": 73,
+"pursuit_test": 35,
+"quarry_test": 39,
+"recf1_test": 28,
+"recorder_detail_test": 11,
+"recorder_neutrality_test": 5,
+"recorder_test": 214,
+"refuge_test": 59,
+"reg01_journey_reload_route_test": 8,
+"reg02_departure_debts_test": 12,
+"reg02_journey_migration_test": 5,
+"reg03_courier_sender_dies_test": 7,
+"reg06_household_change_live_test": 15,
+"reg08_stranded_route_job_test": 9,
+"region_demand_test": 11,
+"region_geography_test": 992,
+"region_sim_test": 8,
+"region_trade_test": 23,
+"region_travel_test": 71,
+"regional_food_test": 48,
+"regional_test": 71,
+"regions_test": 120,
+"relations_test": 80,
+"reserve_test": 43,
+"road_types_test": 14,
+"road_wear_test": 40,
+"run_tests": 3608,
+"sav01_famine_reload_test": 5,
+"sav02_day_state_test": 6,
+"sav03_counter_reload_test": 6,
+"sav03_reservations_reload_test": 6,
+"sav04_reload_determinism_test": 13,
+"save_continuity_test": 5,
+"save_exact_test": 15,
+"save_tolerance_test": 5,
+"save_transfer_test": 21,
+"seed_traveler_test": 48,
+"self_trade_payer_test": 11,
+"services_d2_test": 92,
+"services_test": 51,
+"settle_food_test": 86,
+"settle_review_test": 112,
+"settlement_crafter_test": 25,
+"settlement_development_test": 32,
+"settlement_folk_test": 36,
+"settlement_life_test": 54,
+"settlement_test": 89,
+"sharpen_test": 11,
+"sim_f2_test": 33,
+"sim_f3_test": 17,
+"skilled_employment_test": 54,
+"skills_test": 36,
+"smith_forge_purchase_test": 11,
+"stall_putup_test": 11,
+"stall_rent_pitch_test": 22,
+"stalls_test": 104,
+"start_test": 523,
+"station_tap_test": 25,
+"stone_test": 105,
+"succession_test": 26,
+"sword_visual_test": 43,
+"table_preview_test": 17,
+"tailor_barber_test": 23,
+"tax_test": 34,
+"terrain_test": 35,
+"till_ownership_test": 71,
+"trade_skills_test": 96,
+"travel_perf_test": 1,
+"travel_river_test": 21,
+"trd01_guest_stall_settle_test": 8,
+"trd02_merchant_net_earnings_test": 6,
+"trd03_player_chest_claims_test": 6,
+"trd04_stranded_shipment_test": 10,
+"treasury_test": 23,
+"tree_test": 45,
+"underground_ext_test": 113,
+"underground_struct_test": 90,
+"underground_test": 95,
+"wanted_indicator_test": 16,
+"water_test": 67,
+"wear_transfer_test": 36,
+"wiki_test": 144,
+"wildlife_test": 61,
+"wilds_test": 72,
+"workplace_reach_test": 4,
+"world_test": 339,
+"x20_android_ui_test": 95
+},
+"full_shards": 12
+}
+}
