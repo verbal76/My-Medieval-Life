@@ -144,7 +144,7 @@ func stock_work(s: Dictionary, id: String, qty: int, actor: PlayerState = null) 
 		return w.mirror("business.works.stock_work", stock_work.bind(s, id, qty), [s, id, qty])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, stock_work.bind(s, id, qty))
-	if not biz.is_mine(s):
+	if not biz.may_run(s):
 		return "That is not your stall."
 	if qty <= 0 or not GameData.items.has(id) or qty > biz.listable(id):
 		return "You do not have that many that you can set aside."

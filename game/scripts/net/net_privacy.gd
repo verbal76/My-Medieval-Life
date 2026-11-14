@@ -22,9 +22,9 @@ extends RefCounted
 
 const PLAYER := "player"
 ## B42-MP-PANTRY-PRIVACY (owner decision 2026-11-14): "Household pantry information is private by default. Other players may access it
-## only through explicitly authorized sharing permissions." The MP-05 tier that shares a player household's pantry: tier 3 (property
-## use), the least permissive, as no owner wording names one for a pantry (an agent decision, reported).
-const PANTRY_TIER := 3
+## only through explicitly authorized sharing permissions." The MP-05 tier that shares a player household's pantry: tier 2 and above
+## (B42-Q-PANTRY-TIER, owner 2026-11-14: "Tier 2 and 3: moderate sharing also shows the pantry"); tier 1 (materials) does not.
+const PANTRY_TIER := 2
 ## The fields of a player household read from what it holds: its pantry, and the economy figures worked out from it (days of food).
 const PANTRY_FIELDS := ["econ", "unsustainable_days"]
 
@@ -114,7 +114,7 @@ static func filter(d: Dictionary, ref: String, w: World = null) -> void:
 
 ## B42-MP-PANTRY-PRIVACY: the households (World.to_dict order, one per World.households index) as guest `ref` may see them. A player
 ## household (a player couple's, Life.is_couple; a player's with a villager partner, Guardianship.player_household) keeps its pantry
-## and the figures read from it for its own players and for a player one of them shares property with (PANTRY_TIER); for anyone else
+## and the figures read from it for its own players and for a player one of them shares with at PANTRY_TIER or above; for anyone else
 ## it is sent without them (an empty pantry, "pantry_private"). A household of villagers only is sent as it is.
 static func _households(list: Array, ref: String, w: World) -> Array:
 	var out := []

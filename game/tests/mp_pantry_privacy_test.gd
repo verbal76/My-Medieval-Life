@@ -4,8 +4,8 @@ extends SceneTree
 ## sessions, reconnects, and save/load." What the host sends a guest (the welcome, NetSession.welcome_view; every section sync,
 ## NetSession._private_for before NetSync.changed) holds a player household's pantry, and the figures read from it (`econ`), only for
 ## that household's own players (a player couple's two players, Life.is_couple; a player married to a villager, whose household it is,
-## Guardianship.player_household) and for a player another of them shares property with (MP-05 tier 3, the least permissive tier: no
-## owner wording names a tier for a pantry). Everyone else's copy holds the household without them. Villagers' own households stay as
+## Guardianship.player_household) and for a player one of them shares with at MP-05 tier 2 or 3 (B42-Q-PANTRY-TIER, owner 2026-11-14)
+## Everyone else's copy holds the household without them. Villagers' own households stay as
 ## they were. The host's world is unchanged; the views load on a guest; they hold across the host's save and load and a reconnect.
 ## In the MP-07 style (mp07_private_records_test): the view checked as the JSON text that goes over the wire.
 ##   godot --headless --path game -s tests/mp_pantry_privacy_test.gd
@@ -95,16 +95,15 @@ func _init() -> void:
 	check(has_goods(view_hh(w, bran.pid), hc), "Bran: his own household's pantry whole")
 	check(JSON.stringify(w.to_dict().households) == host_before, "the host's world is unchanged by the views")
 
-	# 2. sharing: tier 3 (property) with one of the couple shares the pantry; tiers 1 and 2 do not
-	for t in [1, 2]:
+	# 2. sharing (B42-Q-PANTRY-TIER, owner 2026-11-14: "Tier 2 and 3: moderate sharing also shows the pantry"): tier 1 does not
+	check(w.player_offer("asset_share", cat.pid, "", 1, ann) == "", "setup: Ann offers Cat tier 1")
+	w.player_answer(int(w.offers.back().id), true, cat)
+	check(w.asset_share_tier(aref, cref) == 1 and not has_goods(view_hh(w, cat.pid), hc), "Cat with tier 1 from Ann: still no pantry")
+	for t in [2, 3]:
 		check(w.player_offer("asset_share", cat.pid, "", t, ann) == "", "setup: Ann offers Cat tier %d" % t)
 		w.player_answer(int(w.offers.back().id), true, cat)
-		check(w.asset_share_tier(aref, cref) == t and not has_goods(view_hh(w, cat.pid), hc), "Cat with tier %d from Ann: still no pantry" % t)
-	check(w.player_offer("asset_share", cat.pid, "", 3, ann) == "", "setup: Ann offers Cat tier 3")
-	w.player_answer(int(w.offers.back().id), true, cat)
-	check(w.asset_share_tier(aref, cref) == 3, "setup: tier 3 agreed")
-	c_hh = view_hh(w, cat.pid)
-	check(has_goods(c_hh, hc) and not has_goods(c_hh, hv), "Cat with tier 3 from Ann: Ann's household pantry sent, the host's still not")
+		c_hh = view_hh(w, cat.pid)
+		check(w.asset_share_tier(aref, cref) == t and has_goods(c_hh, hc) and not has_goods(c_hh, hv), "Cat with tier %d from Ann: Ann's household pantry sent, the host's still not" % t)
 
 	# 3. the sync: a change to the couple's pantry goes to its players, never to anyone else
 	w.asset_share_revoke(cat.pid, ann)

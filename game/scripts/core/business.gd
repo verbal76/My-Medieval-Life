@@ -357,6 +357,29 @@ func is_mine(s: Dictionary) -> bool:
 	return w.is_acting_ref(w.tenant_of(s))            # MP C4: the acting player's (a guest's stall is not the host's)
 
 
+## B42-Q-MP02-TIER3 (owner, 2026-11-14: "Tier 3 partners too: a tier-3 partner can also manage the stall"): the player whose stall or
+## shop this is (the pitch's or built stall's tenant, the shop's opener), "" for none or a villager's.
+func holder_ref(s: Dictionary) -> String:
+	if s.is_empty():
+		return ""
+	var r := str(s.get("by", World.PLAYER)) if is_shop(s) else w.tenant_of(s)
+	return r if World.is_player_ref(r) else ""
+
+
+## B42-Q-MP02-TIER3: whether `ref` (default the acting player) is another player's MP-05 tier-3 partner for this stall or shop: its
+## holder shares property use with them (World.asset_share_tier).
+func partner_runs(s: Dictionary, ref := "") -> bool:
+	var me := ref if ref != "" else w.acting_ref()
+	var h := holder_ref(s)
+	return h != "" and h != me and w.asset_share_tier(h, me) >= 3
+
+
+## Whether the acting player may run the stall or shop day to day: its own (is_mine) or, as a tier-3 partner, its holder's
+## (B42-Q-MP02-TIER3). Giving it up, enlarging it and its production orders stay with the holder (NetActions.HOLDER_ONLY).
+func may_run(s: Dictionary) -> bool:
+	return is_mine(s) or partner_runs(s)
+
+
 func _daily_premises() -> void:
 	for s in premises():
 		if is_shop(s) and not is_mine(s):
@@ -651,7 +674,7 @@ func list_item(s: Dictionary, id: String, qty: int, actor: PlayerState = null) -
 		return w.mirror("business.list_item", list_item.bind(s, id, qty), [s, id, qty])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, list_item.bind(s, id, qty))
-	if not is_mine(s):
+	if not may_run(s):
 		return "That is not your stall."
 	if not can_list(id) or qty <= 0:
 		return "That cannot be sold."
@@ -957,7 +980,7 @@ func store_item(s: Dictionary, id: String, qty: int, actor: PlayerState = null) 
 		return w.mirror("business.store_item", store_item.bind(s, id, qty), [s, id, qty])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, store_item.bind(s, id, qty))
-	if not is_shop(s) or not is_mine(s):
+	if not is_shop(s) or not may_run(s):
 		return "There is no back room here."
 	if not can_list(id) or qty <= 0 or qty > listable(id):
 		return "You cannot store that."
@@ -1058,7 +1081,7 @@ func hire(s: Dictionary, n: NPC, actor: PlayerState = null) -> String:
 		return w.mirror("business.hire", hire.bind(s, n), [s, n])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, hire.bind(s, n))
-	if not is_mine(s):
+	if not may_run(s):
 		return "That is not your stall."
 	if attendant_of(s) != null:
 		return "You have an attendant already."

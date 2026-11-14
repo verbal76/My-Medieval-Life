@@ -119,7 +119,7 @@ static func show(ui: GameUI, id: String, pick := {}) -> void:
 			FitWindow.show(ui, id)
 			return
 		return
-	if not biz.is_mine(s):
+	if not biz.may_run(s):                        # B42-Q-MP02-TIER3: its holder's, or a tier-3 partner's to run with them
 		if Stalls.is_built(s):
 			_others_view(ui, w, s)
 			return
@@ -130,7 +130,8 @@ static func show(ui: GameUI, id: String, pick := {}) -> void:
 	var rent := biz.rent_of(s)
 	var b: Dictionary = biz.building_of(s)
 	var what := "shop" if shop else "stall"
-	ui._open("stall", ("Your shop  ·  a %s  ·  " % w.fitting.trade(b) if shop else ("Your larger market stall  ·  " if bool(s.get("large", false)) else "Your market stall  ·  ")) + "you have %d coins" % p.coins)
+	var shared := not biz.is_mine(s)             # a tier-3 partner's window: the holder's stall, run with them
+	ui._open("stall", ("%s (shared)  ·  " % w.ref_name(biz.holder_ref(s), true) if shared else "") + ("Your shop  ·  a %s  ·  " % w.fitting.trade(b) if shop else ("Your larger market stall  ·  " if bool(s.get("large", false)) else "Your market stall  ·  ")) + "you have %d coins" % p.coins)
 	if not pick.is_empty():
 		_picker(ui, w, s, pick)
 	var owing := int(s.get("missed", 0)) > 0
@@ -185,14 +186,14 @@ static func show(ui: GameUI, id: String, pick := {}) -> void:
 			var why := biz.withdraw(s, put)
 			ui.message(why if why != "" else "You take %d coins from the till." % put, 4.0, "" if why != "" else "money")
 			show(ui, id), biz.stalls.withdrawable(s) >= put if biz.stalls.is_market(s) else till >= put, acts)
-	if not built:
+	if not built and not shared:
 		ui._button("Give up the pitch" if not shop else "Close the shop", func():
 			ui.message(biz.close(s), 4.0, "trade")
 			ui.hide_all(), true, acts)
 	if shop:
 		ui._button("Fit out the room", func(): FitWindow.show(ui, id), true, acts)
 		ui._label(w.fitting.summary(b), 14)
-	elif not bool(s.get("large", false)) and not built:
+	elif not bool(s.get("large", false)) and not built and not shared:
 		var why := biz.upgrade_refusal(s)
 		ui._button("Larger stall: %d coins, then %d a day" % [int(GameData.b("stall_large_cost")), int(GameData.b("stall_large_rent_day"))], func():
 			var r := biz.upgrade(s)

@@ -74,9 +74,11 @@ static var clock := Callable()
 ## the premises. The premises (the first argument) must be named, a pitch or stall by its id ({"$r": "stall"}) or a shop by its
 ## building ({"$r": "shop"}), never sent as a record (a made-up copy with a full till would be paid out as the guest's own), and must
 ## be the guest's own to run (Business.is_mine read as the guest: the pitch it rents, the stall it built, a shop in a room it holds).
-## Another player's, a villager's or a merchant's stall is refused whatever the verb would check itself, as the host's own window
-## never offers them. Sharing (MP-05) does not extend to running a stall: only its holder runs it (open question M2-Q2). The
-## management verbs are instant in single player (no timed action), so none is PACED.
+## Another player's (but see below), a villager's or a merchant's stall is refused whatever the verb would check itself, as the host's
+## own window never offers them. B42-Q-MP02-TIER3 (owner, 2026-11-14: "Tier 3 partners too: a tier-3 partner can also manage the
+## stall"): a player with an MP-05 tier-3 agreement with the holder runs it too (Business.may_run), with its own pack and purse, but
+## giving it up, enlarging it and its production orders stay with the holder (HOLDER_ONLY: MP-05, "Ownership, sale authority, and
+## demolition authority are not transferred"). The management verbs are instant in single player (no timed action), so none is PACED.
 const PREMISES_VERBS := {"business.list_item": [TYPE_STRING, TYPE_INT], "business.unlist": [TYPE_STRING, TYPE_INT],
 	"business.collect": [], "business.deposit": [TYPE_INT], "business.withdraw": [TYPE_INT], "business.close": [],
 	"business.pay_arrears": [], "business.fetch": [TYPE_STRING, TYPE_INT], "business.dismiss": [],
@@ -86,6 +88,10 @@ const PREMISES_VERBS := {"business.list_item": [TYPE_STRING, TYPE_INT], "busines
 	"business.works.add_order": [TYPE_STRING, TYPE_INT, TYPE_INT], "business.works.cancel_order": [TYPE_INT],
 	"business.works.stock_work": [TYPE_STRING, TYPE_INT], "business.works.fetch_work": [TYPE_STRING, TYPE_INT],
 	"business.works.shelve": [TYPE_STRING, TYPE_INT]}
+## B42-Q-MP02-TIER3: the management verbs only the holder may ask, never a tier-3 partner (an agent decision, provisional): giving up
+## the pitch or closing the shop ends the holder's tenancy or licence, a larger stall raises the holder's rent, and orders are made
+## at the holder's own stations.
+const HOLDER_ONLY := ["business.close", "business.upgrade", "business.works.add_order", "business.works.cancel_order"]
 ## MML-MP-02: what a verb's prediction on the guest's machine may have changed in its copy beyond its own character: those sections
 ## go to it again after the request (NetSession.apply_requests), applied or refused, so a guess the host did not make (a refusal,
 ## someone first) is put right at once rather than at the section's next change.
@@ -311,8 +317,10 @@ static func premises_refusal(w: World, p: PlayerState, path: String, raw: Array,
 			TYPE_OBJECT:
 				if not (v is NPC):
 					return "They cannot work for you."
-	if not bool(w.as_actor(p, w.business.is_mine.bind(args[0]))):
+	if not bool(w.as_actor(p, w.business.may_run.bind(args[0]))):
 		return mine
+	if path in HOLDER_ONLY and not bool(w.as_actor(p, w.business.is_mine.bind(args[0]))):
+		return "Only its holder can do that."            # B42-Q-MP02-TIER3: a tier-3 partner runs it, never gives it up
 	if path == "business.stalls.open" and str(args[1]) != w.player_ref(p):
 		return "That is not yours."
 	return ""

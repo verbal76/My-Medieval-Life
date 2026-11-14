@@ -255,7 +255,7 @@ func close(s: Dictionary, why := "closed") -> Dictionary:
 
 ## Why the stall cannot be opened by `ref` now, or "".
 func open_refusal(s: Dictionary, ref: String) -> String:
-	if s.is_empty() or is_merchant_stall(s) or not w.holds(ref, s):
+	if s.is_empty() or is_merchant_stall(s) or not (w.holds(ref, s) or biz.partner_runs(s, ref)):     # B42-Q-MP02-TIER3: or a tier-3 partner
 		return "It is not your stall."
 	if is_open(s):
 		return "It is open already."

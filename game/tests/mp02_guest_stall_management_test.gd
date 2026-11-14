@@ -258,6 +258,7 @@ func _init() -> void:
 	check(not vill.is_empty(), "setup: a villager's stall")
 	for other in [hal_pitch, vill].filter(func(x): return not x.is_empty()):
 		forged_all(other)
+	partner_section(hal, hal_pitch)
 	check(str(hw.as_actor(hal, hw.business.close.bind(hal_pitch))) != "", "setup: Hal gives up his pitch")
 	hw.player.coins = maxi(hw.player.coins, 500)
 	var host_pitch: Dictionary = hw.business.free_pitch()
@@ -412,6 +413,56 @@ func forged_all(other: Dictionary) -> void:
 			refused += 1
 	check(refused == tried and js(other) == snap and g.coins == gc and g.inv.count("plank") + g.inv.count("bread") == gp and hw.total_coins() == coins_b,
 		"forged: every management verb on %s's stall is refused, nothing changes (%d of %d refused)" % [hw.ref_name(hw.holder_of(other), false), refused, tried])
+
+
+## B42-Q-MP02-TIER3 (owner, 2026-11-14: "Tier 3 partners too: a tier-3 partner can also manage the stall"): the guest runs Hal's
+## stall only while Hal shares with it at MP-05 tier 3, with its own pack and purse; giving it up and enlarging it stay Hal's; tier 2
+## and no agreement are refused as before.
+func partner_section(hal: PlayerState, hp: Dictionary) -> void:
+	var raw = NetActions.enc(hw, hp)
+	var href := hw.player_ref(hal)
+	g.pos = hw.business.use_cell(hp)
+	hal.pos = g.pos
+	g.inv.add("plank", 3)
+	var agree_tier := func(t: int) -> void:
+		hw.player_offer("asset_share", g.pid, "", t, hal)
+		hw.player_answer(int(hw.offers.back().id), true, g)
+	agree_tier.call(2)
+	check(hw.asset_share_tier(href, gref) == 2, "partner setup: Hal shares with the guest at tier 2")
+	var snap := js(hp)
+	check(not bool(forged("business.list_item", [raw, "plank", 1]).ok) and not bool(forged("business.withdraw", [raw, 1]).ok) and js(hp) == snap,
+		"tier 2: the guest cannot run Hal's stall")
+	agree_tier.call(3)
+	check(hw.asset_share_tier(href, gref) == 3, "partner setup: Hal shares with the guest at tier 3")
+	var coins0 := hw.total_coins()
+	var planks0 := goods("plank")
+	var st0 := int(hp.stock.get("plank", 0))
+	pump()                                      # the agreement in the guest's copy (its own pairs: NetPrivacy)
+	gw.business.list_item(gw.business.record(str(hp.id)), "plank", 1)
+	pump()
+	check(last_ok() and int(hp.stock.get("plank", 0)) == st0 + 1, "tier 3: the guest puts a plank of its own up at Hal's stall (%s)" % replies.back().text)
+	agree(str(hp.id), "tier 3 put up")
+	var gc := g.coins
+	check(bool(forged("business.set_price", [raw, "plank", GameData.value("plank") + 3]).ok) and int(hp.prices.plank) == GameData.value("plank") + 3,
+		"tier 3: the guest sets the price at Hal's stall")
+	check(bool(forged("business.deposit", [raw, 5]).ok) and bool(forged("business.withdraw", [raw, 5]).ok) and g.coins == gc,
+		"tier 3: the guest puts coins in Hal's till and takes them out, from and to its own purse")
+	check(bool(forged("business.stalls.close", [raw]).ok) and not hw.business.stalls.is_open(hp), "tier 3: the guest closes Hal's stall and settles it")
+	check(bool(forged("business.stalls.open", [raw, gref]).ok) and hw.business.stalls.is_open(hp), "tier 3: the guest opens Hal's stall")
+	check(not bool(forged("business.stalls.open", [raw, href]).ok), "tier 3: OPEN STALL in Hal's name is still refused (the guest's own only)")
+	snap = js(hp)
+	check(not bool(forged("business.close", [raw]).ok) and not bool(forged("business.upgrade", [raw]).ok) and hw.tenant_of(hp) == href and js(hp) == snap,
+		"tier 3: giving up or enlarging Hal's stall stays Hal's")
+	g.away = true
+	check(not bool(forged("business.list_item", [raw, "plank", 1]).ok), "tier 3: not while the guest is away")
+	g.away = false
+	g.pos = g.pos + Vector2(80, 0)
+	check(not bool(forged("business.list_item", [raw, "plank", 1]).ok), "tier 3: not out of reach")
+	g.pos = hw.business.use_cell(hp)
+	check(hw.total_coins() == coins0 and goods("plank") == planks0, "tier 3: coins and planks conserved")
+	hw.asset_share_revoke(g.pid, hal)
+	check(hw.asset_share_tier(href, gref) == 0 and not bool(forged("business.list_item", [raw, "plank", 1]).ok), "revoked: the guest cannot run Hal's stall again")
+	pump()
 
 
 ## A storeroom the guest holds (its leased plot's house and a storeroom module), as business_test builds the host's.
