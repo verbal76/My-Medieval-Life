@@ -1,12 +1,14 @@
 extends SceneTree
-## REG-03 (Build 25 audit, WP-1; overlaps REG-08 investigation F3; owner decision B25-AUD-REG-08 Q1 OPEN): a courier delivery comes
-## home (CourierService._home) with what it collected (coins asked of the recipient) and any goods sent back. When the sender is
-## no longer alive, _home deposits it at the booth under the sender's own reference, and only that reference can withdraw it
-## (withdraw), so a dead villager's proceeds stay at the booth for ever (counted, out of play). FAILING-FIRST reproduction: a
-## villager merchant sends goods to Wulstead's trader asking 7 coins, dies while they are on the road; the delivery comes home.
-## Who should receive the proceeds (the household or heir, a booth deposit, the manor) is the owner's policy, so no game code
-## changes and this test is not in the CI suite list.
-## What must already hold (and does): nothing is lost or made. What fails today: no deposit is left for a dead sender.
+## REG-03 (Build 25 audit, WP-1; overlaps REG-08 investigation F3). A courier delivery comes home (CourierService._home) with what
+## it collected (coins asked of the recipient) and any goods sent back. Before the owner's rule, a sender who died while it was away
+## had it deposited at the booth under their own reference, which nobody could withdraw. Owner rule 2026-11-12
+## (docs/directives/2026-11-12_extra_life_owner_decisions.md item 2, "Estate + timeout"): "a dead sender's proceeds go to their heir
+## or estate by the existing death rule, as any of their coins". _home now redirects them to the heir (World._heir; with no heir
+## the coins go to the manor and goods stay deposited). Fixture: a villager merchant sends goods to Wulstead's trader asking 7
+## coins and dies while they are on the road; the delivery comes home. Checked: nothing is lost or made; no proceeds are left in a
+## deposit only the dead sender could withdraw; the job records the heir who received them. In CI (tests.yml).
+## Not covered here (reported to the lead, Build 42; owned with the courier and migration work): a sender who has MIGRATED
+## (away != "") is not redirected, and CourierService.interrupt refunds a special delivery's fee to the sender unchecked.
 ##   godot --headless --path game --script res://tests/reg03_courier_sender_dies_test.gd
 
 const ITEM := "copper_ring"
