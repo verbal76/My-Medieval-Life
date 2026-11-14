@@ -32,11 +32,16 @@ jobs:
         with:
           fetch-depth: 2           # the requirements check compares the register with the previous commit
 
-      - name: Fetch the integration branches named by records (the register tests check paths there too)
+      - name: Fetch, check and record the integration branches named by records (the register tests check paths there too)
         run: |
-          for b in staging/my-medieval-life wip/build18 wip/build17 wip/expansion18-preparation wip/expansion19-preparation wip/expansion20-preparation wip/expansion21-preparation; do
-            git fetch --depth=1 origin "$b:refs/remotes/origin/$b" || echo "note: $b not fetched"
-          done
+          # Audit 2026-11-13 (docs/audits/2026-11-13_INHERITED_FAILURES_AUDIT.md on the code line; owner Build 42 directive
+          # section 2): the branches come from the register check's own PATH_REFS (8 here, wip/expansion20 included; no second
+          # list to drift), are fetched from GitHub, compared with GitHub (git ls-remote) and recorded with the commit under
+          # test; a branch that cannot be fetched, a stale ref or a missing HEAD~1 (for --against HEAD~1) fails here as an
+          # ENVIRONMENT failure instead of silently weakening or falsifying the register check.
+          python3 tools/check_test_env.py --fetch --strict --require-authority --candidate "${{ github.sha }}" \
+            --require-commit HEAD~1 --record ci-out/test-env.json
+          cat ci-out/test-env.json
 
       - name: Cache Godot
         id: godot
@@ -62,7 +67,7 @@ jobs:
 
       - name: Python tests and data checks
         run: |
-          python3 -m unittest discover -s tests
+          python3 tools/check_unittest_skips.py   # unittest discover -s tests, failing on an unexpected skip or fewer tests than the floor
           python3 tools/check_interactions.py
           python3 tools/check_requirements.py --against HEAD~1   # no approved requirement lost or closed without a record
           python3 tools/check_resources.py

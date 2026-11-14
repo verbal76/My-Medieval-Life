@@ -22,11 +22,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
-      - name: Fetch the integration branches named by records (paths are checked there too)
+      - name: Fetch, check and record the integration branches named by records (paths are checked there too)
         run: |
-          for b in staging/my-medieval-life wip/build18 wip/build17 wip/expansion18-preparation wip/expansion19-preparation wip/expansion20-preparation wip/expansion21-preparation; do
-            git fetch --depth=1 origin "$b:refs/remotes/origin/$b" || echo "note: $b not fetched"
-          done
+          # Audit 2026-11-13 (docs/audits/2026-11-13_INHERITED_FAILURES_AUDIT.md on the code line; owner Build 42 directive
+          # section 2): the branches come from the register check's own PATH_REFS (8 here, wip/expansion20 included; no second
+          # list to drift), are fetched from GitHub, compared with GitHub (git ls-remote) and recorded with the commit under
+          # test; a branch that cannot be fetched, a stale ref or a missing HEAD~1 (for --against HEAD~1) fails here as an
+          # ENVIRONMENT failure instead of silently weakening or falsifying the register check.
+          python3 tools/check_test_env.py --fetch --strict --require-authority --candidate "${{ github.sha }}" \
+            --require-commit HEAD~1 --record ci-out/test-env.json
+          cat ci-out/test-env.json
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"

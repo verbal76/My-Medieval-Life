@@ -1,0 +1,6 @@
+{
+ "format": "mml-unittest-expectations/1",
+ "_why": "tools/check_unittest_skips.py (audit docs/audits/2026-11-13_INHERITED_FAILURES_AUDIT.md on the code line): a skip not listed here, or fewer tests than min_tests, fails. Lowering min_tests or adding a skip needs its reason in the commit that does it; adding tests needs no change. min_tests measured on the records branch (64a6157 plus the environment tests): 129 tests (with the pre-push hook tests), no skips.",
+ "min_tests": 129,
+ "expected_skips": {}
+}
