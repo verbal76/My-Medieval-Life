@@ -1274,6 +1274,7 @@ const _UNMET := ["missed_meal_", "station_busy_", "starved_", "skill_short_", "k
 	"farm_plot_no_ground", "farm_plot_cannot_afford", "supports_failed", "work_refused", "assay_refused", "proposals_refused",
 	"proposals_declined", "contracts_lapsed", "contracts_unsigned", "credit_defaulted", "wage_unpaid"]
 var _day_seen := -1                     # the last day whose summaries were written
+var _earmark_first := {}                # B42: "owner:item" -> {day, cause} of each earmark first found short after a dawn reconcile
 var _spoiled_seen := {}                 # B42: the world's spoiled_<item> counters at the last dawn check (earmark_short causes)
 var _jstats_seen := {}                  # judgment stats at the last judgment_day
 var _bstats_seen := {}                  # bonds stats at the last judgment_day
@@ -1737,10 +1738,13 @@ static func unbacked_split(ec) -> Dictionary:
 func _earmark_causes(list: Array) -> String:
 	var out := []
 	for u in list:
+		var key := "%s:%s" % [str(u.owner), str(u.item)]
 		var k := "spoiled_" + str(u.item)
 		var n := int(float(w.stats.get(k, 0.0)) - float(_spoiled_seen.get(k, 0.0)))
-		out.append("%s:%s short %d, likely %s" % [str(u.owner), str(u.item), int(u.short),
-			("spoilage (%d %s spoiled in the village since the last dawn)" % [n, str(u.item)]) if n > 0 else "unknown (death, theft or tax; not attributable from the counters)"])
+		var cause := ("spoilage (%d %s spoiled in the village since the last dawn)" % [n, str(u.item)]) if n > 0 else "unknown (death, theft or tax; not attributable from the counters)"
+		if _earmark_first.has(key) and n <= 0:
+			cause = "still short since day %d (first: %s)" % [int(_earmark_first[key].day), str(_earmark_first[key].cause)]
+		out.append("%s short %d, likely %s" % [key, int(u.short), cause])
 	return ", ".join(out)
 
 
@@ -1763,6 +1767,11 @@ func economy_after_dawn(d: int) -> void:
 	factor(ev, "model", "earmark_short", split.earmark.size(), "count", "economy_model")
 	if not split.earmark.is_empty():
 		factor(ev, "model", "earmark_short_claims", _earmark_causes(split.earmark), "text", "economy_model")
+	var still := {}
+	for u in split.earmark:
+		var key := "%s:%s" % [str(u.owner), str(u.item)]
+		still[key] = _earmark_first.get(key, {"day": d, "cause": _earmark_causes([u]).get_slice(", likely ", 1)})
+	_earmark_first = still                      # claims no longer short are forgotten
 	end(ev, "ok" if ub.is_empty() else "failed", "", "")
 	if not ub.is_empty():
 		alert("violation", "economy.unbacked_reservation", "world", "unbacked=%d after the dawn reconcile; %s" % [ub.size(), _claims_text(ub)], ev)
