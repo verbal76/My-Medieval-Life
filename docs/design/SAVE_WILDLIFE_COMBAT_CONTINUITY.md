@@ -34,6 +34,7 @@ rules require."
 | An animal's stroll goal, wait, moving flag and facing | each animal picks a new stroll |
 | An animal's hunt (`hunt`) | `Fauna.claims` is rebuilt from the villagers' saved plans (`World._rebuild_reservations`); a wild predator chooses prey again |
 | An animal's anger at someone, its time left and its bite cooldown, a one-off animation (`anger`, `anger_left`, `bite_cd`, `act`) | the animal is calm; it can be angered again by the ordinary rules (being struck, hunger near people) |
+| A struck animal's flight (B25-ANIMAL-HUNT-AI, Build 40): `startle_left`, `alarm`, `alarm_left`, `run_dir`, `zig_left`, `zig_side`, `slide`, `pause_left`, `breaking`, `at_bay` | the animal is calm where it stood, with its health; struck again it is startled and runs by the ordinary rules (`Fauna.provoke`). A flight lasts seconds (`wildlife.struck.flee_seconds` 6, then while the attacker is within `calm_distance`), and nothing a rule reads later depends on it: a hunter's claim on prey is rebuilt from the saved plans. `zig_side` and `slide` outlive one flight (they are not reset on calming), so the first leg of a later flight may bend the other way than in the never-saved game: part of the non-equivalence above |
 | A villager's fight: `target`, `target_ref`, `chase_route`, `attack_cd` | the villager decides afresh; a bandit, a guard or anyone attacked may take the fight up again by the ordinary rules. Wounds (health) are kept |
 | A walk's path (`path`, `path_i`) and the view's `trail`, `live` | the path is found again from the saved plan step |
 | `World.tree_damage`, axe blows in a standing tree | the tree stands whole (blows heal in play too) |
@@ -46,13 +47,16 @@ fight that must be resumed exactly), that is SAV-04 option (b): save the transie
 ## Verification
 
 `game/tests/sav04_reload_determinism_test.gd` (seed 1, two days, then a villager fighting another, a wolf or bear angered at a
-villager and a tree with axe blows; saved a quarter of an hour into the fight):
+villager, a tree with axe blows and a wild grazer struck by a villager and running; saved a quarter of an hour into the fight and
+a second and a half into the flight):
 
 1. every animal, pen, villager's health and place and hunter's claim survives the save (ND-15 tolerance for fractions);
-2. the transients above are reset after loading, not half kept;
+2. the transients above are reset after loading, not half kept; since Build 42 the world is also saved with a struck wild animal
+   mid-flight: it loads calm (its ten flight fields at their defaults), alive, with its health and place, and, struck again after
+   the load, runs and calms down by the ordinary rules;
 3. saving straight after loading writes the same save again (within ND-15's tolerance);
 4. the save loaded twice independently, and loaded, saved and loaded again, go on identically for six game hours: the whole saved
-   world and the transients the save leaves out.
+   world and the transients the save leaves out (the flight fields among them).
 
 `save_continuity_test` (three days, villagers and animals) and `plan_continuity_test` (plans) check the same guarantee for the
 rest of the world.
