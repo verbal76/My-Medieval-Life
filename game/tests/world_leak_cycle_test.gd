@@ -57,6 +57,18 @@ func settle() -> void:
 		await process_frame          # queue_free'd nodes go, deferred calls run
 
 
+## The process's resident memory in MB (Linux /proc; 0 elsewhere): a report only, never checked (it moves with the allocator).
+func _rss_mb() -> float:
+	var f := FileAccess.open("/proc/self/status", FileAccess.READ)
+	if f == null:
+		return 0.0
+	while not f.eof_reached():             # (procfs files report no length: read line by line)
+		var line := f.get_line()
+		if line.begins_with("VmRSS:"):
+			return float(line.split(":")[1].strip_edges().split(" ")[0]) / 1024.0
+	return 0.0
+
+
 func _objects() -> int:
 	return int(Performance.get_monitor(Performance.OBJECT_COUNT))
 
@@ -72,6 +84,7 @@ func _run() -> void:
 	check(main.world != null and main.world.load_error == "", "a new world started")
 	save_and_quit_to_title()
 	await settle()
+	print("first world, on the title: resident %.0f MB" % _rss_mb())
 	var counts: Array = [_objects()]
 	var mem: Array = [Performance.get_monitor(Performance.MEMORY_STATIC)]
 	var prev: WeakRef = weakref(main.world)
@@ -87,7 +100,7 @@ func _run() -> void:
 		await settle()
 		counts.append(_objects())
 		mem.append(Performance.get_monitor(Performance.MEMORY_STATIC))
-		print("cycle %d on the title: %d objects, static memory %.1f MB" % [c + 1, counts[-1], mem[-1] / 1048576.0])
+		print("cycle %d on the title: %d objects, static memory %.1f MB, resident %.0f MB" % [c + 1, counts[-1], mem[-1] / 1048576.0, _rss_mb()])
 	# the first cycles warm caches; the growth from the second to the last is the per-world leak
 	var grow := (int(counts[-1]) - int(counts[1])) / float(maxi(1, cycles - 1))
 	print("objects on the title per cycle: %s (growth %.1f a cycle after the first)" % [str(counts), grow])
