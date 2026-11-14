@@ -1112,15 +1112,35 @@ func _expire(j: Dictionary, day: float) -> void:
 		var hc: NPC = w._heir(dc) if dc != null else null
 		payer = "npc:%d" % hc.id if hc != null else ""
 	var refund := 0
-	if payer != "" and alive(payer) and alive(to) and str(j.kind) == "route":
+	if payer != "" and alive(payer) and (alive(to) or moved != "") and str(j.kind) == "route":
 		refund = mini(int(j.fee), coins_of(payer))
 		if refund > 0:
 			add_coins(payer, -refund)
-			add_coins(to, refund)
+			if alive(to):
+				add_coins(to, refund)
+			elif not _forward(moved, to, refund, {}, day):      # REG-03/REG-05: sent on to a migrated sender's new home
+				b.coins = int(b.coins) + refund                 # (no route there: kept for them at the booth)
+				var dep: Dictionary = (b.deposits as Dictionary).get(to, {"coins": 0, "items": {}})
+				dep.coins = int(dep.coins) + refund
+				b.deposits[to] = dep
 	j.state = "returned"
 	j.outcome = "expired"
 	j["refunded"] = refund
 	j.history.append([day, "not carried within %d days: goods returned, %d of the %d fee refunded" % [int(float((cfg().get("routes", {}) as Dictionary).get("wait_days", 7))), refund, int(j.fee)]])
+	# B42-REG08-SHORTFALL (owner 2026-11-14: the cap approved; "Record any unpaid shortfall so it remains visible and auditable"):
+	# what of the unearned fee could not be refunded (the payer or their heir short of coins, no heir, nobody to refund to) is
+	# recorded on the delivery (saved with it), counted, and written in its history and the village log, naming the payer. No coin
+	# is made to cover it.
+	var short := int(j.fee) - refund if str(j.kind) == "route" else 0
+	if short > 0:
+		var who := payer if payer != "" else str(j.courier)
+		j["refund_shortfall"] = short
+		j["refund_payer"] = who
+		j.history.append([day, "unpaid refund: %d of the %d fee (payer %s%s paid %d)" % [short, int(j.fee), who, "" if payer != "" else ", dead with no heir,", refund]])
+		if w != null:
+			w.stat("courier_refund_shortfall", float(short))
+			w.stat("courier_refund_shortfall_cases")
+			w.note("The courier booth owes %s %d coins of an unearned fee that %s could not refund (%d of %d paid)." % [w.ref_name(to, false) if alive(to) else to, short, w.ref_name(who, false) if alive(who) else who, refund, int(j.fee)])
 	if w != null:
 		w.stat("courier_expired")
 
@@ -1752,7 +1772,7 @@ static func from_dict(world, d: Dictionary) -> CourierService:
 		var c: Dictionary = (j as Dictionary).duplicate(true)
 		for k in ["fee", "carried_coins"]:
 			c[k] = int(c.get(k, 0))
-		for k in ["send_coins", "send_coins_out"]:            # REG-03/REG-05: coins sent on to a migrated sender (optional)
+		for k in ["send_coins", "send_coins_out", "refunded", "refund_shortfall"]:      # optional: REG-03/REG-05 coins sent on, REG-08 refund and its shortfall
 			if c.has(k):
 				c[k] = int(c[k])
 		c["agreement"] = int(c.get("agreement", -1))
