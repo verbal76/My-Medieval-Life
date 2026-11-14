@@ -6382,6 +6382,8 @@ func _save_written(r: Dictionary, d: Dictionary, show: bool) -> bool:
 		save_failing = true
 		return false
 	save_failing = false
+	for k in r.get("kept_newer", []):  # B42: a newer version's save found in the way was moved aside unchanged: say where
+		ui.message("A save made by a newer version of the game was found and kept unchanged as %s." % str(k).get_file(), 12.0)
 	if world != null and world.recorder != null:
 		world.recorder.saved(d)        # REC-19
 	_update_linked_copy()
@@ -6494,6 +6496,9 @@ func _keep_previous_game() -> void:
 	var src := save_path if r.state == "ok" else save_path + SaveStore.BAK
 	if SaveStore.inspect(src, World.SAVE_VERSION).state != "ok":
 		return
+	if FileAccess.file_exists(prev) and SaveStore.newer(prev):
+		if SaveStore.preserve(prev, "newer") == "":   # B42: a newer version's previous game is moved aside unchanged, never removed
+			return                                    # (and nothing is put in its place)
 	if FileAccess.file_exists(prev) and not _keep_expired_demo(prev) and not _keep_cross_edition_previous(prev, src):
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(prev))
 	DirAccess.rename_absolute(ProjectSettings.globalize_path(src), ProjectSettings.globalize_path(prev))

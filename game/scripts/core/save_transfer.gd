@@ -48,6 +48,8 @@ static func export_save(path: String, target: String) -> Dictionary:
 	var s := read_save(path)
 	if not s.ok:
 		return s
+	if SaveStore.newer(target):
+		return {"ok": false, "reason": "the chosen file holds a save made by a newer version of the game, so it was not written over"}
 	var f := FileAccess.open(target, FileAccess.WRITE)
 	if f == null:
 		return {"ok": false, "reason": "the chosen file could not be written (%s)" % error_string(FileAccess.get_open_error())}
