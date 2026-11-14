@@ -314,7 +314,7 @@ None.
 | B42-DEMO-WINDOW-TITLE | Demo window title does not identify the demo | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | B42-EARMARK-SHORT | Cheese contract's earmarked milk fell from 2 to 1 (npc:39, seed 1, day 9): trace the actual item movement; correct or defective | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | B42-MP-PANTRY-PRIVACY | Multiplayer: household pantry information private by default; shared only by explicit permission | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | unassigned |
-| B42-NET-MP4-STALE | net_mp4_test fails on 0bbee94 and later: after the host is killed or restarted a guest's copy differs (stale values) | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
+| B42-NET-MP4-STALE | net_mp4_test fails on 0bbee94 and later: after the host is killed or restarted a guest's copy differs (stale values) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | B42-Q-EMIG-WORK | Should leaving for work be judged per person (no job and no earnings for about a week) instead of per household? | decision | APPROVED | unassigned |
 | B42-Q-JOB02 | Approve the job-board offered-pay rules (J2-Q1..Q7 as built) and switch them on only after a four-seed with/without year-long comparison? | decision | APPROVED | unassigned |
 | B42-Q-POP-LEVERS | Change population growth levers (birth rate, hunger arrivals, 2% young homesteading, deposit sizes) for Build 42? | decision | APPROVED | unassigned |

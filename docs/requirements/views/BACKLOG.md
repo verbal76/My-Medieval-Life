@@ -136,7 +136,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B42-DEMO-WINDOW-TITLE | Demo window title does not identify the demo | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B42-EARMARK-SHORT | Cheese contract's earmarked milk fell from 2 to 1 (npc:39, seed 1, day 9): trace the actual item movement; correct or defective | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B42-MP-PANTRY-PRIVACY | Multiplayer: household pantry information private by default; shared only by explicit permission | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
-| B42-NET-MP4-STALE | net_mp4_test fails on 0bbee94 and later: after the host is killed or restarted a guest's copy differs (stale values) | approved | OWNER APPROVED | NOT STARTED |
+| B42-NET-MP4-STALE | net_mp4_test fails on 0bbee94 and later: after the host is killed or restarted a guest's copy differs (stale values) | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B42-REG08-SHORTFALL | Courier refund cap: record any unpaid shortfall visibly and auditably (REG-08) | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B42-RELEASE-EXACT-SHA | Release requires all mandatory tests to pass on the exact packaged commit | approved | OWNER APPROVED | INTEGRATED |
 | BRANCH-POL-01 | Branch and worktree policy: one code integration branch (wip/b25r2-rev2 since the owner's 2026-11-08/09 decisions; wip/expansion20 until 2026-11-03), short-lived task branches, prompt audited merges, no unrelated ancestry, records branch separate | approved | OWNER APPROVED | INTEGRATED |
