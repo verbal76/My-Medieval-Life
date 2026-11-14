@@ -228,7 +228,7 @@ None.
 | B25-INV02-D2 | INV-02 spoilage: F1(b) F2(b) F3(b) F4(a) F5(b) F6(b) approved, F7 deferred | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-INV02-SPOIL-D1 | INV-02 food spoilage in every store, with storage conditions: investigate and propose before implementation | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
 | B25-LE-ACTIVATE-D1 | Living Economy activation policy for Build 25 | decision | APPROVED | owner decision |
-| B25-MOVE-STUTTER-INV | Deep investigation: repeated whole-game micro-freezes while walking ("step, freeze, step, freeze"; the game freezes then catches up); root cause before any fix | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
+| B25-MOVE-STUTTER-INV | Deep investigation: repeated whole-game micro-freezes while walking ("step, freeze, step, freeze"; the game freezes then catches up); root cause before any fix | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
 | B25-MP03-OWNERSHIP-D1 | MP-03 property rules: public tables, tavern tables private, owners' household tables, keeper death; host-authoritative parity | approved | INTEGRATED / NOT TESTED / OPEN | unassigned |
 | B25-MP03-TABLES-D1 | MP-03: guests may use genuinely public tables within reach, implemented separately from the MP-03 correction | approved | INTEGRATED / NOT TESTED / OPEN | unassigned |
 | B25-ND12-01 | ND-12: recorder diagnostic line overwritten (refused-trade detail) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | unassigned |

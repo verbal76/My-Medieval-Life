@@ -8468,8 +8468,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -8507,6 +8507,11 @@
      "date": "2026-11-14",
      "change": "assigned_worker: unassigned (lead; ownership proposed 2026-11-14) -> Agent P (Build 42 performance); branch: wip/b25-move-stutter-inv -> wip/b42-stutter",
      "why": "owner directive 2026-11-14 (docs/directives/2026-11-14_b42_movement_stutter_correction.md): investigate, correct and verify; assigned to Agent P on wip/b42-stutter from 0bbee94"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> chunk_prefetch 6/0; desks_faced 5/0; autosave_async 11/0; test_commit: None -> a3c740c; commits + a3c740c; integrated_in + wip/b42-integration 9dffa6e",
+     "why": "Agent P wip/b42-stutter a3c740c: reproduced (seed 1, village -> south gate (66,90) -> Wendholt (180,262) -> Milton -> Elmcote; also east to Ashcombe); confirmed causes: chunk prefetch on the main thread (152 of 215 frames >50 ms, 26-166 ms, every chunk border ~7 s: the step-freeze pattern), hourly autosave (71-165 ms/hour), desk prompt growing 1.1->4.9 ms/frame. Fixed result-neutral: prefetch on a worker (182d76e, 19da97d), background autosave (7f59038), reach-filtered desks (2259b69); frames >50 ms south 222->114 and 279->45, prefetch stalls 113/153->0, east 28->10; tests chunk_prefetch 6/0, desks_faced 5/0, autosave_async 11/0; 10-day hash unchanged. Merged wip/b42-integration 9dffa6e. Remaining: 0.5 s tick, presence materialising, dawn/17:00 frames (change results: owner decision), ow:build drawing (Agent P next, wip/b42-stutter-2); real-hardware smoothness unverified (llvmpipe only)"
     }
    ],
    "lifecycle": "ACTIVE",
@@ -8515,7 +8520,13 @@
    "commits": [
     "12cf1a4",
     "8c78e24",
-    "ab68133"
+    "ab68133",
+    "a3c740c"
+   ],
+   "tests": "chunk_prefetch 6/0; desks_faced 5/0; autosave_async 11/0",
+   "test_commit": "a3c740c",
+   "integrated_in": [
+    "wip/b42-integration 9dffa6e"
    ]
   },
   {

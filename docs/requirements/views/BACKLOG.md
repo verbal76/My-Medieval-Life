@@ -111,7 +111,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B25-INV-P52-BLOCKS | p:52: repeated building-block purchase failures (453 in a row) | approved | OWNER APPROVED | INTEGRATED |
 | B25-INV02-D2 | INV-02 spoilage: F1(b) F2(b) F3(b) F4(a) F5(b) F6(b) approved, F7 deferred | approved | OWNER APPROVED | NOT STARTED |
 | B25-INV02-SPOIL-D1 | INV-02 food spoilage in every store, with storage conditions: investigate and propose before implementation | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
-| B25-MOVE-STUTTER-INV | Deep investigation: repeated whole-game micro-freezes while walking ("step, freeze, step, freeze"; the game freezes then catches up); root cause before any fix | approved | OWNER APPROVED | IN DEVELOPMENT |
+| B25-MOVE-STUTTER-INV | Deep investigation: repeated whole-game micro-freezes while walking ("step, freeze, step, freeze"; the game freezes then catches up); root cause before any fix | approved | OWNER APPROVED | INTEGRATED |
 | B25-MP03-OWNERSHIP-D1 | MP-03 property rules: public tables, tavern tables private, owners' household tables, keeper death; host-authoritative parity | approved | OWNER APPROVED | INTEGRATED |
 | B25-MP03-TABLES-D1 | MP-03: guests may use genuinely public tables within reach, implemented separately from the MP-03 correction | approved | OWNER APPROVED | INTEGRATED |
 | B25-ND12-01 | ND-12: recorder diagnostic line overwritten (refused-trade detail) | approved | OWNER APPROVED | INTEGRATED |
