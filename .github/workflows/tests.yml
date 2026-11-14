@@ -529,6 +529,8 @@ jobs:
           res://tests/mp_g4_loopback_test.gd     # Build 42 G4: MP-05/06/07 between two processes, wire payload tapped (~160 s)
           res://tests/mp02_guest_stall_management_test.gd   # MML-MP-02: a guest (and a tier-3 partner) runs its stall and shop through the host
           res://tests/mp_pantry_privacy_test.gd    # B42: player household pantries private below sharing tier 2
+          res://tests/b42_household_access_test.gd    # B42: household membership grants access independently of sharing tiers (wire, reconnect, save/load)
+          res://tests/b42_newer_save_guard_test.gd    # B42: a newer version's save is never overwritten on any write path (byte-for-byte)
           EOF
           if [ -n "$ONLY" ]; then   # an independent run of named suites: keep only those entries of the list
             for t in $ONLY; do grep -E "^ *$t( |$)" "$RUNNER_TEMP/game.txt" || { echo "unknown suite: $t"; exit 1; }; done > "$RUNNER_TEMP/only.txt"
