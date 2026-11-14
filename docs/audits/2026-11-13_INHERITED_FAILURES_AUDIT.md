@@ -256,3 +256,32 @@ that carries it) proves: the new fetch step on a real shallow CI clone (`--fetch
 credentials, `HEAD~1` present at `fetch-depth: 2`), `ci-out/test-env.json` in the `ci-report` artifact, and
 `check_unittest_skips.py` in shard 0 (201 tests, 1 expected skip). One `requirements.yml` dispatch proves the same for
 that workflow. The records branch's own workflows need the same change (D4 drift) when the lead next edits them.
+
+## 12. The pre-push hook compared with the wrong branch (2026-11-14)
+
+Lead's question: is the hook's staging-only register comparison (D3) still right now that records are edited on
+`wip/requirements-control`? **No.**
+
+- **Rule (REQ-CTRL-01):** a push to any branch other than staging and the records branch must carry a register version the
+  edit point has had. The hook took the edit point to be staging.
+- **What changed:** the register is edited on `wip/requirements-control` (CLAUDE.md section 9a on the records branch;
+  REQ-CTRL-02), and staging is no longer a records target (owner, DOC-RECON-01 2026-10-31, BRANCH-POL-Q1 2026-11-09); its last
+  register change is `aca9ac8` (2026-11-05). Measured 2026-11-14: the records branch has had 746 register versions, 107 of them
+  (the current one included) never on staging. The code branches (`wip/b42-integration`, `wip/b41-stream-candidate`,
+  `wip/b25-preview`) still carry a version staging had, so the fault was latent: the first sync of the current register into
+  a code branch would have been refused.
+- **Direct evidence:** the old hook refuses the push of `docs/b42-records-env-guard` `8bf040b` (a branch of the records
+  branch): "changes the requirements register to a version staging never had", exit 1; the fixed hook accepts it, exit 0.
+- **Second weakness (the same class as this audit):** it fetched with `2>/dev/null` and then judged against whatever
+  `origin/staging` the clone held; in a `--shared` clone that is the source checkout's stale local branch.
+- **Where the hook runs:** `core.hooksPath` is `tools/git_hooks`, relative to the working tree, so the hook in force is the
+  checked-out branch's copy (the main checkout is on `wip/b16-integration`, with the old hook), and an agent clone has no hook
+  until `core.hooksPath` is set (now in the clone recipe).
+- **Fix:** accept a version from the history of `wip/requirements-control` or staging; fetch both from GitHub (a local
+  source's own origin when origin is a checkout); refuse the push if either cannot be fetched. Delete and force-push protection
+  and the `--against` check are unchanged. Records branch: `8bf040b` (fast-forwarded onto `wip/requirements-control` by the
+  lead). Code line: this branch, same file. `tests/test_pre_push_hook.py`: 4 tests (records version accepted, staging version
+  accepted, unknown version refused, unreachable authority refused); the old hook fails 3 of them.
+- **Lesson:** the third instance here of one fact kept in two places that drifted: PATH_REFS vs the CI fetch loops (D4), the
+  register's edit point in CLAUDE.md vs the hook (D3), and the brief's fetch list vs PATH_REFS. Each was right when written;
+  nothing checked that the copies still agreed.

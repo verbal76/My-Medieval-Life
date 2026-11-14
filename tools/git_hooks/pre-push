@@ -1,8 +1,9 @@
 #!/bin/sh
 # Refuse to delete or force-push the staging branch (owner rule: never force-push or delete
 # staging/my-medieval-life). Installed by: git config core.hooksPath tools/git_hooks
-# REQ-CTRL-01 (owner, 2026-10-23): the requirements register is edited on staging only; on any other branch a push may
-# not change it to a version that staging has never had (sync from staging instead).
+# REQ-CTRL-01 (owner, 2026-10-23): the requirements register is edited in one place; on any other branch a push may
+# not change it to a version that place never had (sync from it instead). Since DOC-CONT-01/REQ-CTRL-02 that place is
+# wip/requirements-control (staging's history is still accepted: older synchronized copies came from it).
 # REQ-CTRL-02 (owner, 2026-10-23): wip/requirements-control is the isolated register-consolidation branch, merged into
 # staging only after validation; it may carry register edits staging has not yet had.
 zero=0000000000000000000000000000000000000000
@@ -14,12 +15,25 @@ while read local_ref local_sha remote_ref remote_sha; do
     old=""
     [ "$remote_sha" != "$zero" ] && old=$(git rev-parse -q --verify "$remote_sha:$reg" 2>/dev/null)
     [ "$new" = "$old" ] && continue
-    git fetch -q origin staging/my-medieval-life 2>/dev/null
-    found=$(git log --format=%H origin/staging/my-medieval-life -- "$reg" | while read c; do
-         [ "$(git rev-parse -q --verify "$c:$reg" 2>/dev/null)" = "$new" ] && { echo yes; break; }; done)
+    # Build 42 env guard (2026-11-14): the register is edited on the records branch (CLAUDE.md section 9a, REQ-CTRL-02) and
+    # staging is frozen as a records target (DOC-RECON-01, BRANCH-POL-Q1), so a synchronized copy may be any version either
+    # branch has had. Both are fetched from GitHub (a clone of a local checkout would otherwise read that checkout's stale
+    # local branches), and a fetch that fails refuses the push instead of judging against an old copy.
+    url=$(git remote get-url origin 2>/dev/null)
+    case "$url" in *://*|*@*:*) ;; *) [ -d "$url" ] && url=$(git -C "$url" remote get-url origin 2>/dev/null) ;; esac
+    found=""
+    for b in wip/requirements-control staging/my-medieval-life; do
+      if ! git fetch -q "$url" "+refs/heads/$b:refs/remotes/origin/$b"; then
+        echo "pre-push: could not fetch $b from $url to check the requirements register; push again when it can be reached." >&2
+        exit 1
+      fi
+      found=$(git log --format=%H "origin/$b" -- "$reg" | while read c; do
+           [ "$(git rev-parse -q --verify "$c:$reg" 2>/dev/null)" = "$new" ] && { echo yes; break; }; done)
+      [ "$found" = "yes" ] && break
+    done
     if [ "$found" != "yes" ]; then
-      echo "pre-push: $remote_ref changes the requirements register to a version staging never had." >&2
-      echo "pre-push: edit the register on staging/my-medieval-life only, then copy staging's file here (docs/requirements/SCHEMA.md)." >&2
+      echo "pre-push: $remote_ref changes the requirements register to a version neither wip/requirements-control nor staging ever had." >&2
+      echo "pre-push: the lead edits the register on wip/requirements-control only; copy that branch's file here (docs/requirements/SCHEMA.md)." >&2
       exit 1
     fi
     continue
