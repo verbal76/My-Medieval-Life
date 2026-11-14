@@ -12160,6 +12160,42 @@
    ]
   },
   {
+   "id": "B42-ENVOY-ROUNDTRIP",
+   "kind": "approved",
+   "title": "Reeve's envoys starve on the road home: provisioned for one leg only",
+   "description": "Reeve's envoys starve on the road home: provisioned for one leg only",
+   "source": "docs/audits/2026-11-13_B42_FLIGHT_RECORDER_ANALYSIS.md",
+   "owner_wording": "Classify findings as confirmed defects, legitimate simulation outcomes, or improvement opportunities, with evidence.",
+   "approval": "owner, 2026-11-13 (Build 42 directive: anomalies investigated and fixed)",
+   "acceptance": [
+    "an envoy is provisioned for the round trip from household food within the cap, or not sent; failing-first test; confirmed in the Build 42 365-day campaign"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/audits/2026-11-13_B42_FLIGHT_RECORDER_ANALYSIS.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Agent F (Build 42 regional travel); branch: None -> wip/b42-reg-travel",
+     "why": "assigned to Agent F (wip/b42-reg-travel)"
+    }
+   ],
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "Agent F (Build 42 regional travel)",
+   "branch": "wip/b42-reg-travel"
+  },
+  {
    "id": "B42-MP-PANTRY-PRIVACY",
    "kind": "approved",
    "title": "Multiplayer: household pantry information private by default; shared only by explicit permission",
@@ -12203,6 +12239,47 @@
    "test_commit": "c4b3a6b",
    "commits": [
     "c4b3a6b"
+   ]
+  },
+  {
+   "id": "B42-NAV-STRANDING",
+   "kind": "approved",
+   "title": "Villagers stranded outside the village (140-cell path box, partial paths) and the walk back-off bypass (MML-NPC-01 class)",
+   "description": "Villagers stranded outside the village (140-cell path box, partial paths) and the walk back-off bypass (MML-NPC-01 class)",
+   "source": "docs/audits/2026-11-13_B42_FLIGHT_RECORDER_ANALYSIS.md",
+   "owner_wording": "Classify findings as confirmed defects, legitimate simulation outcomes, or improvement opportunities, with evidence.",
+   "approval": "owner, 2026-11-13 (Build 42 directive: anomalies investigated and fixed)",
+   "acceptance": [
+    "stranded villagers walk home (failing-first reproductions on 0bbee94); back-off counts consecutive failures within a plan; regression suites pass; confirmed in the Build 42 365-day campaign"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/audits/2026-11-13_B42_FLIGHT_RECORDER_ANALYSIS.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: None -> Agent L (Build 42 navigation); branch: None -> wip/b42-nav-stranding; tests: None -> b42_nav_stranding 24/0; b42_chapel_band 8/0; chapel 175/0; test_commit: None -> 6fc514f; commits + 6fc514f",
+     "why": "Agent L wip/b42-nav-stranding 6fc514f: path_far gate/south-road route for outside-to-village walks; back-off reset only by the plan's last walk; b42_nav_stranding_test 24/0 (5-7 fail on 0bbee94), npc01 10/0, 13 regression suites; plus owner B42-Q-BAND-CHAPEL-RELIEF (b42_chapel_band_test 8/0, 2 fail before). Pending merge"
+    }
+   ],
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "Agent L (Build 42 navigation)",
+   "branch": "wip/b42-nav-stranding",
+   "tests": "b42_nav_stranding 24/0; b42_chapel_band 8/0; chapel 175/0",
+   "test_commit": "6fc514f",
+   "commits": [
+    "6fc514f"
    ]
   },
   {
