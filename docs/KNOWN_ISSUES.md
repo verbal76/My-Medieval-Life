@@ -162,10 +162,27 @@ when the issue arose.
 - Release id 432836586: `target_commitish` reads `726ceeb`. Release run 41666958781 on `a459186` replaced every file (checksums in
   `docs/release/build25_reconciliation/CI_RECORD.md`). Read the CI record, not the release's commit field.
 
-### KI-08 "Resources still in use at exit" warnings in Godot runs (OPEN, not investigated)
+### KI-08 "Resources still in use at exit" warnings in Godot runs (CORRECTED on wip/b42-world-leak 097409d, integrated wip/b42-integration 05712d1, 2026-11-14; CI proof pending; original title: OPEN, not investigated)
 - Examples: ChatGPT's green focused runs 42520403018 and 42520222693 (issue #4 comment 11); the lead's local measurement on
   `c9da5db` ("69 resources still in use at exit"). The earlier state-file note calls "leaked at exit" warnings long-standing noise.
   It has not been checked whether they are.
+- 2026-11-14 (Build 41 package check, Agent B): NOT noise. Each world loaded after Save and quit to title stayed in memory:
+  567 instances leaked at exit after one world, 1475 after three; title RSS 662 -> 840 -> 891 -> 895 MB. Same defect as Build
+  40 D1 ("memory leak per Continue").
+- Root cause (Agent M, confirmed by graph scans): World is RefCounted and every discarded world was kept by cycles: about 45
+  stores and services hold a strong `w`/`world` back-reference; store-to-store cycles (Business <-> Stalls/BusinessWorks,
+  EconomyFoundation <-> market/claims/rentals/repairs, EconActor <-> EconReservations, JudgmentStore <-> JudgmentAspiration,
+  Regions <-> OffMapSettlement hooks, PlayerState <-> Inventory); bound callables (person_hook, journey_hook); and holders
+  outside the world (static AerialMap._inst, GameUI.coins_world, and main.world never disposed at exit). World.dispose() nulled
+  only brain, fauna and construction.
+- Fix (097409d; no gameplay, save or simulation change): World.dispose() walks the world's objects and breaks every back edge
+  (_break_back_references); main.gd drops AerialMap and disposes the world at exit; GameUI keeps the world's instance id.
+  world_leak_cycle_test (real scene, 3 Save-and-quit/Continue cycles): 5 of 9 fail on 0bbee94, 9/9 pass on the fix (+1 object a
+  cycle, none leaked at exit); headless static memory flat at 474.5 MB versus +33 MB a cycle before. In CI with floor 9 and a
+  leak-line check on that suite. 10-day seed-1 judgment hash unchanged (2716197525).
+- Remaining: suites that build their own World.new() without disposing still print leak lines (test scripts, not the game);
+  start_test prints 46 objects and 23 CanvasItem RIDs at exit (not investigated); D4 growth within one running world not
+  investigated.
 
 ### KI-09 Native crash (double free) in `demo_test`, once (FIXED and MERGED: `167b235` on the development line, 2026-11-10 05:48 UTC)
 - Strict run 42542326507 on `4f1b3c8`, shard 9. Every check before the crash passed, and the shard passed on re-run. Cause not
