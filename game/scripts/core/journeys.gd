@@ -197,6 +197,12 @@ static func leg_done(w: World, n: NPC) -> void:
 
 
 static func end(w: World, n: NPC, how: String) -> void:
+	match str(n.journey.get("purpose", {}).get("kind", "")):      # REG-04, REG-05: the purpose settles what the walk carried
+		"courier":
+			if w.couriers != null:
+				w.couriers.walk_ended(n, how)
+		"migrate":
+			Migration.walk_ended(w, n, how)
 	w.stat("journey_ended_" + how)
 	record(w, n, "ended", {"to": str(n.journey.get("to", "")), "how": how, "purpose": (n.journey.get("purpose", {}) as Dictionary).duplicate(true),
 		"coins": n.coins, "at": [n.cell().x, n.cell().y]})
