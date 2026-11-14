@@ -11,6 +11,9 @@ extends RefCounted
 ## "newer" (written by a later version than this build reads) or "older" (written before MIN_VERSION:
 ## by a version whose world this build cannot place it in). A save that is not "ok" is never
 ## written over: `preserve` renames it, bytes unchanged, to "<name>.<state>-<time>.json" first.
+## B42 (owner 2026-11-14): a newer version's save is never overwritten, modified, truncated, deleted or silently replaced, by any
+## write: `write_text` moves one found at the save or its backup aside first (returned in "kept_newer", so the game says where), and
+## the dated backups' pruning never removes one.
 ##
 ## Dated backups (DVW-A2): the game's own save also keeps up to DATED_KEEP copies of earlier days'
 ## saves, "<name>.backup-YYYY-MM-DD.json": the first save of a day copies the backup (the previous
@@ -79,6 +82,16 @@ static func write_text(path: String, text: String, dated := false) -> Dictionary
 		return _fail("writing the save failed (%s), perhaps the device is full" % (error_string(err) if err != OK else "test"), tmp)
 	if FileAccess.get_file_as_string(tmp) != text or fail_at == "verify":
 		return _fail("the written save did not read back correctly", tmp)
+	# B42 (owner 2026-11-14: a newer version's save is never overwritten, modified, truncated, deleted or silently replaced): a save
+	# or backup at `path` that a later version of the game wrote is moved aside unchanged before anything turns it over (it would
+	# become the backup and be removed by the save after), whoever put it there (another build, a copy restored, a race)
+	var kept := []
+	for p in [path, path + BAK]:
+		if newer(p):
+			var k := preserve(p, "newer")
+			if k == "":
+				return _fail("a save made by a newer version of the game is in the way and could not be moved aside, so it was not replaced", tmp)
+			kept.append(k)
 	var old_bak := path + BAK + ".old"
 	if FileAccess.file_exists(path):
 		# the current save becomes the backup, but only a readable one: anything else was preserved already
@@ -100,7 +113,7 @@ static func write_text(path: String, text: String, dated := false) -> Dictionary
 		DirAccess.remove_absolute(_abs(old_bak))
 	if dated:
 		_keep_dated(path)
-	return {"ok": true, "reason": ""}
+	return {"ok": true, "reason": "", "kept_newer": kept}
 
 
 ## The dated backups of `path`, newest first (their names sort by date).
@@ -131,7 +144,13 @@ static func _keep_dated(path: String) -> void:
 				DirAccess.remove_absolute(_abs(copy))     # never keep a damaged copy
 	var all := dated_backups(path)
 	for i in range(DATED_KEEP, all.size()):
-		DirAccess.remove_absolute(_abs(all[i]))
+		if not newer(all[i]):                      # B42: a newer version's dated backup is never removed (this build cannot read it)
+			DirAccess.remove_absolute(_abs(all[i]))
+
+
+## B42: whether `path` holds a save written by a later version of the game than this build reads (World.SAVE_VERSION).
+static func newer(path: String) -> bool:
+	return FileAccess.file_exists(path) and str(inspect(path, World.SAVE_VERSION).state) == "newer"
 
 
 ## Move a save that cannot be used out of the way, unchanged, so nothing writes over it.
