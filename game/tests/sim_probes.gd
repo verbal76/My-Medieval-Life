@@ -270,6 +270,7 @@ func manhunt(seed: int) -> Dictionary:
 	p.pos = at + Vector2(0.5, 0)
 	p.map_level = 0
 	var coins0 := w.total_coins()
+	var sources0 := w.coin_sources        # coin_sources is cumulative from world start: the probe's window is its change from here
 	for k in 30:
 		if w.player_hit_npc(v, 20.0).killed:
 			break
@@ -328,7 +329,12 @@ func manhunt(seed: int) -> Dictionary:
 	r.yield_text = str(y.text)
 	r.status_after_yield = w2.justice.status("player")
 	r.fine_paid = w2.treasury - t0
-	r.coins_conserved = w2.total_coins() == c0 and w.total_coins() <= coins0 + w.coin_sources
+	# the village's coins change only by what crossed its boundary during the probe (World.coin_sources since coins0, the same
+	# delta economy_sim's currency audit uses); exact, not a bound. The old check added the whole cumulative coin_sources (-76 on
+	# seed 1: net exports before the probe began) to coins0, so an unchanged total read as created coins.
+	r.coins_world_delta = w.total_coins() - coins0
+	r.coin_sources_delta = w.coin_sources - sources0
+	r.coins_conserved = w2.total_coins() == c0 and int(r.coins_world_delta) == int(r.coin_sources_delta)
 	r.meets_requirement = bool(r.killed) and int(r.hue_and_cry) >= 1 and bool(r.searched) and bool(r.searched_from_last_known) \
 			and not bool(r.last_known_is_hideout) and str(r.status_after_search) == "wanted" and str(r.status_after_load) == "wanted" \
 			and int(r.guards_knowing_after_load) >= 1 and bool(r.yielded) and str(r.status_after_yield) == "clear" and int(r.fine_paid) > 0 \
