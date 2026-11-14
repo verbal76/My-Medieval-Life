@@ -309,9 +309,9 @@ None.
 | B25R2-STUTTER | Walking south of the starter village to the next settlement froze the game for about a second every other step: fix? | decision | APPROVED | 20+ |
 | B25R2-VER-01 | How should the next Play Test Build One package identify itself? | decision | APPROVED | 25 |
 | B42-ANDROID-DEBUGGABLE | Android packages exported with debugging enabled; separate test and production configurations; release gate | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
-| B42-BEGIN-DOUBLE-CLICK | Character creation Begin button sometimes needs a second click | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
-| B42-DEMO-SAVE-OVERWRITE | Demo New game overwrites the full game's save without warning (player-data protection) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
-| B42-DEMO-WINDOW-TITLE | Demo window title does not identify the demo | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
+| B42-BEGIN-DOUBLE-CLICK | Character creation Begin button sometimes needs a second click | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
+| B42-DEMO-SAVE-OVERWRITE | Demo New game overwrites the full game's save without warning (player-data protection) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
+| B42-DEMO-WINDOW-TITLE | Demo window title does not identify the demo | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
 | B42-EARMARK-SHORT | Cheese contract's earmarked milk fell from 2 to 1 (npc:39, seed 1, day 9): trace the actual item movement; correct or defective | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | B42-MP-PANTRY-PRIVACY | Multiplayer: household pantry information private by default; shared only by explicit permission | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | unassigned |
 | B42-NET-MP4-STALE | net_mp4_test fails on 0bbee94 and later: after the host is killed or restarted a guest's copy differs (stale values) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |

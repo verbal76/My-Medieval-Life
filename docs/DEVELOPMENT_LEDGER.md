@@ -182,9 +182,9 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25R2-CONT-01 | Build 25 R2 continuation: conditional sequential merges, baseline questions, births investigation, WP-1 | unassigned | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | B25R2-HOSTMENU | Host a game on the title screen | 20+ | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B42-ANDROID-DEBUGGABLE | Android packages exported with debugging enabled; separate test and production configurations; release gate | unassigned | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
-| B42-BEGIN-DOUBLE-CLICK | Character creation Begin button sometimes needs a second click | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
-| B42-DEMO-SAVE-OVERWRITE | Demo New game overwrites the full game's save without warning (player-data protection) | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
-| B42-DEMO-WINDOW-TITLE | Demo window title does not identify the demo | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| B42-BEGIN-DOUBLE-CLICK | Character creation Begin button sometimes needs a second click | unassigned | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| B42-DEMO-SAVE-OVERWRITE | Demo New game overwrites the full game's save without warning (player-data protection) | unassigned | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| B42-DEMO-WINDOW-TITLE | Demo window title does not identify the demo | unassigned | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B42-EARMARK-SHORT | Cheese contract's earmarked milk fell from 2 to 1 (npc:39, seed 1, day 9): trace the actual item movement; correct or defective | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B42-MP-PANTRY-PRIVACY | Multiplayer: household pantry information private by default; shared only by explicit permission | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B42-NET-MP4-STALE | net_mp4_test fails on 0bbee94 and later: after the host is killed or restarted a guest's copy differs (stale values) | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |

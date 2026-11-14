@@ -11955,8 +11955,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -11969,11 +11969,24 @@
      "date": "2026-11-14",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Agent O (Build 42 demo and front end); branch: None -> wip/b42-demo-frontend",
      "why": "assigned 2026-11-14 (owner accountability directive)"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> demo_save_slots 44/0; demo_test 38/0; demo_journey 69/0; creation_begin_click 6/0; test_commit: None -> 6d3d2e7; commits + 6d3d2e7; integrated_in + wip/b42-integration 09a5662",
+     "why": "Agent O wip/b42-demo-frontend 6d3d2e7 (fadf52a, 3eeb422, 567bca0 save slot; 4f2f867 window title; 8cb94d8, 6d3d2e7 first click): demo_save_slots_test 44/0 (9 of 14 coexistence checks fail with the slot reverted), demo_test 38/0, demo_journey_test 69/0, creation_begin_click_test 6/0 (2 of 6 fail without the fix); merged into wip/b42-integration 09a5662; integration verification running. Begin cause: the window's focus-out/in between press and release ends the press (reproduced with real X11 input); not verified on Windows"
     }
    ],
    "lifecycle": "ACTIVE",
    "assigned_worker": "Agent O (Build 42 demo and front end)",
-   "branch": "wip/b42-demo-frontend"
+   "branch": "wip/b42-demo-frontend",
+   "tests": "demo_save_slots 44/0; demo_test 38/0; demo_journey 69/0; creation_begin_click 6/0",
+   "test_commit": "6d3d2e7",
+   "commits": [
+    "6d3d2e7"
+   ],
+   "integrated_in": [
+    "wip/b42-integration 09a5662"
+   ]
   },
   {
    "id": "B42-DEMO-SAVE-OVERWRITE",
@@ -11991,8 +12004,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -12005,11 +12018,24 @@
      "date": "2026-11-14",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Agent O (Build 42 demo and front end); branch: None -> wip/b42-demo-frontend",
      "why": "assigned 2026-11-14 (owner accountability directive)"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> demo_save_slots 44/0; demo_test 38/0; demo_journey 69/0; creation_begin_click 6/0; test_commit: None -> 6d3d2e7; commits + 6d3d2e7; integrated_in + wip/b42-integration 09a5662",
+     "why": "Agent O wip/b42-demo-frontend 6d3d2e7 (fadf52a, 3eeb422, 567bca0 save slot; 4f2f867 window title; 8cb94d8, 6d3d2e7 first click): demo_save_slots_test 44/0 (9 of 14 coexistence checks fail with the slot reverted), demo_test 38/0, demo_journey_test 69/0, creation_begin_click_test 6/0 (2 of 6 fail without the fix); merged into wip/b42-integration 09a5662; integration verification running. Begin cause: the window's focus-out/in between press and release ends the press (reproduced with real X11 input); not verified on Windows"
     }
    ],
    "lifecycle": "ACTIVE",
    "assigned_worker": "Agent O (Build 42 demo and front end)",
-   "branch": "wip/b42-demo-frontend"
+   "branch": "wip/b42-demo-frontend",
+   "tests": "demo_save_slots 44/0; demo_test 38/0; demo_journey 69/0; creation_begin_click 6/0",
+   "test_commit": "6d3d2e7",
+   "commits": [
+    "6d3d2e7"
+   ],
+   "integrated_in": [
+    "wip/b42-integration 09a5662"
+   ]
   },
   {
    "id": "B42-DEMO-WINDOW-TITLE",
@@ -12027,8 +12053,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -12041,11 +12067,24 @@
      "date": "2026-11-14",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> Agent O (Build 42 demo and front end); branch: None -> wip/b42-demo-frontend",
      "why": "assigned 2026-11-14 (owner accountability directive)"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> demo_save_slots 44/0; demo_test 38/0; demo_journey 69/0; creation_begin_click 6/0; test_commit: None -> 6d3d2e7; commits + 6d3d2e7; integrated_in + wip/b42-integration 09a5662",
+     "why": "Agent O wip/b42-demo-frontend 6d3d2e7 (fadf52a, 3eeb422, 567bca0 save slot; 4f2f867 window title; 8cb94d8, 6d3d2e7 first click): demo_save_slots_test 44/0 (9 of 14 coexistence checks fail with the slot reverted), demo_test 38/0, demo_journey_test 69/0, creation_begin_click_test 6/0 (2 of 6 fail without the fix); merged into wip/b42-integration 09a5662; integration verification running. Begin cause: the window's focus-out/in between press and release ends the press (reproduced with real X11 input); not verified on Windows"
     }
    ],
    "lifecycle": "ACTIVE",
    "assigned_worker": "Agent O (Build 42 demo and front end)",
-   "branch": "wip/b42-demo-frontend"
+   "branch": "wip/b42-demo-frontend",
+   "tests": "demo_save_slots 44/0; demo_test 38/0; demo_journey 69/0; creation_begin_click 6/0",
+   "test_commit": "6d3d2e7",
+   "commits": [
+    "6d3d2e7"
+   ],
+   "integrated_in": [
+    "wip/b42-integration 09a5662"
+   ]
   },
   {
    "id": "B42-EARMARK-SHORT",
@@ -12082,13 +12121,19 @@
      "date": "2026-11-14",
      "change": "commits + 518780e",
      "why": "Agent I per-holder trace (seed 1, 0bbee94): npc:39's milk 5->2 by World.work_craft (contract 21, earmark #419 consumed), 2->1 by Decay.spoil_inv at day 9 06:00; no other removal. Correct under LE-03 (earmarks never cut). Recorder diagnostics 518780e (confirmed/suspected/unknown cause from per-holder spoilage; reservation_summary always shows short counts). Latent defect found: eating raw food from one's own pack (npc_brain.gd:1144/:2990) and stock_family_chest (:2508) ignore claims; being fixed on wip/b42-contract-earmark. Owner question (future): earmark on spoilage A stay short / B shrink / C release and notify"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "commits + ff307a5",
+     "why": "Agent I wip/b42-contract-earmark ff307a5 (a11a082): own-pack meals and stock_family_chest use only unclaimed units (EconClaims.spare_for_use); a claimed unit is eaten only when no other meal can be planned, shrinking the earmark (used_in_need, recorded); b42_earmark_eat_test 10/0 (7 of 10 fail on 0bbee94); le03 suites passing so far; more suites running"
     }
    ],
    "lifecycle": "ACTIVE",
    "assigned_worker": "Agent I (Build 42 flight recorder)",
    "branch": "wip/b42-recorder-reservation",
    "commits": [
-    "518780e"
+    "518780e",
+    "ff307a5"
    ]
   },
   {
