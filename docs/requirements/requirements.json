@@ -12248,6 +12248,50 @@
    ]
   },
   {
+   "id": "B42-MP07-HOUSEHOLD-ACCESS",
+   "kind": "approved",
+   "title": "Household members keep full access to their own household and pantry independently of sharing tiers; MP-07 test corrected",
+   "description": "Household members keep full access to their own household and pantry independently of sharing tiers; MP-07 test corrected",
+   "source": "docs/directives/2026-11-14_b42_integration_regressions.md",
+   "owner_wording": "Household membership grants access independently of asset-sharing tiers",
+   "approval": "owner, 2026-11-14",
+   "acceptance": [
+    "all mp07 checks pass; household access correct across marriage, reconnect, save, load and membership change; outsiders limited by the approved tiers"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-14_b42_integration_regressions.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: None -> Agent Q (Build 42 integration regressions); branch: None -> wip/b42-integ-fixes; tests: None -> mp07 89/0 (was 85/2); b42_household_access 37/0 (mutation-checked); mp_pantry_privacy 26/0; mp02 92/0; mp05 24/0 and 53/0; mp_g4_loopback 35/0; net_family 22/0; mp03 75/0; test_commit: None -> e9f79bc; commits + e9f79bc; integrated_in + wip/b42-integration 141df28",
+     "why": "Root cause: wrong test expectation in mp07 after B42-MP-PANTRY-PRIVACY; code correct (NetPrivacy._households). Test corrected and new b42_household_access_test; lead verified on e9f79bc and merged"
+    }
+   ],
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "Agent Q (Build 42 integration regressions)",
+   "branch": "wip/b42-integ-fixes",
+   "tests": "mp07 89/0 (was 85/2); b42_household_access 37/0 (mutation-checked); mp_pantry_privacy 26/0; mp02 92/0; mp05 24/0 and 53/0; mp_g4_loopback 35/0; net_family 22/0; mp03 75/0",
+   "test_commit": "e9f79bc",
+   "commits": [
+    "e9f79bc"
+   ],
+   "integrated_in": [
+    "wip/b42-integration 141df28"
+   ]
+  },
+  {
    "id": "B42-NAV-STRANDING",
    "kind": "approved",
    "title": "Villagers stranded outside the village (140-cell path box, partial paths) and the walk back-off bypass (MML-NPC-01 class)",
@@ -12338,6 +12382,50 @@
    "branch": "wip/b42-net-resync",
    "commits": [
     "1f847f8"
+   ]
+  },
+  {
+   "id": "B42-NEWER-SAVE-GUARD",
+   "kind": "approved",
+   "title": "A newer version's save is never overwritten, modified, truncated, deleted or silently replaced on any write path",
+   "description": "A newer version's save is never overwritten, modified, truncated, deleted or silently replaced on any write path",
+   "source": "docs/directives/2026-11-14_b42_integration_regressions.md",
+   "owner_wording": "Treat this as a potential player-data-loss defect until proven otherwise... must never be overwritten, modified, truncated, deleted, or silently replaced by an older version.",
+   "approval": "owner, 2026-11-14",
+   "acceptance": [
+    "every write path (startup, background autosave, manual save, demo slots, shutdown and recovery, failed load and retry) leaves a newer save byte-for-byte intact; failing-first tests; start_test passes in full"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-14_b42_integration_regressions.md"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: None -> Agent Q (Build 42 integration regressions); branch: None -> wip/b42-integ-fixes; tests: None -> b42_newer_save_guard 31/0 (failing first 29/5, sha-256 byte checks); start_test 524/0; save_exact 15/0; save_continuity 5/0; sav04 18/0; autosave_async 11/0; save_transfer 21/0; demo_save_slots 14/13/12/5 /0; test_commit: None -> e9f79bc; commits + e9f79bc; integrated_in + wip/b42-integration 141df28",
+     "why": "Agent Q fixed four loss paths (backup rotation, dated pruning, New game previous, linked copy) and the start_test autosave race; lead verified on e9f79bc and merged"
+    }
+   ],
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "Agent Q (Build 42 integration regressions)",
+   "branch": "wip/b42-integ-fixes",
+   "tests": "b42_newer_save_guard 31/0 (failing first 29/5, sha-256 byte checks); start_test 524/0; save_exact 15/0; save_continuity 5/0; sav04 18/0; autosave_async 11/0; save_transfer 21/0; demo_save_slots 14/13/12/5 /0",
+   "test_commit": "e9f79bc",
+   "commits": [
+    "e9f79bc"
+   ],
+   "integrated_in": [
+    "wip/b42-integration 141df28"
    ]
   },
   {
@@ -12560,6 +12648,31 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "B42-Q-NEWER-SLOT",
+   "kind": "decision",
+   "title": "A newer version's save found at Continue: keep today's behaviour (moved aside unchanged, new game saved in the slot) or leave it in the slot and save the new game to a separate slot (changes title screen and Continue)?",
+   "description": "A newer version's save found at Continue: keep today's behaviour (moved aside unchanged, new game saved in the slot) or leave it in the slot and save the new game to a separate slot (changes title screen and Continue)?",
+   "source": "docs/directives/2026-11-14_b42_integration_regressions.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "owner decision",
+   "related": [
+    "B42-NEWER-SAVE-GUARD"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-14_b42_integration_regressions.md"
+    }
+   ],
+   "lifecycle": "UNDER REVIEW"
+  },
+  {
    "id": "B42-Q-PANTRY-TIER",
    "kind": "decision",
    "title": "Which sharing tier lets another player see a player household's pantry?",
@@ -12726,6 +12839,31 @@
     }
    ],
    "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B42-Q-WIDOW-PANTRY",
+   "kind": "decision",
+   "title": "A widowed player no longer counts as a member of the late spouse's household, so that household's pantry becomes visible to all like a villager household: confirm?",
+   "description": "A widowed player no longer counts as a member of the late spouse's household, so that household's pantry becomes visible to all like a villager household: confirm?",
+   "source": "docs/directives/2026-11-14_b42_integration_regressions.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "owner decision",
+   "related": [
+    "B42-MP07-HOUSEHOLD-ACCESS"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-14",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-14_b42_integration_regressions.md"
+    }
+   ],
+   "lifecycle": "UNDER REVIEW"
   },
   {
    "id": "B42-REG08-SHORTFALL",

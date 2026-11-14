@@ -82,6 +82,8 @@
 > (`wip/backup-20261109/*`, 58 branches) and verified against GitHub's copy (288 files, 0 mismatches). Free disk about 526 MB.
 > Record: `docs/audits/2026-11-09_WORK_PRESERVATION_EVENT.md`. Before disk-heavy work, check `df -h /`.
 
+> **2026-11-14 Build 42 integration status:** wip/b42-integration head `5a1314a` (Agent Q's regression fixes merged and lead-verified: mp07 89/0, start_test 524/0, newer-save guard 31/0, 10-day identical to 5596b17). Not a candidate. Held for lead verification on the integration line: Agent F `wip/b42-reg-travel` `6829561` (B42-ENVOY-ROUNDTRIP, REG-04/05, B42-REG08-SHORTFALL, B42-Q-EMIG-WORK) and Agent G `wip/b42-net-resync` `ed2013e` (ND-26 first-heartbeat fix). Open decisions B42-Q-NEWER-SLOT, B42-Q-WIDOW-PANTRY. Details: docs/audits/2026-11-14_B42_LEAD_LOG.md.
+
 ## SESSION HANDOFF 2026-11-10 (read first)
 
 The owner closed the 2026-11-10 session for token conservation (`docs/directives/2026-11-10_token_conservation_handoff.md`).

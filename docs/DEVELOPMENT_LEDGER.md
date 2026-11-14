@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (872)
+## Approved requirement (874)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -188,8 +188,10 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B42-EARMARK-SHORT | Cheese contract's earmarked milk fell from 2 to 1 (npc:39, seed 1, day 9): trace the actual item movement; correct or defective | unassigned | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B42-ENVOY-ROUNDTRIP | Reeve's envoys starve on the road home: provisioned for one leg only | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B42-MP-PANTRY-PRIVACY | Multiplayer: household pantry information private by default; shared only by explicit permission | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
+| B42-MP07-HOUSEHOLD-ACCESS | Household members keep full access to their own household and pantry independently of sharing tiers; MP-07 test corrected | unassigned | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B42-NAV-STRANDING | Villagers stranded outside the village (140-cell path box, partial paths) and the walk back-off bypass (MML-NPC-01 class) | unassigned | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B42-NET-MP4-STALE | net_mp4_test fails on 0bbee94 and later: after the host is killed or restarted a guest's copy differs (stale values) | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| B42-NEWER-SAVE-GUARD | A newer version's save is never overwritten, modified, truncated, deleted or silently replaced on any write path | unassigned | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B42-REG08-SHORTFALL | Courier refund cap: record any unpaid shortfall visibly and auditably (REG-08) | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B42-RELEASE-EXACT-SHA | Release requires all mandatory tests to pass on the exact packaged commit | unassigned | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B7-001 | Starting coins | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
@@ -990,7 +992,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (353)
+## Owner decisions (355)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -1066,12 +1068,14 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B42-Q-JOB02 | Approve the job-board offered-pay rules (J2-Q1..Q7 as built) and switch them on only after a four-seed with/without year-long comparison? | unassigned | APPROVED |  |
 | B42-Q-MP02-REACH | Must a multiplayer guest be within 24 tiles of its stall to manage it? | unassigned | APPROVED |  |
 | B42-Q-MP02-TIER3 | May a tier-3 sharing partner run another player's stall or shop? | unassigned | APPROVED |  |
+| B42-Q-NEWER-SLOT | A newer version's save found at Continue: keep today's behaviour (moved aside unchanged, new game saved in the slot) or leave it in the slot and save the new game to a separate slot (changes title screen and Continue)? | owner decision | OPEN |  |
 | B42-Q-PANTRY-TIER | Which sharing tier lets another player see a player household's pantry? | unassigned | APPROVED |  |
 | B42-Q-POP-LEVERS | Change population growth levers (birth rate, hunger arrivals, 2% young homesteading, deposit sizes) for Build 42? | unassigned | APPROVED |  |
 | B42-Q-REG08-CAP | Accept the MML-REG-08 expired-delivery refund capped at what the payer's heir holds (never creating coins)? | unassigned | APPROVED |  |
 | B42-Q-RELEASE-TESTS | Release gate: start a missing full test run, cancellation on concurrent runs, evidence retention | unassigned | APPROVED |  |
 | B42-Q-STUTTER-PART2 | Fix the result-changing stutter causes (0.5 s tick, presence materialising, dawn and 17:00 frames) in Build 42? | unassigned | APPROVED |  |
 | B42-Q-VILLAGER-PANTRY | Keep villager households' pantries visible to multiplayer guests? | unassigned | APPROVED |  |
+| B42-Q-WIDOW-PANTRY | A widowed player no longer counts as a member of the late spouse's household, so that household's pantry becomes visible to all like a villager household: confirm? | owner decision | OPEN |  |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | owner decision | APPROVED |  |
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | owner decision | APPROVED |  |
 | BRANCH-POL-Q1 | Records line and code line: keep wip/requirements-control (records, lead-written) separate from wip/expansion20 (code), with notices on the code line's copies (recommended); or authorize bringing the records into wip/expansion20 as one reviewed change (files only, not the old ancestry)? | unassigned | APPROVED |  |

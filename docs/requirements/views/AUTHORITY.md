@@ -17,12 +17,12 @@ Before any significant change, find its record here and follow `Governing record
 
 | Lifecycle | Records |
 |---|---|
-| ACTIVE | 929 |
+| ACTIVE | 931 |
 | SUPERSEDED | 43 |
 | COMPLETED | 246 |
 | REJECTED | 3 |
 | DEFERRED | 19 |
-| UNDER REVIEW | 79 |
+| UNDER REVIEW | 81 |
 
 ## Superseded records and what governs instead
 
@@ -440,6 +440,8 @@ Before any significant change, find its record here and follow `Governing record
 | B25-AUD-REG-08 | decision | REG-08 courier stranded deliveries: who receives stranded goods/coins, how a waiting route job ends, whether the flat fe |
 | B25-Q33-TRADER-RESERVE | decision | Q33 trader reserve (80 coins instead of 85% of the till) and the caravan economy: why it lowers caravan purchases and vi |
 | B42-Q-EARMARK-SPOIL | decision | When a contract's earmarked input spoils (or is otherwise lost): (A) stay short [current LE-03 rule], (B) shrink to what |
+| B42-Q-NEWER-SLOT | decision | A newer version's save found at Continue: keep today's behaviour (moved aside unchanged, new game saved in the slot) or  |
+| B42-Q-WIDOW-PANTRY | decision | A widowed player no longer counts as a member of the late spouse's household, so that household's pantry becomes visible |
 | BAN-B | proposal | Expansion 23 BAN-B: faction identity, membership, hierarchy, safehouse ownership and persistent faction resources |
 | BAN-C | proposal | Expansion 23 BAN-C: career actions, recruitment, theft and raids, resale, suspicion and response (within E23-SCOPE) |
 | BAN-D | proposal | Expansion 23 BAN-D: rank, challenge, leadership, schism and autonomous succession |

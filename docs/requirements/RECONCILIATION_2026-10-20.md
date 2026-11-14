@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 926 (517 of them still open) |
-| **Open entries now** (rules excluded) | | **675** |
+| Entries added since | | 930 (521 of them still open) |
+| **Open entries now** (rules excluded) | | **679** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (926)
+## Added since the baseline (930)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -315,8 +315,10 @@ None.
 | B42-EARMARK-SHORT | Cheese contract's earmarked milk fell from 2 to 1 (npc:39, seed 1, day 9): trace the actual item movement; correct or defective | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
 | B42-ENVOY-ROUNDTRIP | Reeve's envoys starve on the road home: provisioned for one leg only | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | B42-MP-PANTRY-PRIVACY | Multiplayer: household pantry information private by default; shared only by explicit permission | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | unassigned |
+| B42-MP07-HOUSEHOLD-ACCESS | Household members keep full access to their own household and pantry independently of sharing tiers; MP-07 test corrected | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
 | B42-NAV-STRANDING | Villagers stranded outside the village (140-cell path box, partial paths) and the walk back-off bypass (MML-NPC-01 class) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
 | B42-NET-MP4-STALE | net_mp4_test fails on 0bbee94 and later: after the host is killed or restarted a guest's copy differs (stale values) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
+| B42-NEWER-SAVE-GUARD | A newer version's save is never overwritten, modified, truncated, deleted or silently replaced on any write path | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
 | B42-Q-BAND-CHAPEL-RELIEF | Should the chapel stop sending relief parcels to the outlaw band (ND-23 excluded only the manor's relief)? | decision | APPROVED | unassigned |
 | B42-Q-CLICK-SCOPE | Apply the first-click fix to all buttons? | decision | APPROVED | unassigned |
 | B42-Q-DEMO-HANDOFF | Accept the explicit 'Continue your demo world' handoff in place of plain Continue? | decision | APPROVED | unassigned |
@@ -325,12 +327,14 @@ None.
 | B42-Q-JOB02 | Approve the job-board offered-pay rules (J2-Q1..Q7 as built) and switch them on only after a four-seed with/without year-long comparison? | decision | APPROVED | unassigned |
 | B42-Q-MP02-REACH | Must a multiplayer guest be within 24 tiles of its stall to manage it? | decision | APPROVED | unassigned |
 | B42-Q-MP02-TIER3 | May a tier-3 sharing partner run another player's stall or shop? | decision | APPROVED | unassigned |
+| B42-Q-NEWER-SLOT | A newer version's save found at Continue: keep today's behaviour (moved aside unchanged, new game saved in the slot) or leave it in the slot and save the new game to a separate slot (changes title screen and Continue)? | decision | OPEN | owner decision |
 | B42-Q-PANTRY-TIER | Which sharing tier lets another player see a player household's pantry? | decision | APPROVED | unassigned |
 | B42-Q-POP-LEVERS | Change population growth levers (birth rate, hunger arrivals, 2% young homesteading, deposit sizes) for Build 42? | decision | APPROVED | unassigned |
 | B42-Q-REG08-CAP | Accept the MML-REG-08 expired-delivery refund capped at what the payer's heir holds (never creating coins)? | decision | APPROVED | unassigned |
 | B42-Q-RELEASE-TESTS | Release gate: start a missing full test run, cancellation on concurrent runs, evidence retention | decision | APPROVED | unassigned |
 | B42-Q-STUTTER-PART2 | Fix the result-changing stutter causes (0.5 s tick, presence materialising, dawn and 17:00 frames) in Build 42? | decision | APPROVED | unassigned |
 | B42-Q-VILLAGER-PANTRY | Keep villager households' pantries visible to multiplayer guests? | decision | APPROVED | unassigned |
+| B42-Q-WIDOW-PANTRY | A widowed player no longer counts as a member of the late spouse's household, so that household's pantry becomes visible to all like a villager household: confirm? | decision | OPEN | owner decision |
 | B42-REG08-SHORTFALL | Courier refund cap: record any unpaid shortfall visibly and auditably (REG-08) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | B42-RELEASE-EXACT-SHA | Release requires all mandatory tests to pass on the exact packaged commit | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
 | BAN-B | Expansion 23 BAN-B: faction identity, membership, hierarchy, safehouse ownership and persistent faction resources | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |

@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 24 |
+| OPEN | 26 |
 | APPROVED | 314 |
 | PROVISIONAL | 4 |
 | SUPERSEDED | 6 |
@@ -70,9 +70,11 @@ The decision register is the `decision` records of the register. A recommendatio
 | JUICE-JD5 | Notifications: which village notes the player sees in the corner log by default, and whether a filter exists. | OPEN | no |  | the juice assessment PRELIMINARY_ASSESSMENT.md (only on branch wip/juice-assessment) section 6 D5 |
 | TEST-AUDIT-Q2 | Accept a new simulation baseline (SIM-GATE-01) recorded from the final B25R2 commit, for overworld generation 8 and save version 23? The current one (df67e8e) predates the band household (bf20dc9, B25R1-Q2 a) and generations 6-8; every difference is traced to approved changes (docs/release/SIM_BASELINE_DIFFERENCES_B25R2.md). Recommendation: yes, once the 365-day campaign on the final commit is read. | PROVISIONAL | no | B25R2-DRAFT-01, B25R2-PKG-01 | docs/audits/2026-11-06_TEST_REGIMEN_AUDIT.md |
 
-## Waiting on an owner decision for its build: open, reopened or provisional (1)
+## Waiting on an owner decision for its build: open, reopened or provisional (3)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
 | B25-AUD-REG-08 | REG-08 courier stranded deliveries: who receives stranded goods/coins, how a waiting route job ends, whether the flat fee is refunded, how a courier's migration is treated | OPEN | no |  | docs/directives/2026-11-09_overnight_autonomous_development.md; docs/decisions/REG-08-INVESTIGATION-2026-11-09.md |
+| B42-Q-NEWER-SLOT | A newer version's save found at Continue: keep today's behaviour (moved aside unchanged, new game saved in the slot) or leave it in the slot and save the new game to a separate slot (changes title screen and Continue)? | OPEN | no |  | docs/directives/2026-11-14_b42_integration_regressions.md |
+| B42-Q-WIDOW-PANTRY | A widowed player no longer counts as a member of the late spouse's household, so that household's pantry becomes visible to all like a villager household: confirm? | OPEN | no |  | docs/directives/2026-11-14_b42_integration_regressions.md |
 
