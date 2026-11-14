@@ -554,6 +554,7 @@ func test_notary_live() -> void:
 	# a small payment is an ordinary delivery: no document, no signature
 	cs.daily()
 	var nk := str(cs.booth_of("village").keeper)
+	keeper_home(x)                    # REG-04: the new keeper walks it and needs food for the road there and back, as every booking here
 	x.player.inv.add(ITEM, 1)
 	var j4 := cs.book_special({"sender": "player", "recipient": "region:wulstead/trader", "recipient_kind": "business", "settlement": "wulstead", "items": {ITEM: 1},
 		"courier": nk, "collect": {"kind": "coins", "amount": 9}}, 40)
