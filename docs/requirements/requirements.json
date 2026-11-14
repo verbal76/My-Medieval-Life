@@ -12257,7 +12257,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -12271,6 +12271,11 @@
      "date": "2026-11-14",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: None -> Agent L (Build 42 navigation); branch: None -> wip/b42-nav-stranding; tests: None -> b42_nav_stranding 24/0; b42_chapel_band 8/0; chapel 175/0; test_commit: None -> 6fc514f; commits + 6fc514f",
      "why": "Agent L wip/b42-nav-stranding 6fc514f: path_far gate/south-road route for outside-to-village walks; back-off reset only by the plan's last walk; b42_nav_stranding_test 24/0 (5-7 fail on 0bbee94), npc01 10/0, 13 regression suites; plus owner B42-Q-BAND-CHAPEL-RELIEF (b42_chapel_band_test 8/0, 2 fail before). Pending merge"
+    },
+    {
+     "date": "2026-11-14",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in + wip/b42-integration 5596b17",
+     "why": "merged into wip/b42-integration 5596b17 (interaction index regenerated, 451/0); integration verification running"
     }
    ],
    "lifecycle": "ACTIVE",
@@ -12280,6 +12285,9 @@
    "test_commit": "6fc514f",
    "commits": [
     "6fc514f"
+   ],
+   "integrated_in": [
+    "wip/b42-integration 5596b17"
    ]
   },
   {

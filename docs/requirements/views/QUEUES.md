@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (38)
+## Workers and task branches (37)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -29,7 +29,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25R2-HOSTMENU | 20+ | IMPLEMENTED ON TASK BRANCH | none | wip/b25r2-rev2 |
 | B42-ENVOY-ROUNDTRIP | unassigned | IN DEVELOPMENT | Agent F (Build 42 regional travel) | wip/b42-reg-travel |
 | B42-MP-PANTRY-PRIVACY | unassigned | IMPLEMENTED ON TASK BRANCH | Agent G (Build 42 multiplayer) | wip/b42-mp-stalls |
-| B42-NAV-STRANDING | unassigned | IMPLEMENTED ON TASK BRANCH | Agent L (Build 42 navigation) | wip/b42-nav-stranding |
 | B42-NET-MP4-STALE | unassigned | IN DEVELOPMENT | Agent G (Build 42 multiplayer) | wip/b42-mp-stalls |
 | B42-REG08-SHORTFALL | unassigned | IN DEVELOPMENT | Agent F (Build 42 regional travel) | wip/b42-reg-travel |
 | DOC-RECON-01 | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
