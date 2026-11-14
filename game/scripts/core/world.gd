@@ -798,7 +798,7 @@ func _path_to(n: NPC, to: Vector2i) -> void:
 ## where the box back does not; a box that fits can also cut off the only bridge). Such a walk goes the way the travellers and the
 ## homesteaders already go (Journeys, Homesteads._path_home): the bounded search to a gate of the village (the nearest first) or,
 ## failing that, to the nearest cell of a road out of the south gate (the road routes, Overworld.road_route, nearest first), along
-## that road to the gate, and the village's own grid inside. Both ends outside the village: through the village, gate to gate.
+## that road to the gate, and the village's own grid inside. Both ends outside the village: not used (empty).
 ## Empty when none of these is found (the walk fails as before). Deterministic: fixed orders, ties by index.
 func path_far(a: Vector2i, b: Vector2i) -> PackedVector2Array:
 	if map.overworld == null:
@@ -813,19 +813,9 @@ func path_far(a: Vector2i, b: Vector2i) -> PackedVector2Array:
 		var back := _path_in(b, a)
 		back.reverse()
 		return back
-	var ex: Array = map.exits()
-	if ex.is_empty():
-		return PackedVector2Array()
-	var g: Dictionary = ex[Journeys.gate_index(self)]
-	var inside := Vector2i(g.out) - Vector2i(g.dir)
-	var p1 := _path_in(a, inside)
-	if p1.is_empty():
-		return PackedVector2Array()
-	var p2 := _path_in(b, inside)
-	if p2.is_empty():
-		return PackedVector2Array()
-	p2.reverse()
-	return _joined(p1, p2)
+	# both ends outside (a traveller between settlements, a resumed journey after a load): left to the bounded search as before;
+	# through the village would turn a traveller on the road back to the gate (reg01_journey_reload_route_test)
+	return PackedVector2Array()
 
 
 ## B42-NAV: from `o` (outside the village) to `v` (inside it), by a gate or a road (path_far). Empty when neither is found.
