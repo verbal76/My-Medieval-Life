@@ -105,10 +105,12 @@ func follow(center: Vector2, feet: Vector2, delta: float, budget := BUILD_PER_FR
 		if profiling:
 			tq = _pf("ow:recentre+free", tq)
 	var n := 0
-	if budget < 0:
+	if budget != BUILD_PER_FRAME:
+		# a first view (Main: the nearest chunks at once, budget 6) or a teleport (-1): whole chunks, as before; only the
+		# streaming of play (one chunk a frame) is drawn in parts
 		while not _job.is_empty():
 			_build_part()                          # a chunk begun in parts is finished first
-		while not _pending.is_empty():
+		while not _pending.is_empty() and (budget < 0 or n < budget):
 			var c: Vector2i = _pending.pop_front()
 			if not chunks.has(c):
 				_build(c)
@@ -551,6 +553,12 @@ func _build(cc: Vector2i) -> void:
 		_build_part()
 
 
+## B42: finish the chunk `cc` if it is the one being drawn in parts (the test queries).
+func _finish_drawing(cc: Vector2i) -> void:
+	while _job.get("cc", null) == cc:
+		_build_part()
+
+
 func _build_begin(cc: Vector2i) -> void:
 	var t0 := Time.get_ticks_usec()
 	if not overworld.cache.has(cc):
@@ -712,6 +720,7 @@ func _grass_off(cell: Vector2i) -> void:
 
 ## The tuft drawn on a cell of a loaded chunk, -1 for none (tests).
 func grass_value(cell: Vector2i) -> int:
+	_finish_drawing(Overworld.chunk_of(cell))
 	var c: Dictionary = chunks.get(Overworld.chunk_of(cell), {})
 	return -1 if c.is_empty() else tile_value(c.grass, cell)
 
@@ -1024,7 +1033,9 @@ func loaded_count() -> int:
 	return chunks.size()
 
 
-## The tile value drawn on a cell's ground layer, or -1 (tests).
+## The tile value drawn on a cell's ground layer, or -1 (tests). B42: a chunk still being drawn in parts is finished first,
+## so a loaded chunk reads as wholly drawn, as it did when chunks were drawn at once.
 func ground_value(cell: Vector2i) -> int:
+	_finish_drawing(Overworld.chunk_of(cell))
 	var c: Dictionary = chunks.get(Overworld.chunk_of(cell), {})
 	return -1 if c.is_empty() else tile_value(c.ground, cell)
