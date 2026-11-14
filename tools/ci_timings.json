@@ -5,7 +5,8 @@
   "tests": "results.jsonl of Tests runs 41580777660, 41733575763, 41735516442, 41737006430, 41740708833",
   "sim_gate": "gate.json job_results of long-sims gate runs 41923800341 (361f364) and 41962208084 (a995397), 4 jobs on 4 CPUs: the slower of the two for each run (runner speed varied 20-40% between them); rotating seeds as seconds a day, the mean of the four rotating runs",
   "tests_b25r1_cicover": "34 suites added to tests.yml on 2026-11-05 (wip/b25r1-cicover): one local headless run each on the 4-CPU session container, three at a time beside other agents' suites (so likely slower than a runner); replace with runner medians from the next ci-report artifacts",
-  "tests_b25r2_audit": "TEST-AUDIT-01 (2026-11-06): every game suite's seconds from the full suite on 832f711 (run 42274258964, 225 suites); 19 suites had no timing and many had drifted (run_tests 428 -> 1095 s, credit_test 12 -> 350 s, business_ownership_test 1036 -> 231 s). Predicted: the slowest of 12 shards 56 -> 34 min with the same suites."
+  "tests_b25r2_audit": "TEST-AUDIT-01 (2026-11-06): every game suite's seconds from the full suite on 832f711 (run 42274258964, 225 suites); 19 suites had no timing and many had drifted (run_tests 428 -> 1095 s, credit_test 12 -> 350 s, business_ownership_test 1036 -> 231 s). Predicted: the slowest of 12 shards 56 -> 34 min with the same suites.",
+  "tests_b42_g4": "game/mp_g4_loopback_test (Build 42, wip/b42-verify): one local headless run, 157 s, on the shared 4-CPU session container beside other agents' suites; replace with a runner median from the next ci-report artifact"
  },
  "shard0_extra": [
   "python/build_weapons",
@@ -146,6 +147,7 @@
   "game/net_econ_integrity_test": 186.5,
   "game/net_family_test": 57.0,
   "game/net_fault_test": 263.3,
+  "game/mp_g4_loopback_test": 160.0,
   "game/net_fauna_test": 24.6,
   "game/net_g1_test": 95.5,
   "game/net_interact_test": 113.0,

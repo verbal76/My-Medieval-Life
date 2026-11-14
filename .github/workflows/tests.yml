@@ -498,6 +498,7 @@ jobs:
           res://tests/net_mp4_test.gd            # X20 phase 4.5: one host with two, then three guests (four players)
           res://tests/net_recorder_quit_test.gd  # X20: a flight recording ends whenever its world is closed in order
           res://tests/net_soak_test.gd           # X20 item 11: a recorded multiplayer soak, one host and three guests (~3-4 min)
+          res://tests/mp_g4_loopback_test.gd     # Build 42 G4: MP-05/06/07 between two processes, wire payload tapped (~160 s)
           EOF
           if [ -n "$ONLY" ]; then   # an independent run of named suites: keep only those entries of the list
             for t in $ONLY; do grep -E "^ *$t( |$)" "$RUNNER_TEMP/game.txt" || { echo "unknown suite: $t"; exit 1; }; done > "$RUNNER_TEMP/only.txt"
