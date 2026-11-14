@@ -13,7 +13,7 @@
   "alert_severities": ["violation", "warning"],
   "alert_rules": {
     "coin.unattributed_holder": "a holder's coins changed by an amount no recorded coin state change explains",
-    "economy.unbacked_reservation": "X20-FINAL: the LE-01 model holds a reservation no stock backs (EconReservations.unbacked; only when economy.json is on)",
+    "economy.unbacked_reservation": "X20-FINAL: the LE-01 model holds a reservation no stock backs (EconReservations.unbacked; only when economy.json is on). B42: at the day summary (00:00) only claims not covered by their owner's own offers (stale offers, reconciled at dawn, are the stale_offers observation); at 06:00, right after the dawn reconcile, every unbacked reservation",
     "identity.ids_changed_on_load": "a version 20 save was loaded and the set of person ids differs from the saved register",
     "coin.unattributed_total": "World.total_coins changed by an amount neither the recorded coin changes nor World.coin_sources explain"
   },

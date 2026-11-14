@@ -47,6 +47,7 @@ func _init() -> void:
 	test_x20_phase3()
 	test_rec_diag()
 	test_coverage_file()
+	test_b42_unbacked_after_dawn()
 	print("%d checks, %d failures" % [checks, failures])
 	_remove(tmp_root)
 	quit(1 if failures > 0 else 0)
@@ -1348,3 +1349,58 @@ func test_coverage_file() -> void:
 		if row.status == "Not instrumented":
 			ok = ok and not row.has("test")
 	check(ok and fully > 0, "coverage: every status is valid and every 'Fully' row names a test that exists here (%d rows 'Fully')" % fully)
+
+
+# ------------------------------------------------------------------ B42: the unbacked-reservation check after the dawn reconcile
+## Steps `w` until day `day`, hour `hour` of the game clock (the harness's step).
+func run_until(w: World, day: int, hour: int) -> void:
+	while w.day() < day or (w.day() == day and fmod(w.minutes, World.DAY) < hour * 60.0):
+		w.update(0.5)
+		w.player.hunger = 100.0
+
+
+## An adult villager other than `not_id` with no trade in `item` (so nothing in play touches the test's claim before dawn).
+func quiet_adult(w: World, not_id := -1) -> NPC:
+	for n in w.npcs:
+		if n.alive and n.role == "adult" and n.id != not_id and not n.job in ["tanner", "carpenter", "merchant", "smith", "laborer"]:
+			return n
+	return null
+
+
+func unbacked_alerts(rec: WorldRecorder) -> Array:
+	return rows(rec, "alert").filter(func(a): return str(a.rule) == "economy.unbacked_reservation")
+
+
+func test_b42_unbacked_after_dawn() -> void:
+	EconomyFoundation.set_override({"enabled": true})
+	var w := identity_world()
+	var rec := WorldRecorder.attach(w, {"root": sub("b42_unbacked")})
+	# an ask whose goods are then used up by other means: a stale offer until EconClaims.reconcile_all at dawn (06:00)
+	var n := quiet_adult(w)
+	n.inv.add("leather", 3)
+	var aid := int(w.economy.offers.post(EconOffers.ASK, World.npc_ref(n.id), "leather", 3, 9, w.day() + 20, "", "test").id)
+	n.inv.remove("leather", 3)
+	check(aid >= 0 and w.economy.reservations.unbacked().size() == 1, "B42: precondition, the ask is unbacked once its goods are gone")
+	var d1 := w.day() + 1
+	run_until(w, d1, 1)                 # the day summary at the day's first hour, before the dawn reconcile
+	var stale := rows(rec, "factor").filter(func(f): return str(f.factor) == "stale_offers" and int(f.value) >= 1)
+	check(not stale.is_empty(), "B42: the pre-dawn stale ask is recorded as the stale_offers observation")
+	run_until(w, d1, 7)                 # past the dawn reconcile
+	check(unbacked_alerts(rec).is_empty(), "B42: an ask whose goods were consumed before dawn raises no violation (%s)" % JSON.stringify(unbacked_alerts(rec)))
+	check(w.economy.reservations.unbacked().is_empty() and w.economy.offers.get_offer(aid).state != "open", "B42: the dawn reconcile cut the stale ask")
+	var after := evs(rec, "economy_dawn_reconcile")
+	check(not after.is_empty() and after[-1].outcome == "ok", "B42: the check after the dawn reconcile ran and found nothing unbacked")
+	# a hold that is not an offer is never reconciled: still unbacked after the reconcile, still a violation
+	var m := quiet_adult(w, n.id)
+	m.inv.add("plank", 2)
+	var r := w.economy.reservations.reserve(World.npc_ref(m.id), "plank", 2, "test:hold", w.day() + 20)
+	m.inv.remove("plank", 2)
+	check(bool(r.ok), "B42: precondition, a non-offer hold is made")
+	run_until(w, w.day() + 1, 7)
+	var v := unbacked_alerts(rec)
+	check(v.any(func(a): return str(a.severity) == "violation" and "after the dawn reconcile" in str(a.values) and "plank" in str(a.values)),
+		"B42: an unbacked reservation that survives the dawn reconcile is still a violation (%s)" % JSON.stringify(v))
+	check(v.any(func(a): return str(a.severity) == "violation" and not "after the dawn reconcile" in str(a.values) and "plank" in str(a.values)),
+		"B42: a non-offer claim unbacked at the day summary is a violation there too (as strict as before)")
+	w.dispose()
+	EconomyFoundation.set_override({})
