@@ -57,8 +57,11 @@ class FakeGitHub:
     def ref_sha(self, ref):
         return self.head
 
-    def dispatch(self, workflow, ref):
-        self.dispatched.append((workflow, ref))
+    def runs_since(self, workflow, ref, since):
+        return [r for r in self.fx.get("branch_runs", []) if r["created_at"] >= since]
+
+    def dispatch(self, workflow, ref, sha):
+        self.dispatched.append((workflow, ref, sha))
         if self.after:
             for k in ("runs",):
                 self.fx[k] = self.after[k] + self.fx[k]
@@ -247,9 +250,73 @@ class TestsEvidence(unittest.TestCase):
         later["runs"][0]["created_at"] = "2999-01-01T00:00:00Z"        # created after the dispatch
         gh = FakeGitHub(empty, head=SHA, after_dispatch=later)
         rec = find(gh, SHA, GREEN["tree"], "dispatch", ref="wip/b42-integration")
-        self.assertEqual(gh.dispatched, [("tests.yml", "wip/b42-integration")])
+        self.assertEqual(gh.dispatched, [("tests.yml", "wip/b42-integration", SHA)], "started with release_sha: its own concurrency group")
         self.assertEqual(rec["result"], "pass")
         self.assertIn("started for this release", rec["why"])
+
+    # owner 2026-11-14, B42-Q-RELEASE-TESTS: "If a run for the exact commit is already underway, wait for and reuse it. If another
+    # commit is running, queue the release verification or otherwise isolate its concurrency so neither run cancels the other."
+    def test_concurrent_run_of_the_exact_commit_is_awaited_and_reused(self):
+        gh = FakeGitHub(GREEN, head=SHA, progress=[{"status": "queued", "conclusion": None}, {"status": "in_progress", "conclusion": None}])
+        rec = find(gh, SHA, GREEN["tree"], "dispatch")
+        self.assertEqual((rec["result"], rec["run"]["id"], gh.dispatched), ("pass", int(RID), []))
+
+    def test_concurrent_run_of_another_commit_is_left_alone_and_the_release_run_queues(self):
+        other = copy.deepcopy(GREEN["runs"][0])
+        other.update({"id": 1, "head_sha": "e" * 40, "status": "in_progress", "conclusion": None, "event": "push"})
+        fx = {"runs": [other], "jobs": {"1": []}, "artifacts": {"1": []}, "files": {}}
+        later = copy.deepcopy(GREEN)
+        later["runs"][0]["created_at"] = "2999-01-01T00:00:00Z"
+        gh = FakeGitHub(fx, head=SHA, after_dispatch=later, progress=[])
+        rec = find(gh, SHA, GREEN["tree"], "dispatch")
+        self.assertEqual(rec["result"], "pass")
+        self.assertEqual(gh.dispatched, [("tests.yml", "wip/x", SHA)], "the other commit's run is not waited on and not reused")
+        self.assertFalse(hasattr(ev.GitHub, "cancel"), "the release never cancels a Tests run")
+        self.assertEqual([r["status"] for r in gh.fx["runs"] if r["id"] == 1], ["in_progress"])
+
+    def test_release_run_queued_behind_others_is_awaited(self):
+        later = copy.deepcopy(GREEN)
+        later["runs"][0]["created_at"] = "2999-01-01T00:00:00Z"
+        gh = FakeGitHub({"runs": [], "jobs": {}, "artifacts": {}, "files": {}}, head=SHA, after_dispatch=later)
+        gh.progress = [{"status": "queued", "conclusion": None}] * 5 + [{"status": "in_progress", "conclusion": None}] * 5
+        rec = find(gh, SHA, GREEN["tree"], "dispatch")
+        self.assertEqual((rec["result"], len(gh.dispatched)), ("pass", 1))
+
+    def test_expired_evidence_is_verified_again(self):
+        fx = variant(lambda fx: [a.__setitem__("expired", True) for a in fx["artifacts"][RID]])
+        later = copy.deepcopy(GREEN)
+        later["runs"][0].update({"id": 2, "created_at": "2999-01-01T00:00:00Z"})
+        later["jobs"] = {"2": later["jobs"][RID]}
+        later["artifacts"] = {"2": [dict(a, name=a["name"].replace(RID, "2")) for a in later["artifacts"][RID]]}
+        gh = FakeGitHub(fx, head=SHA, after_dispatch=later)
+        rec = find(gh, SHA, GREEN["tree"], "dispatch")
+        self.assertEqual((rec["result"], rec["run"]["id"], len(gh.dispatched)), ("pass", 2, 1))
+        self.assertEqual(rec["considered"][1]["verdict"], ev.UNUSABLE)
+
+    def test_cancelled_release_run_never_passes(self):
+        later = copy.deepcopy(GREEN)
+        later["runs"][0].update({"created_at": "2999-01-01T00:00:00Z", "conclusion": "cancelled"})
+        gh = FakeGitHub({"runs": [], "jobs": {}, "artifacts": {}, "files": {}}, head=SHA, after_dispatch=later)
+        rec = find(gh, SHA, GREEN["tree"], "dispatch")
+        self.assertEqual((rec["result"], len(gh.dispatched)), ("blocked", 1), "started once, cancelled: blocked, not started again")
+
+    def test_failed_release_run_blocks(self):
+        later = copy.deepcopy(GREEN)
+        later["runs"][0].update({"created_at": "2999-01-01T00:00:00Z", "conclusion": "failure"})
+        next(j for j in later["jobs"][RID] if j["name"] == "test (shard 2 of 12)")["conclusion"] = "failure"
+        gh = FakeGitHub({"runs": [], "jobs": {}, "artifacts": {}, "files": {}}, head=SHA, after_dispatch=later)
+        rec = find(gh, SHA, GREEN["tree"], "dispatch")
+        self.assertEqual((rec["result"], len(gh.dispatched)), ("blocked", 1))
+        self.assertEqual(rec["considered"][0]["verdict"], ev.FAILED)
+
+    def test_started_run_of_a_moved_branch_blocks(self):
+        moved = copy.deepcopy(GREEN["runs"][0])
+        moved.update({"id": 3, "head_sha": "9" * 40, "created_at": "2999-01-01T00:00:00Z", "status": "completed", "conclusion": "failure"})
+        fx = {"runs": [], "jobs": {}, "artifacts": {}, "files": {}, "branch_runs": [moved]}
+        gh = FakeGitHub(fx, head=SHA)
+        rec = find(gh, SHA, GREEN["tree"], "dispatch")
+        self.assertEqual(rec["result"], "blocked")
+        self.assertIn("moved on", rec["why"])
 
     def test_no_dispatch_when_the_ref_moved_on(self):
         gh = FakeGitHub({"runs": [], "jobs": {}, "artifacts": {}, "files": {}}, head="c" * 40)
@@ -381,6 +448,43 @@ class AndroidGate(unittest.TestCase):
         self.assertEqual(AND["certificate_sha256"], "31704b8025a4585cf4119e268ee6c8b30d5a39d1c62cdc00eecf0b7e76cb80e6")
         self.assertEqual(AND["editions"]["full"]["package"], "com.hotatticgames.mymedievallife.dev")
         self.assertEqual(AND["editions"]["demo"]["package"], "com.hotatticgames.mymedievallife.dev.demo")
+
+
+def gh_expr(expr, inputs, ref="refs/heads/wip/x", run_id="77"):
+    """Evaluate the small GitHub expression subset tests.yml's concurrency uses (&&, ||, ==, !=, '', null, format, inputs.*)."""
+    py = expr.strip()
+    py = re.sub(r"^\$\{\{|\}\}$", "", py)
+    py = py.replace("&&", " and ").replace("||", " or ").replace("null", "None")
+    py = re.sub(r"inputs\.(\w+)", r"inputs.get('\1')", py)
+    py = py.replace("github.ref", repr(ref)).replace("github.run_id", repr(run_id))
+    return eval(py, {"format": lambda f, *a: f.replace("{0}", str(a[0])), "inputs": inputs})
+
+
+class TestsConcurrency(unittest.TestCase):
+    """B42-Q-RELEASE-TESTS item 2: a release's verification run and other Tests runs never cancel each other."""
+    wf = (ROOT / ".github" / "workflows" / "tests.yml").read_text()
+    group = re.search(r"(?m)^concurrency:\n(?:  #.*\n)*  group: (.*)$", wf).group(1)
+    cancel = re.search(r"(?m)^  cancel-in-progress: (.*)$", wf).group(1)
+
+    def ctx(self, **inputs):
+        return gh_expr(self.group, inputs), gh_expr(self.cancel, inputs)
+
+    def test_push_runs_still_supersede_each_other(self):
+        self.assertEqual(self.ctx(), ("tests-refs/heads/wip/x", True))         # a push: no inputs at all
+        self.assertEqual(self.ctx(only="", group="", release_sha=""), ("tests-refs/heads/wip/x", True))
+
+    def test_release_run_has_its_own_group_and_cancels_nothing(self):
+        g, c = self.ctx(only="", group="", release_sha=SHA)
+        self.assertEqual((g, c), ("tests-release-" + SHA, False))
+        self.assertNotEqual(g, self.ctx()[0], "a push's run and the release's run are in different groups")
+        self.assertNotEqual(g, self.ctx(release_sha="e" * 40)[0], "two commits' release runs never share a group")
+
+    def test_targeted_runs_unchanged(self):
+        self.assertEqual(self.ctx(only="res://tests/x.gd", release_sha="")[0], "tests-only-77")
+
+    def test_release_run_refuses_another_commit(self):
+        self.assertIn('if [ "$RELEASE_SHA" != "$GITHUB_SHA" ]', self.wf)
+        self.assertIn("inputs[release_sha]=", (ROOT / "tools" / "release_evidence.py").read_text())
 
 
 class ReleaseWorkflow(unittest.TestCase):

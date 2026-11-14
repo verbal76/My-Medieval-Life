@@ -20,15 +20,23 @@ on:
         description: "Optional (owner 2026-11-10, GitHub Actions testing directive): run only the suites of these subsystem groups from tools/ci_groups.json (space-separated: save determinism economy population multiplayer recorder justice); combined with 'only'. A targeted run uses one runner and skips the Python checks and the 10-day economy run; empty with 'only' empty = the full run (the integration gate)"
         required: false
         default: ""
+      release_sha:
+        description: "Set only by release.yml (B42-RELEASE-EXACT-SHA): the exact commit a release must verify. Such a run is always a full run, has a concurrency group of its own (it never cancels, and is never cancelled by, another Tests run) and fails at once if the branch head is no longer that commit"
+        required: false
+        default: ""
 
 permissions:
   contents: read
 
 concurrency:
-  # a full run supersedes the older full run on its branch; an 'only' run (one suite checked independently, B25R1 validation
-  # 2026-11-04) has its own group, so it and a full run on the same commit never cancel each other
-  group: ${{ ((inputs.only != '' && inputs.only != null) || (inputs.group != '' && inputs.group != null)) && format('tests-only-{0}', github.run_id) || format('tests-{0}', github.ref) }}
-  cancel-in-progress: true
+  # a full run supersedes the older full run on its branch (pushes and hand-started runs, as before); an 'only' run (one suite
+  # checked independently, B25R1 validation 2026-11-04) has its own group, so it and a full run on the same commit never cancel
+  # each other. A run a release asked for (release_sha; owner 2026-11-14, B42-Q-RELEASE-TESTS item 2: "Do not cancel an
+  # existing full test run simply because a release requests verification ... isolate its concurrency so neither run cancels
+  # the other") is in a group of its own commit and cancels nothing: a push's run on the branch neither cancels it nor is
+  # cancelled by it, and a second request for the same commit queues behind the first.
+  group: ${{ (inputs.release_sha != '' && inputs.release_sha != null) && format('tests-release-{0}', inputs.release_sha) || (((inputs.only != '' && inputs.only != null) || (inputs.group != '' && inputs.group != null)) && format('tests-only-{0}', github.run_id) || format('tests-{0}', github.ref)) }}
+  cancel-in-progress: ${{ inputs.release_sha == '' || inputs.release_sha == null }}
 
 env:
   GODOT_VERSION: "4.7.2"
@@ -48,7 +56,13 @@ jobs:
         env:
           ONLY: ${{ inputs.only }}
           GROUP: ${{ inputs.group }}
+          RELEASE_SHA: ${{ inputs.release_sha }}
         run: |
+          # a release's verification run is a full run of exactly the release's commit (B42-RELEASE-EXACT-SHA)
+          if [ -n "$RELEASE_SHA" ]; then
+            if [ -n "$ONLY$GROUP" ]; then echo "::error::a release verification run (release_sha) is a full run: 'only' and 'group' must be empty"; exit 1; fi
+            if [ "$RELEASE_SHA" != "$GITHUB_SHA" ]; then echo "::error::release_sha $RELEASE_SHA is not this run's commit $GITHUB_SHA (the branch moved): not the release's commit"; exit 1; fi
+          fi
           if [ -n "$ONLY$GROUP" ]; then
             echo 'shards=[0]' >> "$GITHUB_OUTPUT"; echo 'targeted=true' >> "$GITHUB_OUTPUT"
           else

@@ -87,7 +87,12 @@ Reuse, not duplication: a passing Tests run of the commit is reused, whoever sta
 `tests-evidence` start one, on the branch being released and only when that branch's head is still the commit
 (`tests_when_missing: dispatch`, the default; `fail` blocks instead). A full run of the commit that failed blocks the
 release and is never re-run by the workflow; a person decides whether a failure was the runner's and re-runs its failed
-jobs. Starting Tests on a branch cancels a Tests run still in progress on that branch (tests.yml's concurrency group).
-Tests artifacts are kept 30 days: after that a commit's evidence has expired and a new run is needed. The record
+jobs. Concurrency (owner, 2026-11-14, B42-Q-RELEASE-TESTS item 2): the run a release starts carries `release_sha` and is in
+a concurrency group of its own commit (`tests-release-<sha>`, cancel-in-progress off), so it never cancels, and is never
+cancelled by, a push's or anyone's Tests run; a second request for the same commit queues behind the first, and the
+release waits for a queued or running run of its commit instead of starting another. Pushes keep superseding older
+pushes' runs on the same branch (`tests-<ref>`), as before. A `release_sha` run fails at once if the branch head is no
+longer that commit, and the release then blocks with that reason. Tests artifacts are kept 30 days (owner-approved): after
+that a commit's evidence has expired and the release starts a new verification run. The record
 (`release-evidence` artifact, mml-release-evidence/1) names the run used and every run considered, and its summary goes
 into the release notes.
