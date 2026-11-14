@@ -822,24 +822,24 @@ static func _set_out(w: World, s: OffMapSettlement, ms: Array, reason: String, h
 		if o.role == "adult":
 			head = o
 			break
-	if pantry != null:                                   # the household's stores are carried by its head
-		var ids: Array = pantry.ids()
-		ids.sort()
-		for id in ids:
-			w.transfer(pantry, head.inv, str(id), pantry.count(str(id)))
 	var ids_ := []
 	for o: NPC in ms:
 		ids_.append(o.id)
 	var purpose := {"kind": MIGRATE, "party": "%s:%d:%d" % [s.id, w.day(), int(ms[0].id)], "reason": reason, "members": ids_}
 	purpose.merge(how)
 	var started := []
-	for o: NPC in ms:
+	for o: NPC in ms:                                    # each takes food for their own walk from the pantry (Journeys.provision)
 		if Journeys.start(w, o, s.id, purpose) != "":
 			for x: NPC in started:                         # (cannot happen after walks(): a walk that will not start leaves nobody on the road)
 				Journeys.end(w, x, "cancelled")
 			w.stat("migration_set_out_failed")
 			return false
 		started.append(o)
+	if pantry != null:                                   # the rest of the household's stores are carried by its head
+		var ids: Array = pantry.ids()
+		ids.sort()
+		for id in ids:
+			w.transfer(pantry, head.inv, str(id), pantry.count(str(id)))
 	w.stat("migration_set_out")
 	w.stat("migration_set_out_" + reason)
 	w.note("%s set%s out for %s %s." % [_names(ms), "s" if ms.size() == 1 else "", s.name, WHY[reason]])

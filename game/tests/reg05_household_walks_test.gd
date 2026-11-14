@@ -134,6 +134,8 @@ func test_household_walks() -> void:
 		if ms2[0].alive:
 			tr.jump = maxf(float(tr.jump), ms2[0].pos.distance_to(tr.last))
 			tr.last = ms2[0].pos)
+	for o: NPC in ms2:
+		print("  member %d %s role %s alive %s away '%s' journey %s doing '%s' at %s hunger %.0f" % [o.id, o.name, o.role, str(o.alive), o.away, str(o.journey), o.doing, o.cell(), o.hunger])
 	check(ms2.all(func(o): return not o.alive and str(o.away) == s.id), "on arrival they leave the village's living (away in the settlement)")
 	check(_in_settlement(s2, ids) == ids.size(), "all %d are members in %s now" % [ids.size(), s.name])
 	var hids := {}
