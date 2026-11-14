@@ -12,7 +12,7 @@ owner's signing manager.
 | Keystore | `mymedievallife-release.jks`, PKCS12 (kept by the owner) |
 | Alias | `mymedievallife_release` |
 | Valid | 2026-10-24 to 2053-10-23 |
-| Certificate SHA-256 | in the owner's signing manager; every build prints it (below) for comparison |
+| Certificate SHA-256 | `31704b8025a4585cf4119e268ee6c8b30d5a39d1c62cdc00eecf0b7e76cb80e6` (public; Builds 21, 24, 34, 41); every build prints it and the release gate requires it (`tools/release_requirements.json`) |
 | Package id | `com.hotatticgames.mymedievallife.dev` (`game/export_presets.cfg`, unchanged since 2026-10-18; the signing manager's `com.hotatticgames.mygame` is a placeholder). Changing it needs the owner's approval. |
 
 ## The four repository secrets (never renamed)
@@ -30,13 +30,19 @@ Agents cannot create or read these secrets; they only reference them by name.
 
 1. Checks all four secrets are set and that the keystore decodes. A missing secret stops the build with an error naming
    the missing secret, never its value.
-2. Exports the APK **unsigned** (the build sets `package/signed=false`), aligns it with `zipalign` (16 KB pages) and signs
+2. Exports the APK **unsigned** with Godot's **release** template (`--export-release`; the build sets `package/signed=false`;
+   up to Build 41 it was `--export-debug`, which made every APK `android:debuggable=true`: B42-ANDROID-DEBUGGABLE,
+   `BUILDING.md`), aligns it with `zipalign` (16 KB pages) and signs
    it with `apksigner`, passing the keystore password and the key password separately (they are never assumed equal).
    A wrong password, alias or keystore stops the build; the signer's log stays on the runner and is not printed.
 3. Verifies the APK (`apksigner verify --print-certs`) and records the certificate's SHA-256 fingerprint in the job log,
    in the release notes and in `ForgeMyLife-B<n>-Android-signature.txt` (with the package id and version code
    from `aapt dump badging`). Compare it with the signing manager's fingerprint.
-4. Deletes the decoded keystore and the Godot settings file before the release step.
+4. Checks the signed APK with `tools/check_android_apk.py` (not debuggable, the package id, versionCode = the build number,
+   exactly one signer with the permanent certificate SHA-256 `31704b8025a4585cf4119e268ee6c8b30d5a39d1c62cdc00eecf0b7e76cb80e6`,
+   recorded from Builds 21, 24, 34 and 41), in its package job and again in the release job before publication.
+5. Deletes the decoded keystore and the Godot settings file before the release step. (The keystore is no longer written into
+   Godot's settings as its debug keystore: an unsigned release export needs none.)
 
 There is **no fallback**: the old `allow_temporary_key` input and its throwaway key are gone. Windows and Linux are not
 signed and are unaffected.

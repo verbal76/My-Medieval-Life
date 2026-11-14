@@ -22,6 +22,20 @@
 # results (workbook, summary, gate.json, logs, analyses) are uploaded as the workflow artifact "sim-gate" whether it passes
 # or fails; the workbook is an internal CI artifact, never attached to the release; the release notes carry a short
 # summary with the gate's run id and the recorder schema.
+#
+# B42-RELEASE-EXACT-SHA (owner, 2026-11-14: "Require all mandatory release tests to pass against the exact commit SHA used to
+# produce the release packages. Failed, skipped, missing, or incomplete required tests must block release. Reuse valid results
+# for the exact SHA rather than running expensive duplicate tests."): what is mandatory is defined once, in
+# tools/release_requirements.json. The "tests-evidence" job finds a complete, fully green full Tests run of exactly this commit
+# and reuses it, awaits one in progress, or (tests_when_missing=dispatch, the default) starts one when none exists; a failed
+# run blocks and is never re-run here (tools/release_evidence.py). The release job first checks every mandatory job succeeded.
+#
+# B42-ANDROID-DEBUGGABLE (owner, 2026-11-14): the Android packages are production packages: exported with --export-release
+# (Godot's release template; --export-debug made every APK up to Build 41 android:debuggable=true), then aligned and signed
+# with the permanent release key as before. tools/check_android_apk.py checks each APK's own manifest and signature (not
+# debuggable, the package id, versionCode = the build number, the permanent certificate) in its package job and again in
+# the release job before anything is published. A development/test APK is exported locally with --export-debug
+# (docs/release/BUILDING.md) and is never a release package.
 name: Build and release
 
 on:
@@ -44,6 +58,11 @@ on:
         description: "Owner-approved only (private builds): an earlier release run whose simulation gate passed; reused instead of running the gate, when nothing the simulation runs has changed since"
         type: string
         default: ""
+      tests_when_missing:
+        description: "No full Tests run of this commit exists: dispatch = start one on this branch and wait for it (only when the branch head is this commit); fail = block the release. A green run of the commit is always reused; a failed one always blocks"
+        type: choice
+        options: [dispatch, fail]
+        default: dispatch
 
 permissions:
   contents: write
@@ -56,6 +75,33 @@ env:
   GODOT_VERSION: "4.7.2"
 
 jobs:
+  # B42-RELEASE-EXACT-SHA: a complete, fully green full Tests run of exactly this commit (tools/release_requirements.json "tests").
+  # Reused when it exists (no duplicate run); awaited when in progress; started once when none exists and tests_when_missing is
+  # dispatch. Runs beside the package jobs; the release job needs it.
+  tests-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      actions: write           # read the Tests runs, their jobs and artifacts; start tests.yml when no run of this commit exists
+      contents: read
+    steps:
+      - uses: actions/checkout@v4        # this commit's tests.yml (the full shard plan), floors and guards define the evidence
+      - name: Find, await or start a full green Tests run of this exact commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          WHEN_MISSING: ${{ inputs.tests_when_missing || 'dispatch' }}
+        run: |
+          python3 tools/release_evidence.py tests --repo "$GITHUB_REPOSITORY" --sha "$GITHUB_SHA" --ref "$GITHUB_REF_NAME" \
+            --when-missing "$WHEN_MISSING" --json out/release-evidence.json --markdown "$GITHUB_STEP_SUMMARY"
+      - name: Keep the evidence record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-evidence
+          path: out/release-evidence.json
+          if-no-files-found: warn
+          retention-days: 90
+
   # SIM-GATE-01 split across runners (B25R1, docs/ci/CI_ARCHITECTURE_B25R1.md section 3): plan, one runner a part, then one
   # gather job that judges every run as the single-job gate did and uploads the same `sim-gate` and `sim-gate-archives`
   # artifacts. Skipped when an owner-approved earlier gate is reused (reuse_gate_run); the release job's checks are unchanged.
@@ -149,8 +195,10 @@ jobs:
             echo "::error::ANDROID_RELEASE_KEYSTORE_BASE64 does not decode to a keystore file. The build stops."
             exit 1
           fi
-          # Godot exports the APK unsigned (package/signed=false below) and apksigner signs it in the export step. The
-          # keystore is also named here only because Godot's export check may ask for one; it signs nothing with it.
+          # Godot exports the APK unsigned (package/signed=false below) with its RELEASE template (--export-release) and
+          # apksigner signs it in the export step. An unsigned release export needs no keystore in Godot's settings (checked
+          # with Godot 4.7.2 and its templates, B42-ANDROID-DEBUGGABLE), so the release key is no longer handed to Godot as
+          # its "debug keystore", as it was while the export was a debug one.
           mkdir -p "$HOME/.config/godot"
           cat > "$HOME/.config/godot/editor_settings-4.7.tres" <<EOF
           [gd_resource type="EditorSettings" format=3]
@@ -158,9 +206,6 @@ jobs:
           [resource]
           export/android/android_sdk_path = "${ANDROID_SDK_ROOT}"
           export/android/java_sdk_path = "${JAVA_HOME}"
-          export/android/debug_keystore = "${RUNNER_TEMP}/android-release.keystore"
-          export/android/debug_keystore_user = "${KEY_ALIAS}"
-          export/android/debug_keystore_pass = "${KEYSTORE_PASSWORD}"
           EOF
 
       - name: Fetch the music as WAV (Windows and Linux carry it; Android carries Ogg)
@@ -205,7 +250,9 @@ jobs:
           KEY_PASSWORD: ${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}
         run: |
           mkdir -p out pkg
-          godot --headless --path game --export-debug "Android${PRESET_SUFFIX}" ../out/unsigned.apk
+          # B42-ANDROID-DEBUGGABLE: the production package comes from Godot's release template (android:debuggable absent,
+          # the release engine build); --export-debug, used here up to Build 41, is for local development builds only
+          godot --headless --path game --export-release "Android${PRESET_SUFFIX}" ../out/unsigned.apk
           # SIM-GATE-01 amendment: the APK carries no workbook or desktop export code (export_presets.cfg exclude_filter)
           if unzip -l out/unsigned.apk | grep -E "recorder_export|sim_workbook"; then
             echo "::error::the Android package contains the desktop recording export (scripts/recorder_export or data/sim_workbook.json)"
@@ -237,6 +284,9 @@ jobs:
           [ "${{ matrix.edition }}" = "demo" ] && want="com.hotatticgames.mymedievallife.dev.demo"
           grep -q "name='${want}'" out/apk-package.txt || { echo "::error::the APK's package id is not ${want}"; exit 1; }
           "$aapt" dump permissions "$apk" | tee out/apk-permissions.txt
+          # the production gate on the package's own manifest and signature (tools/release_requirements.json "android")
+          python3 tools/check_android_apk.py --apk "$apk" --edition "${{ matrix.edition }}" --build-number "$BUILD_N" \
+            --apksigner "${tools_dir}apksigner" --json out/android-gate.json
           for perm in INTERNET ACCESS_NETWORK_STATE ACCESS_WIFI_STATE CHANGE_WIFI_MULTICAST_STATE; do
             if ! grep -q "android.permission.${perm}'\?\$" out/apk-permissions.txt; then
               echo "::error::the APK's manifest lacks android.permission.${perm} (game/export_presets.cfg)"
@@ -311,9 +361,11 @@ jobs:
           if (Select-String -Path out.log, err.log -Pattern 'resources still in use at exit|ObjectDB instances? (were|was) leaked' -Quiet) { Select-String -Path out.log, err.log -Pattern 'still in use at exit|leaked at exit|Leaked instance' | Select-Object -First 20; Write-Error "leak at exit when the Windows ${{ matrix.edition }} build quit"; exit 1 }
 
   release:
-    needs: [sim-gate, package, smoke-windows]
-    # the gate passed on this commit, or (owner-approved, private only) an earlier run's passing gate is reused: see below
-    if: always() && needs.package.result == 'success' && needs.smoke-windows.result == 'success' && (needs.sim-gate.result == 'success' || (needs.sim-gate.result == 'skipped' && inputs.reuse_gate_run != '' && inputs.visibility == 'private'))
+    needs: [tests-evidence, sim-gate, package, smoke-windows]
+    # runs whatever its needs concluded, so that its first step names every unmet requirement; that step blocks the release
+    # unless every mandatory job succeeded (tools/release_requirements.json "release_jobs"; sim-gate may be skipped only for the
+    # owner-approved private reuse of an earlier passing gate, checked below against the diff since that gate's commit)
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     environment: ${{ inputs.visibility == 'public' && 'public-release' || 'private-testing' }}
@@ -324,12 +376,40 @@ jobs:
         with:
           fetch-depth: 0                  # a reused gate is checked against the diff since its commit
 
+      - name: Fetch the tests evidence record
+        if: always()
+        continue-on-error: true           # a missing record is reported by the next step, which blocks
+        uses: actions/download-artifact@v4
+        with:
+          name: release-evidence
+          path: release-evidence
+
+      - name: Every mandatory release requirement met on this commit (B42-RELEASE-EXACT-SHA)
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+          VISIBILITY: ${{ inputs.visibility }}
+          REUSE: ${{ inputs.reuse_gate_run }}
+        run: |
+          python3 tools/release_evidence.py needs --needs-json "$NEEDS" --visibility "$VISIBILITY" --reuse-gate-run "$REUSE" \
+            --evidence release-evidence/release-evidence.json --sha "$GITHUB_SHA"
+
       - name: Collect the six packages
         uses: actions/download-artifact@v4
         with:
           pattern: pkg-*
           path: release
           merge-multiple: true
+
+      - name: Check both Android packages again before publication (B42-ANDROID-DEBUGGABLE)
+        run: |
+          tools_dir="$(ls -d "$ANDROID_SDK_ROOT"/build-tools/*/ | sort -V | tail -1)"
+          rc=0
+          python3 tools/check_android_apk.py --apk "release/ForgeMyLife-B${BUILD_N}-Android.apk" --edition full \
+            --build-number "$BUILD_N" --apksigner "${tools_dir}apksigner" > android-gate.txt || rc=1
+          python3 tools/check_android_apk.py --apk "release/ForgeMyLife-B${BUILD_N}-Demo-Android.apk" --edition demo \
+            --build-number "$BUILD_N" --apksigner "${tools_dir}apksigner" >> android-gate.txt || rc=1
+          cat android-gate.txt
+          exit $rc
 
       - name: Check all six are here, and write the checksums and the notes
         run: |
@@ -355,6 +435,8 @@ jobs:
             echo
             echo "\`SHA256SUMS.txt\` lists each file's checksum, \`SIZES.txt\` its size."
             echo
+            python3 -c "import json, sys; sys.path.insert(0, 'tools'); import release_evidence as r; print(r.markdown(json.load(open('release-evidence/release-evidence.json'))))"
+            echo "**Android production gate** (tools/check_android_apk.py):"; echo; sed 's/^/- /' android-gate.txt; echo
             if [ -f "docs/release/BUILD_${n}_TESTER_NOTES.md" ]; then cat "docs/release/BUILD_${n}_TESTER_NOTES.md"; echo; fi
             cat docs/release/TESTING_CHECKLIST.md; } > notes.md
 
@@ -409,6 +491,7 @@ jobs:
         env:
           JOB_STATUS: ${{ job.status }}
           GATE_RESULT: ${{ needs.sim-gate.result }}
+          TESTS_RESULT: ${{ needs.tests-evidence.result }}
           PACKAGE_RESULT: ${{ needs.package.result }}
           VISIBILITY: ${{ inputs.visibility }}
         run: |
@@ -428,6 +511,7 @@ jobs:
             echo "| Run | $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID (attempt $GITHUB_RUN_ATTEMPT) |"
             echo "| Trigger | $GITHUB_EVENT_NAME by $GITHUB_ACTOR |"
             echo "| Visibility requested | $VISIBILITY |"
+            echo "| Tests on this exact commit (tests-evidence) | $TESTS_RESULT |"
             echo "| Simulation gate job | $GATE_RESULT |"
             echo "| Package jobs (six) | $PACKAGE_RESULT |"
             echo "| Outcome | **$outcome** |"
