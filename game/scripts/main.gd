@@ -1499,6 +1499,7 @@ func _clear_world() -> void:
 	furn = {}
 	if world:
 		world.dispose()
+	AerialMap.drop()                 # B42 KI-08: its static instance kept the world thrown away, and its pictures, until a map opened
 	for sg in house_signs.values():
 		if is_instance_valid(sg):
 			sg.queue_free()

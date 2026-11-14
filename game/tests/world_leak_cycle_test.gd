@@ -89,11 +89,12 @@ func _run() -> void:
 	var grow := (int(counts[-1]) - int(counts[1])) / float(maxi(1, cycles - 1))
 	print("objects on the title per cycle: %s (growth %.1f a cycle after the first)" % [str(counts), grow])
 	check(grow <= PER_CYCLE_TOLERANCE, "the title's object count is flat across cycles (%.1f a cycle, at most %d)" % [grow, PER_CYCLE_TOLERANCE])
-	# the last world kept by main for the next Continue is freed when main drops it
+	# the last world, kept by main for the next Continue, is freed once main throws it away (AerialMap's static instance
+	# held it until the next map opened)
 	main._clear_world()
 	main.world = null
 	await settle()
-	check(prev.get_ref() == null, "the last world was freed when main dropped it")
+	check(prev.get_ref() == null, "the last world was freed when main threw it away")
 	print("%s: %d failure(s)" % ["PASS" if failures == 0 else "FAIL", failures])
 	_clear_saves()
 	quit(1 if failures > 0 else 0)
