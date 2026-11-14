@@ -6031,8 +6031,61 @@ func _real_pads() -> Array:
 	return Input.get_connected_joypads().filter(func(d): return is_pad(Input.get_joy_name(d)))
 
 
+## B42-BEGIN-DOUBLE-CLICK (owner 2026-11-14, C7: "Character creation Begin button sometimes needs a second click"). Cause, traced
+## with real X input (XTest on Xvfb, the packaged Linux test's setting): the first click into the window makes the system move the
+## window's focus out and back in between the button's press and its release; the engine then drops the GUI's hold on the pressed
+## button (a window losing focus ends every press), so the release reaches no control and the button never fires: the second click,
+## with no focus change, works. A name field had the focus only because the keyboard had been used, not the mouse, up to then.
+## Correction: a left click whose press was on a button, interrupted by such a focus change, and released over the same button
+## (enabled, shown) completes that button's click once, as an uninterrupted click would; a release elsewhere does nothing, and a
+## click the button received itself is never repeated.
+var _click_btn: BaseButton = null
+var _click_got_up := false
+var _click_cut := false
+
+
+func _click_watch(e: InputEventMouseButton) -> void:
+	if e.button_index != MOUSE_BUTTON_LEFT:
+		return
+	var c := get_viewport().gui_get_hovered_control()   # the control under the pointer (the GUI's own hit test)
+	while c != null and not (c is BaseButton):
+		c = c.get_parent() as Control
+	if e.pressed:
+		_click_btn = null
+		_click_cut = false
+		if c != null and not (c as BaseButton).disabled:
+			_click_btn = c
+			_click_got_up = false
+			if not _click_btn.button_up.is_connected(_on_click_up):
+				_click_btn.button_up.connect(_on_click_up, CONNECT_ONE_SHOT)
+		return
+	if _click_btn != null and _click_cut and c == _click_btn:
+		_finish_cut_click.call_deferred(_click_btn)      # after the GUI has had the release: only if the button did not
+	elif _click_cut:
+		_click_btn = null                                # released away from it: no click, as with any button
+	_click_cut = false
+
+
+func _on_click_up() -> void:
+	_click_got_up = true
+
+
+func _finish_cut_click(b: BaseButton) -> void:
+	var mine := b == _click_btn
+	_click_btn = null
+	if not mine or _click_got_up or not is_instance_valid(b) or not b.is_visible_in_tree() or b.disabled:
+		return
+	if b.button_up.is_connected(_on_click_up):
+		b.button_up.disconnect(_on_click_up)
+	if b.toggle_mode:
+		b.button_pressed = not b.button_pressed
+	b.pressed.emit()
+
+
 ## Which controls are in use, from the latest input: the HUD follows (touch buttons, prompts).
 func _input(e: InputEvent) -> void:
+	if e is InputEventMouseButton:
+		_click_watch(e)
 	var s := scheme
 	if e is InputEventScreenTouch or e is InputEventScreenDrag:
 		s = "touch"
@@ -6415,6 +6468,8 @@ func demo_save_expired() -> bool:
 
 
 func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_WINDOW_FOCUS_OUT and _click_btn != null:
+		_click_cut = true                   # B42-BEGIN-DOUBLE-CLICK: a press in flight is dropped by the engine (_click_watch)
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_APPLICATION_PAUSED:
 		app_focused = false                 # DEMO-01: the demo's clock stops in the background
 	elif what == NOTIFICATION_APPLICATION_FOCUS_IN or what == NOTIFICATION_APPLICATION_RESUMED:
