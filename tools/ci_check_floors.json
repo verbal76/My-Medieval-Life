@@ -320,5 +320,6 @@
  "stream_tunnel_test": 5,
  "tile_premake_test": 6,
  "demo_journey_test": 60,
- "mp_g4_loopback_test": 34
+ "mp_g4_loopback_test": 34,
+ "world_leak_cycle_test": 9
 }

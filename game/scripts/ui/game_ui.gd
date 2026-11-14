@@ -41,7 +41,8 @@ var coin_delta: Label              # the one "+5" beside the purse (reused: neve
 var coins_to := -1                 # the purse the counter is counting to (-1: none yet)
 var coins_from := 0.0
 var coins_t := 0.0                 # seconds of counting left
-var coins_world: Object = null     # the world whose purse it shows (a new world shows its purse at once)
+var coins_world := 0               # the instance id of the world whose purse it shows (a new world shows its purse at once); an id,
+                                   # not the world, so a world thrown away is not kept alive by the status box (B42 KI-08)
 var coin_delta_t := 0.0
 var prompt_first := ""             # the prompt's first line last shown (a new target pulses it once)
 var clock_label: Label         # the time of day ("07:00")
@@ -1147,7 +1148,7 @@ func update_hud() -> void:
 ## at once, without a count. With Reduce effects the number changes at once and the amount stands still beside it.
 ## Reads the purse only (World.player.coins, which the host's snapshots give a guest): every change of it is a real one.
 func _coins_step(coins: int, delta: float) -> void:
-	var w: Object = main.world if main != null else null
+	var w: int = main.world.get_instance_id() if main != null and main.world != null else 0
 	var still: bool = main != null and main.settings.reduce_effects
 	if w != coins_world or coins_to < 0:
 		coins_world = w

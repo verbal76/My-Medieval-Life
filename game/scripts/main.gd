@@ -1499,6 +1499,7 @@ func _clear_world() -> void:
 	furn = {}
 	if world:
 		world.dispose()
+	AerialMap.drop()                 # B42 KI-08: its static instance kept the world thrown away, and its pictures, until a map opened
 	for sg in house_signs.values():
 		if is_instance_valid(sg):
 			sg.queue_free()
@@ -6261,6 +6262,8 @@ func end_recording() -> void:
 func _exit_tree() -> void:
 	AerialMap.drop()                       # B25R1-025: the settlements' worker thread is stopped and joined
 	end_recording()
+	if world != null:
+		world.dispose()                    # B42 KI-08: the game is closing: its world's reference cycles are broken so nothing leaks at exit
 
 
 ## DEMO-01: one frame of the demo's clock, counted where the world advances (not paused, alive or hosting guests; the window in the

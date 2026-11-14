@@ -6380,13 +6380,77 @@ func end_recording() -> void:
 		judgment.pers.rec = null
 
 
-## Break the world <-> brain reference cycle so a finished world is freed.
+## Break the reference cycles so a finished world is freed. B42 KI-08: some 45 of the world's stores and services keep a strong
+## reference back to it (`w`, the judgment store's `world`, the settlement people's `person_hook` bound to it), each a
+## RefCounted cycle, so every world thrown away (Continue after Save and quit to title, a guest leaving, a failed load)
+## stayed in memory with everything it held (~450 objects, ~30 MB). Every back-reference reachable from the world is
+## cleared here; the world is not used after this.
 func dispose() -> void:
 	disposed = true                    # the views that read this world stop (StallDisplayView): it is being thrown away
 	end_recording()
+	_break_back_references()
 	brain = null
 	fauna = null
 	construction = null
+
+
+## B42 KI-08: walk the objects the world holds (script variables, through arrays, dictionaries and callables) depth first and
+## clear every variable that points back up the walk: to the world (the stores' `w`), to an object that holds this one (a
+## business's stalls' `biz`, the economy's stores' `f`, a person's pack's `worn_fn`), or is a callable bound to one (the
+## settlements' hooks, the world's own `journey_hook`). With every such back edge gone the graph has no cycle left, so it
+## is freed when the last outside reference goes. Plain data is only read; resources (textures, shared data) are not walked.
+func _break_back_references() -> void:
+	var visited := {get_instance_id(): true}
+	var on_path := {get_instance_id(): true}
+	var stack: Array = [[self, _held_by(self), 0]]
+	while not stack.is_empty():
+		var top: Array = stack[-1]
+		var items: Array = top[1]
+		if top[2] >= items.size():
+			on_path.erase((top[0] as Object).get_instance_id())
+			stack.pop_back()
+			continue
+		var item: Array = items[top[2]]
+		top[2] += 1
+		var to: Object = item[1]
+		var id: int = to.get_instance_id()
+		if on_path.has(id):
+			if item[0] != "":
+				(top[0] as Object).set(item[0], Callable() if item[2] else null)
+		elif not visited.has(id):
+			visited[id] = true
+			on_path[id] = true
+			stack.append([to, _held_by(to), 0])
+
+
+## The objects one object holds, for _break_back_references: [variable ("" when inside an array or dictionary), the object,
+## whether it is a callable's].
+func _held_by(o: Object) -> Array:
+	var out: Array = []
+	for pr in o.get_property_list():
+		if int(pr.usage) & PROPERTY_USAGE_SCRIPT_VARIABLE:
+			_held_in(o.get(pr.name), str(pr.name), out)
+	return out
+
+
+func _held_in(v: Variant, prop: String, out: Array) -> void:
+	if v is Callable:
+		var c: Callable = v
+		var co: Object = c.get_object()
+		if co is RefCounted and not co is Resource:
+			out.append([prop, co, true])
+		for a in c.get_bound_arguments():
+			_held_in(a, "", out)
+	elif v is Array:
+		for x in v:
+			if x is Object or x is Array or x is Dictionary or x is Callable:
+				_held_in(x, "", out)
+	elif v is Dictionary:
+		for x in (v as Dictionary).values():
+			if x is Object or x is Array or x is Dictionary or x is Callable:
+				_held_in(x, "", out)
+	elif v is RefCounted and is_instance_valid(v) and not v is Resource:
+		out.append([prop, v, false])
 
 
 # ---------------------------------------------------------------- save / load ----------------
