@@ -27,6 +27,7 @@ func check(cond: bool, what: String) -> void:
 
 func _init() -> void:
 	GameData.ensure()
+	Migration.walk = false            # REG-05 (B42): these decision-rule checks are of the move made at once (a world with no roads); the walk is reg05_household_walks_test
 	var r1 := scenario(true)
 	var r2 := scenario(false)
 	check(r1 == r2 and str(r1) != "", "two identical runs make the same move (%s)" % str(r1))

@@ -612,6 +612,15 @@ func refusal(order: Dictionary) -> String:
 			return why_not
 		if units_of(items) > capacity(str(order.courier)) * 1:
 			return "That is more than the courier can carry (%d)." % capacity(str(order.courier))
+		var dest := str(order.get("settlement", place_of(recipient)))
+		if walks(str(order.courier), dest):                   # REG-04: the courier walks it, now, by road
+			var cn = _npc(str(order.courier))
+			if Journeys.active(cn):
+				return "That courier is on the road."
+			if w.map.overworld.road_route(Journeys.gate_index(w), dest).is_empty():
+				return "There is no road there."
+			if not Journeys.fed_for(w, cn, dest, {"kind": "courier"}):
+				return "That courier has not the food for the road there and back."
 	if is_formal(order):                                      # X18-Q13: a formal contract is signed, never remotely or at once
 		if str(order.get("kind", "special")) == "route":
 			return "A payment of %d coins is a formal contract and must be signed: send it by a special delivery with a courier who knows the law, or meet face to face." % payment_value(order)
@@ -789,6 +798,11 @@ func book_special(order: Dictionary, fee: int) -> Dictionary:
 	job.arrive = _day() + float(q.days)
 	job.history.append([_day(), "agreed at %d coins; fee held at the booth; the courier takes the goods" % fee])
 	_note_carried(job, EconRouteRisk.value_of(job.cargo))
+	if walks(str(order.courier), str(job.settlement)):          # REG-04: the courier sets out on foot with the load
+		if Journeys.start(w, _npc(str(order.courier)), str(job.settlement), {"kind": "courier", "jobs": [str(job.id)]}) == "":
+			job.walker = str(order.courier)
+			job.arrive = _day() + Journeys.trip_minutes(w, str(job.settlement)) / World.DAY
+			w.stat("courier_walks")
 	return job
 
 
@@ -831,7 +845,11 @@ func formal() -> FormalAgreements:
 func tick(day: float) -> void:
 	for r in routes:
 		while float(r.next_day) <= day:
-			_depart(r, float(r.next_day))
+			if _walked_route(r) and _due_jobs(r).size() > 0:
+				if not _set_off(r, day):
+					break                                  # REG-04: the carrier is on the road: the loads wait for them at the booth
+			else:
+				_depart(r, float(r.next_day))
 			r.next_day = int(r.next_day) + int(r.every_days)
 	var wait := float((cfg().get("routes", {}) as Dictionary).get("wait_days", 7))
 	for j in jobs:
@@ -841,6 +859,8 @@ func tick(day: float) -> void:
 		if str(j.state) in ["in_transit", "returning"] and not alive(str(j.courier)):
 			interrupt(j, "the courier died on the road")
 			continue
+		if str(j.get("walker", "")) != "":
+			continue                                       # REG-04: a walked delivery moves only with its carrier (walk_arrived, walk_ended)
 		match str(j.state):
 			"in_transit":
 				if day >= float(j.arrive):
@@ -848,6 +868,214 @@ func tick(day: float) -> void:
 			"returning":
 				if day >= float(j.back):
 					_home(j, day)
+
+
+# ------------------------------------------------------------------------------ REG-04: the carrier walks
+## REG-04 (owner 2026-11-08, docs/directives/2026-11-08_recovered_owner_messages.md "REG-04 - Couriers physically travel"): a
+## delivery is not completed by a day count while its carrier stays somewhere else. A villager courier (the village booth's keeper,
+## who also carries the shop booths' routes, or a keeper hired for a special delivery) WALKS: one journey (Journeys, the same road,
+## pace, night rest, food and dangers as every traveller) to the settlement and home, purpose {kind: "courier", jobs: [ids]}. Every
+## load waiting for that keeper and that settlement goes on the one walk (the route's cart: load_units x loads_per_departure units),
+## so one courier is on one road at a time; a route whose keeper is on the road waits (its schedule stays due) until they are home.
+## The hand-over (_arrive: payment, notary signing) happens when the walker reaches the site (walk_arrived, World.journey_hook), and
+## the return (_home) when they are back in the village (walk_ended "home"). A walk turned back (a closed road) brings the goods
+## home to the sender; a courier who dies on the road drops the load where they fall (interrupt). The load rides with the walker in
+## the delivery's `cargo` (job.walker names them), as before: a villager courier's own trading never sells it. Not walked (owner
+## questions R4-Q2, R4-Q3, docs/audits/2026-11-12_PREREQUISITES_REG04_REG05_MP02_JOB02.md): a settlement's trader party carrying
+## (its caravan is off-map), an errand within one place, a service with no world map (the abstract tests); and a delivery booked
+## before REG-04 (no `walker`, a save made on the road) finishes by its day count.
+
+## Whether `courier` walks to `settlement`: the live service, a world with roads, a villager courier, a settlement with a site.
+func walks(courier: String, settlement: String) -> bool:
+	return live and w != null and w.map != null and w.map.overworld != null and courier.begins_with("npc:") \
+		and settlement != SettlementFacts.VILLAGE and not w.map.overworld.site(settlement).is_empty()
+
+
+func _walked_route(r: Dictionary) -> bool:
+	return walks(str(carrier_booth(r).keeper), str(booth(str(r.to)).get("settlement", "")))
+
+
+## The deliveries waiting at the booth for route `r`.
+func _due_jobs(r: Dictionary) -> Array:
+	return jobs.filter(func(j): return str(j.route) == str(r.id) and str(j.state) == "at_booth")
+
+
+## REG-04: the keeper of `r` sets out with every load waiting for them and r's settlement on the routes now due. True when the
+## route's departure is done with (they left, or nobody can carry: the loads wait as before), false while the keeper is on the road.
+func _set_off(r: Dictionary, day: float) -> bool:
+	var keeper := str(carrier_booth(r).keeper)
+	var sid := str(booth(str(r.to)).settlement)
+	if not alive(keeper):
+		_depart(r, float(r.next_day))                  # (the old rule: nobody to carry, the loads wait; REG-08's timeout ends them)
+		return true
+	var n = _npc(keeper)
+	if Journeys.active(n):
+		return false
+	var cap := int(r.load_units) * int(cfg().routes.loads_per_departure)
+	var take := []
+	var units := 0
+	for r2 in routes:
+		if float(r2.next_day) > day or str(carrier_booth(r2).keeper) != keeper or str(booth(str(r2.to)).get("settlement", "")) != sid:
+			continue
+		for j in _due_jobs(r2):
+			var u := units_of(j.items)
+			if units + u <= cap:
+				take.append(j)
+				units += u
+	if take.is_empty():
+		return true
+	var why := Journeys.start(w, n, sid, {"kind": "courier", "jobs": take.map(func(j): return str(j.id))})
+	if why != "":
+		for j in take:
+			j.history.append([day, "the courier could not set out: " + why])
+		w.stat("courier_walk_refused")
+		return true                                    # (the loads wait for the next departure; REG-08 ends one nobody carries)
+	var arrive := day + Journeys.trip_minutes(w, sid) / World.DAY
+	for j in take:
+		var b := booth(str(j.booth))
+		j.courier = keeper
+		for id in j.items:
+			(b.store as Inventory).remove(id, int(j.items[id]))
+		j.cargo = (j.items as Dictionary).duplicate()
+		if int(j.get("send_coins", 0)) > 0:            # REG-03/REG-05: coins sent on to a migrated sender leave the booth with the load
+			b.coins = int(b.coins) - int(j.send_coins)
+			j.carried_coins = int(j.send_coins)
+			j.send_coins = 0
+		j.state = "in_transit"
+		j.walker = keeper
+		j.depart = day
+		j.arrive = arrive                              # (an estimate for the window: the walk itself decides)
+		j.history.append([day, "%s set out on foot with %d deliveries" % [w.ref_name(keeper, true), take.size()]])
+		_note_carried(j, EconRouteRisk.value_of(j.cargo, int(j.carried_coins)))
+	w.stat("courier_walks")
+	return true
+
+
+## World.journey_hook: a walking courier at the settlement hands over every delivery they carry (each by _arrive's rules: the
+## recipient's payment, the notary's signature, a refusal sends the goods back with them), then turns home. False always: the
+## journey goes on by Journeys' own rules (the night's rest, the road home).
+static func at_site(w: World, n: NPC) -> bool:
+	var p: Dictionary = n.journey.get("purpose", {})
+	if str(p.get("kind", "")) != "courier" or bool(p.get("done", false)) or w.couriers == null:
+		return false
+	p.done = true
+	w.couriers.walk_arrived(n)
+	n.journey.stay_until = w.minutes                   # back the same day (Journeys rests them first if night has fallen)
+	return false
+
+
+func walk_arrived(n: NPC) -> void:
+	var day := _day()
+	for id in n.journey.get("purpose", {}).get("jobs", []):
+		var j := job(str(id))
+		if not j.is_empty() and str(j.state) == "in_transit" and str(j.get("walker", "")) == World.npc_ref(n.id):
+			_arrive(j, day)
+	w.stat("courier_walk_arrived")
+
+
+## Journeys.end of a courier's walk (`how`: home, turned_back, died, lost, no road, emigrated). Home (or turned back home): every
+## delivery is finished at home (_home: the payment and goods brought back to the sender, the special fee to the courier); a delivery
+## that never reached the settlement comes home whole to its sender. Anything else: the walk stopped on the road (interrupt: the load
+## lies where they stand, a special fee goes back).
+func walk_ended(n: NPC, how: String) -> void:
+	var day := _day()
+	for id in n.journey.get("purpose", {}).get("jobs", []):
+		var j := job(str(id))
+		if j.is_empty() or str(j.get("walker", "")) != World.npc_ref(n.id) or not str(j.state) in ["in_transit", "returning"]:
+			continue
+		if how in ["home", "turned_back"] and n.alive:
+			if str(j.state) == "in_transit":
+				_unsigned(j, day)
+				j.returned_items = (j.cargo as Dictionary).duplicate()
+				j.outcome = "the courier turned back on the road"
+				j.state = "returning"
+				j.history.append([day, "turned back on the road: the goods come home"])
+			j.erase("walker")
+			_home(j, day)
+		else:
+			interrupt(j, "the courier died on the road" if how == "died" else "the courier's walk ended on the road (%s)" % how)
+			j.erase("walker")
+
+
+func job(id: String) -> Dictionary:
+	for j in jobs:
+		if str(j.id) == id:
+			return j
+	return {}
+
+
+## REG-03 / REG-05: the household party in a settlement of a sender who left the village for it ("region:<sid>/hh:<n>"), "" when
+## `ref` is no migrant (alive here, dead, the player) or their household there is gone.
+func _moved_to(ref: String) -> String:
+	if not live or w == null or w.regions == null or not ref.begins_with("npc:"):
+		return ""
+	var n = _npc(ref)
+	if n == null or n.alive or str(n.away) == "" or not w.regions.by_id.has(str(n.away)):
+		return ""
+	var s: OffMapSettlement = w.regions.by_id[str(n.away)]
+	var m := SettlementTrips._member(s, int(n.id))
+	if m.is_empty():
+		return ""
+	var key := "region:%s/hh:%d" % [s.id, int(m[0])]
+	return key if _party(key.trim_prefix("region:")) != null else ""
+
+
+## REG-03 / REG-05: send `coins` and `goods` on to `to` (a migrated sender's settlement household) as a delivery from the village's
+## booth on its route to that settlement, carried by its keeper's next walk there (no fee: it finishes the obligation the sender's
+## delivery was paid for). The goods and coins wait in the village booth's store and coins until then. False (nothing moves) when
+## there is no such route or nothing to send.
+func _forward(to: String, sender: String, coins: int, goods: Dictionary, day: float) -> bool:
+	if coins <= 0 and goods.is_empty():
+		return false
+	var vb := booth_of(SettlementFacts.VILLAGE)
+	var sb := booth_of(place_of(to))
+	var r := {}
+	for x in routes:
+		if not vb.is_empty() and not sb.is_empty() and str(x.from) == str(vb.id) and str(x.to) == str(sb.id):
+			r = x
+	if r.is_empty():
+		return false
+	for id in goods:
+		(vb.store as Inventory).add(str(id), int(goods[id]))
+	vb.coins = int(vb.coins) + coins
+	var j := _job({"kind": "route", "sender": sender, "recipient": to, "recipient_kind": "person", "settlement": place_of(to), "items": goods},
+		{"fee": 0, "days": float(r.days)}, str(carrier_booth(r).keeper))
+	j.route = str(r.id)
+	j.booth = str(vb.id)
+	j.state = "at_booth"
+	j.send_coins = coins
+	j.send_coins_out = coins
+	j.history.append([day, "sent on to %s, where the sender now lives: %d coins and %d goods" % [to, coins, units_of(goods)]])
+	if w != null:
+		w.stat("courier_forwarded_migrant")
+	return true
+
+
+## REG-03 F2 (B42): a refund of `coins` held at booth `b` (already taken out of its escrow) to `sender`: to them while they live
+## here; a dead villager's to their heir (World._heir), else the manor (the estate rule); a migrant's sent on to their new home
+## (_forward), else left at the booth as their deposit.
+func _refund(sender: String, coins: int, b: Dictionary) -> void:
+	if coins <= 0:
+		return
+	if alive(sender) or not sender.begins_with("npc:") or w == null:
+		add_coins(sender, coins)
+		return
+	var dn = _npc(sender)
+	if dn != null and str(dn.away) == "":
+		var hr: NPC = w._heir(dn)
+		if hr != null:
+			add_coins("npc:%d" % hr.id, coins)
+		else:
+			w.treasury += coins
+			w.stat("courier_estate_coins", float(coins))
+		return
+	var to := _moved_to(sender)
+	if to != "" and _forward(to, sender, coins, {}, _day()):      # (the coins wait in the village booth's coins for the walk)
+		return
+	b.coins = int(b.coins) + coins
+	var dep: Dictionary = (b.deposits as Dictionary).get(sender, {"coins": 0, "items": {}})
+	dep.coins = int(dep.coins) + coins
+	b.deposits[sender] = dep
 
 
 ## REG-08 (owner 2026-11-12, "Estate + timeout"): a route delivery still waiting at its booth `wait_days` (7) after it was booked
@@ -863,14 +1091,21 @@ func _expire(j: Dictionary, day: float) -> void:
 			var hr: NPC = w._heir(dn)
 			if hr != null:
 				to = "npc:%d" % hr.id
+	var moved := _moved_to(to)                         # REG-03/REG-05 (B42): a sender who moved away gets them sent on
+	var fwd := {}
 	for id in j.items:
 		var n := int(j.items[id])
 		if not b.is_empty():
 			(b.store as Inventory).remove(id, n)
 			if alive(to) and inv_of(to) != null and inv_of(to).can_add(id):
 				inv_of(to).add(id, n)
+			elif moved != "":
+				fwd[id] = n
 			else:
 				_deposit_item(b, to, id, n)
+	if not fwd.is_empty() and not _forward(moved, to, 0, fwd, day):
+		for id in fwd:
+			_deposit_item(b, to, id, int(fwd[id]))
 	var payer := str(j.courier)
 	if not alive(payer) and payer.begins_with("npc:") and w != null:
 		var dc = _npc(payer)
@@ -903,6 +1138,10 @@ func _depart(r: Dictionary, day: float) -> void:
 		for id in j.items:
 			(b.store as Inventory).remove(id, int(j.items[id]))
 		j.cargo = (j.items as Dictionary).duplicate()
+		if int(j.get("send_coins", 0)) > 0:            # REG-03/REG-05: coins sent on to a migrated sender
+			b.coins = int(b.coins) - int(j.send_coins)
+			j.carried_coins = int(j.send_coins)
+			j.send_coins = 0
 		j.state = "in_transit"
 		j.depart = day
 		j.arrive = day + float(r.days)
@@ -958,6 +1197,9 @@ func _arrive(j: Dictionary, day: float) -> void:
 	for id in j.items:
 		rinv.add(id, int(j.items[id]))
 	j.cargo = {}
+	if int(j.get("send_coins_out", 0)) > 0 and int(j.carried_coins) > 0:     # REG-03/REG-05: coins sent on to a migrated sender
+		add_coins(str(j.recipient), int(j.carried_coins))
+		j.carried_coins = 0
 	if not col.is_empty():
 		if str(col.kind) == "coins":
 			add_coins(str(j.recipient), -int(col.amount))
@@ -1025,6 +1267,20 @@ func _home(j: Dictionary, day: float) -> void:
 				j["heir"] = sender
 			else:
 				to_estate = true
+	# REG-03 / REG-05 (B42; REG-08 investigation F3): a sender who has moved to a settlement is owed what comes home where they
+	# now live: it is sent on to their household there by the next courier walk on that road (_forward), never left at a booth
+	# they cannot reach and never moved there at once.
+	var moved := _moved_to(sender)
+	if moved != "" and not to_estate:
+		var goods := {}
+		for src in [j.returned_items, j.carried_items]:
+			for id in src:
+				goods[id] = int(goods.get(id, 0)) + int(src[id])
+		if _forward(moved, sender, int(j.carried_coins), goods, day):
+			j.returned_items = {}
+			j.carried_items = {}
+			j.carried_coins = 0
+			j["forwarded"] = moved
 	var deposit: bool = str(j.proceeds) == "deposit" or not alive(sender)
 	# goods that came back, and goods collected as payment
 	for src in [j.returned_items, j.carried_items]:
@@ -1096,7 +1352,7 @@ func interrupt(j: Dictionary, why: String) -> void:
 	if str(j.kind) == "special" and str(j.held_at) != "":
 		var hb := booth(str(j.held_at))
 		hb.escrow = int(hb.escrow) - int(j.fee)
-		add_coins(str(j.sender), int(j.fee))
+		_refund(str(j.sender), int(j.fee), hb)              # REG-03 F2 (B42): to the sender, else their heir, estate or new home
 	if not (j.cargo as Dictionary).is_empty() or int(j.carried_coins) > 0:
 		var rr := EconRouteRisk.of(w)
 		if rr != null:                                          # LE-05 route risk: the load did not arrive (a record only)
@@ -1496,6 +1752,9 @@ static func from_dict(world, d: Dictionary) -> CourierService:
 		var c: Dictionary = (j as Dictionary).duplicate(true)
 		for k in ["fee", "carried_coins"]:
 			c[k] = int(c.get(k, 0))
+		for k in ["send_coins", "send_coins_out"]:            # REG-03/REG-05: coins sent on to a migrated sender (optional)
+			if c.has(k):
+				c[k] = int(c[k])
 		c["agreement"] = int(c.get("agreement", -1))
 		c["booth"] = str(c.get("booth", ""))
 		for k in ["items", "carried_items", "returned_items", "cargo"]:

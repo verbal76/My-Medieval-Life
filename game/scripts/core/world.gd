@@ -179,7 +179,7 @@ var recorder = null           # REC-19: the flight recorder (WorldRecorder), or 
 
 func _init() -> void:
 	GameData.ensure()
-	journey_hook = func(n: NPC) -> bool: return Envoys.at_site(self, n) or RegionTrade.at_site(self, n) or (life != null and life.at_site(n))      # REGION-NAV-01: an envoy's interviews (S4), a buyer's purchase (S6); B25R1-014: a runaway joins the settlement
+	journey_hook = func(n: NPC) -> bool: return Envoys.at_site(self, n) or RegionTrade.at_site(self, n) or CourierService.at_site(self, n) or Migration.at_site(self, n) or (life != null and life.at_site(n))      # REGION-NAV-01: an envoy's interviews (S4), a buyer's purchase (S6); REG-04: a courier's hand-overs; REG-05: migrants join the settlement; B25R1-014: a runaway joins the settlement
 
 
 # ---------------------------------------------------------------- setup ----------------------

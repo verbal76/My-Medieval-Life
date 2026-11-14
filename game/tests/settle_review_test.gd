@@ -23,6 +23,7 @@ func check(cond: bool, what: String) -> void:
 
 func _init() -> void:
 	GameData.ensure()
+	Migration.walk = false            # REG-05 (B42): what crosses at the move is checked at once (a world with no roads); the walk is reg05_household_walks_test
 	test_idle_trader_closes()
 	test_closing_trader_takes_in_shipments()
 	test_founding_trader_reserve()
